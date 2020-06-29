@@ -23,3 +23,76 @@ paths:
               schema:
                 type: string
       x-openapi-router-controller: de.fzi.efeu.api.HealthController
+  /boxStatus/:
+    get:
+      tags:
+        - Box Status
+      summary: Requests all box states
+      description: ''
+      operationId: getBoxStates
+      parameters: []
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/statusBoxArray'
+        400:
+          description: Failure
+          content: {}
+
+
+components:
+  schemas:
+    statusBox:
+      required:
+        - boxId
+        - boxState
+        - boxPosition
+        - boxLoad
+        - boxChangeTimestamp
+        - vehicleId
+        - mountId
+      type: object
+      properties:
+        boxId:
+          type: integer
+        boxState:
+          type: string
+          enum:
+            - idle
+            - inUse
+            - unclean
+            - disruption
+        boxPosition:
+          type: object
+          required:
+            - lat
+            - long
+          properties:
+            lat:
+              type: number
+            long:
+              type: number
+        boxLoad:
+          type: string
+          enum:
+            - empty
+            - loaded
+        boxChangeTimestamp:
+          type: string
+          format: date-time
+        vehicleId:
+          type: integer
+        mountId:
+          type:integer
+    statusBoxArray:
+      type: object
+      required:
+        - statusBoxes
+      properties:
+        statusBoxes:
+          type: array
+          items:
+            $ref: '#/statusBox'
