@@ -52,8 +52,6 @@ components:
         - boxPosition
         - boxLoad
         - boxChangeTimestamp
-        - vehicleId
-        - mountId
       type: object
       properties:
         boxId:
@@ -73,8 +71,10 @@ components:
           properties:
             lat:
               type: number
+              format: float
             long:
               type: number
+              format: float
         boxLoad:
           type: string
           enum:
@@ -86,7 +86,7 @@ components:
         vehicleId:
           type: integer
         mountId:
-          type:integer
+          type: integer
     statusBoxArray:
       type: object
       required:
