@@ -23,7 +23,7 @@ public class VehicleStatus {
     private Long id;
 
     @NonNull
-    private Long vehicleId;
+    private String vehicleId;
 
     @Enumerated(EnumType.ORDINAL)
     @NonNull
@@ -38,7 +38,7 @@ public class VehicleStatus {
     @NonNull
     private Double remainingRange;
 
-    private Long boxId;
+    private String boxId;
 
     @Column(columnDefinition = "TIMESTAMP")
     @NonNull

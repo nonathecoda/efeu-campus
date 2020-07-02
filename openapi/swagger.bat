@@ -1,6 +1,6 @@
 java ^
 -Dmodels ^
--jar C:/Users/hess/Documents/dev_swagger/openapi-generator.jar generate ^
+-jar C:/dev/swagger/swagger.jar generate ^
 -g spring ^
 -o ../ ^
 -i swagger.yaml ^

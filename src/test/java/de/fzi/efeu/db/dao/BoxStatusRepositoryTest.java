@@ -1,9 +1,11 @@
 package de.fzi.efeu.db.dao;
 
-import java.time.LocalDateTime;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
+import java.time.LocalDateTime;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,20 +26,20 @@ public class BoxStatusRepositoryTest {
     @Test
     public void whenFindById_thenShouldBeFound() {
         LocalDateTime localDateTime = LocalDateTime.of(2020, 5, 27, 17, 17);
-        BoxStatus boxStatus = new BoxStatus(1L, BoxState.Free, 42.0, 13.0, BoxLoad.Empty, localDateTime);
+        BoxStatus boxStatus = new BoxStatus("1", BoxState.FREE, 42.0, 13.0, BoxLoad.EMPTY, localDateTime);
         boxStatusRepository.save(boxStatus);
 
-        boxStatus = boxStatusRepository.findByBoxId(1L);
+        boxStatus = boxStatusRepository.findByBoxId("1");
         assertThat(boxStatus, notNullValue());
         assertThat(boxStatus.getTimestamp(), is(localDateTime));
     }
 
     @Test
     public void whenFindByInvalidId_thenShouldBeNull() {
-        BoxStatus boxStatus = new BoxStatus(1L, BoxState.Free, 42.0, 13.0, BoxLoad.Empty, LocalDateTime.now());
+        BoxStatus boxStatus = new BoxStatus("1", BoxState.FREE, 42.0, 13.0, BoxLoad.EMPTY, LocalDateTime.now());
         boxStatusRepository.save(boxStatus);
 
-        boxStatus = boxStatusRepository.findByBoxId(2L);
+        boxStatus = boxStatusRepository.findByBoxId("2");
         assertThat(boxStatus, nullValue());
     }
 }

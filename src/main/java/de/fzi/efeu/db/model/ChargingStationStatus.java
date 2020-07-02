@@ -23,12 +23,13 @@ public class ChargingStationStatus {
     private Long id;
 
     @NonNull
-    private Long chargingStationId;
+    private String chargingStationId;
 
     @Enumerated(EnumType.ORDINAL)
     @NonNull
     private ChargingStationState chargingStationState;
-    private Long vehicleId;
+
+    private String vehicleId;
 
     @Column(columnDefinition = "TIMESTAMP")
     @NonNull

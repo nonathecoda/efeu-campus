@@ -18,6 +18,8 @@
         <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
         <h2.version>1.4.197</h2.version>
         <hamcrest.version>2.2</hamcrest.version>
+        <efeuportal.version>0.0.2-SNAPSHOT</efeuportal.version>
+        <modelmapper.version>2.3.8</modelmapper.version>
     </properties>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -181,6 +183,17 @@
             <artifactId>hamcrest</artifactId>
             <version>${hamcrest.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.fzi.efeu</groupId>
+            <artifactId>efeuportal-client</artifactId>
+            <version>${efeuportal.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>${modelmapper.version}</version>
         </dependency>
     </dependencies>
 </project>

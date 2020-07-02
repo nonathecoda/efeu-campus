@@ -20,12 +20,14 @@ import lombok.RequiredArgsConstructor;
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class BoxStatus {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NonNull
-    private Long boxId;
+    @Column(unique=true)
+    private String boxId;
 
     @Enumerated(EnumType.ORDINAL)
     @NonNull
@@ -44,6 +46,7 @@ public class BoxStatus {
     @Column(columnDefinition = "TIMESTAMP")
     @NonNull
     private LocalDateTime timestamp;
-    private Long vehicleId;
-    private Long mountId;
+
+    private String vehicleId;
+    private String mountId;
 }

@@ -23,7 +23,7 @@ public class WarehousePlaceStatus {
     private Long id;
 
     @NonNull
-    private Long wareHousePlaceId;
+    private String wareHousePlaceId;
 
     @Enumerated(EnumType.ORDINAL)
     @NonNull
@@ -32,5 +32,6 @@ public class WarehousePlaceStatus {
     @Column(columnDefinition = "TIMESTAMP")
     @NonNull
     private LocalDateTime timestamp;
-    private Long efeuPackageId;
+
+    private String efeuPackageId;
 }

@@ -13,24 +13,24 @@ import javax.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @Entity
 @Data
 @NoArgsConstructor
-public class MountStatus {
+@RequiredArgsConstructor
+public class OrderStatus {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NonNull
-    private String mountId;
+    private String orderId;
 
     @Enumerated(EnumType.ORDINAL)
     @NonNull
-    private MountState mountState;
-
-    @NonNull
-    private String boxId;
+    private OrderState orderState;
 
     @Column(columnDefinition = "TIMESTAMP")
     @NonNull
