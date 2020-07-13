@@ -24,7 +24,7 @@ public class HealthApiControllerTest {
 
     @Test
     public void whenGetHealth_thenOk() throws Exception{
-        mvc.perform(MockMvcRequestBuilders.get("/health/")
+        mvc.perform(MockMvcRequestBuilders.get("/process/health/")
                 .accept(MediaType.TEXT_PLAIN))
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("Process management is running!")));
