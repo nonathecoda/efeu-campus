@@ -1,12 +1,11 @@
 package de.fzi.efeu.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import de.fzi.efeu.efeuportal.ApiException;
 import de.fzi.efeu.efeuportal.api.OrderApi;
+import de.fzi.efeu.efeuportal.model.EfCaModelCollector;
 import de.fzi.efeu.efeuportal.model.EfCaOrder;
 import de.fzi.efeu.efeuportal.model.EfCaOrderResp;
 
@@ -46,7 +45,7 @@ public class ProcessService {
     private void createBoxOrder(final EfCaOrder order) {
         EfCaOrder boxOrder = new EfCaOrder();
         try {
-            EfCaOrderResp boxOrderResponse = orderApi.postAddOrders(List.of(boxOrder));
+            EfCaOrderResp boxOrderResponse = orderApi.postAddOrders(new EfCaModelCollector().addOrdersItem(boxOrder));
         } catch (ApiException e) {
             e.printStackTrace();
         }
