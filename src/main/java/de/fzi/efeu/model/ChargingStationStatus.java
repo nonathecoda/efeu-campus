@@ -15,7 +15,7 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * ChargingStationStatus
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-07-01T15:04:38.930184900+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-07-10T15:40:07.261635900+02:00[Europe/Berlin]")
 
 public class ChargingStationStatus   {
   @JsonProperty("id")
@@ -118,8 +118,7 @@ public class ChargingStationStatus   {
    * Get vehicleId
    * @return vehicleId
   */
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
+  @ApiModelProperty(value = "")
 
 
   public String getVehicleId() {
@@ -154,7 +153,7 @@ public class ChargingStationStatus   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -190,7 +189,7 @@ public class ChargingStationStatus   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

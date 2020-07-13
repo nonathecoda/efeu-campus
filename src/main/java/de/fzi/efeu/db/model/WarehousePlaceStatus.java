@@ -1,6 +1,6 @@
 package de.fzi.efeu.db.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,15 +23,16 @@ public class WarehousePlaceStatus {
     private Long id;
 
     @NonNull
+    @Column(unique=true)
     private String wareHousePlaceId;
 
     @Enumerated(EnumType.ORDINAL)
     @NonNull
     private WarehousePlaceState warehousePlaceState;
 
-    @Column(columnDefinition = "TIMESTAMP")
+    @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
     @NonNull
-    private LocalDateTime timestamp;
+    private OffsetDateTime timestamp;
 
     private String efeuPackageId;
 }

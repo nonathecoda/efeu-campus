@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-07-01T13:33:10.937421600+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-07-10T14:10:36.203026900+02:00[Europe/Berlin]")
 
 @Validated
 @Api(value = "process", description = "the process API")
@@ -42,7 +42,7 @@ public interface ProcessApi {
     @RequestMapping(value = "/process/trips/{id}/fix",
         produces = { "text/plain" }, 
         method = RequestMethod.POST)
-    default ResponseEntity<String> fixTrip(@ApiParam(value = "efeu ID",required=true) @PathVariable("id") String id) {
+    default ResponseEntity<String> fixTrip(@ApiParam(value = "efeu ID", required = true) @PathVariable("id") String id) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -60,6 +60,23 @@ public interface ProcessApi {
         produces = { "text/plain" }, 
         method = RequestMethod.GET)
     default ResponseEntity<String> getHealth() {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * POST /process/plan
+     *
+     * @return Success (status code 200)
+     */
+    @ApiOperation(value = "", nickname = "plan", notes = "", response = String.class, tags={ "Process", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Success", response = String.class) })
+    @RequestMapping(value = "/process/plan",
+        produces = { "text/plain" }, 
+        method = RequestMethod.POST)
+    default ResponseEntity<String> plan() {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }

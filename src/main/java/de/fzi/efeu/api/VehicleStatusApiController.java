@@ -67,4 +67,11 @@ public class VehicleStatusApiController implements VehicleStatusApi {
         vehicleStatusRepository.save(dbStatus);
         return ResponseEntity.ok(vehicleStatus);
     }
+
+    @Override
+    public ResponseEntity<String> deleteVehicleStatus(final String id) {
+        de.fzi.efeu.db.model.VehicleStatus dbStatus = vehicleStatusRepository.findByVehicleId(id);
+        vehicleStatusRepository.delete(dbStatus);
+        return ResponseEntity.ok("");
+    }
 }

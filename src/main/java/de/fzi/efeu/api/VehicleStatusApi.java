@@ -26,7 +26,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-07-01T13:33:10.937421600+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-07-10T14:10:36.203026900+02:00[Europe/Berlin]")
 
 @Validated
 @Api(value = "vehicleStatus", description = "the vehicleStatus API")
@@ -50,7 +50,9 @@ public interface VehicleStatusApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    default ResponseEntity<VehicleStatus> createVehicleStatus(@ApiParam(value = "efeu ID",required=true) @PathVariable("id") String id,@ApiParam(value = ""  )  @Valid @RequestBody(required = false) VehicleStatus vehicleStatus) {
+    default ResponseEntity<VehicleStatus> createVehicleStatus(
+            @ApiParam(value = "efeu ID", required = true) @PathVariable("id") String id,
+            @ApiParam(value = "") @Valid @RequestBody(required = false) VehicleStatus vehicleStatus) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
@@ -60,6 +62,25 @@ public interface VehicleStatusApi {
                 }
             }
         });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * DELETE /vehicleStatus/{id}
+     *
+     * @param id efeu ID (required)
+     * @return Success (status code 200)
+     */
+    @ApiOperation(value = "", nickname = "deleteVehicleStatus", notes = "", response = String.class, tags={ "VehicleStatus", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Success", response = String.class) })
+    @RequestMapping(value = "/vehicleStatus/{id}",
+        produces = { "text/plain" }, 
+        method = RequestMethod.DELETE)
+    default ResponseEntity<String> deleteVehicleStatus(
+            @ApiParam(value = "efeu ID", required = true) @PathVariable("id") String id) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -77,7 +98,8 @@ public interface VehicleStatusApi {
     @RequestMapping(value = "/vehicleStatus/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    default ResponseEntity<VehicleStatus> getVehicleStatus(@ApiParam(value = "efeu ID",required=true) @PathVariable("id") String id) {
+    default ResponseEntity<VehicleStatus> getVehicleStatus(
+            @ApiParam(value = "efeu ID", required = true) @PathVariable("id") String id) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
@@ -132,7 +154,9 @@ public interface VehicleStatusApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.PUT)
-    default ResponseEntity<VehicleStatus> updateVehicleStatus(@ApiParam(value = "efeu ID",required=true) @PathVariable("id") String id,@ApiParam(value = ""  )  @Valid @RequestBody(required = false) VehicleStatus vehicleStatus) {
+    default ResponseEntity<VehicleStatus> updateVehicleStatus(
+            @ApiParam(value = "efeu ID", required = true) @PathVariable("id") String id,
+            @ApiParam(value = "") @Valid @RequestBody(required = false) VehicleStatus vehicleStatus) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {

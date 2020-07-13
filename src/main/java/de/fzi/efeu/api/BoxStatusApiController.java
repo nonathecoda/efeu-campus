@@ -72,4 +72,11 @@ public class BoxStatusApiController implements BoxStatusApi {
         boxStatusRepository.save(dbBoxStatus);
         return ResponseEntity.ok(boxStatus);
     }
+
+    @Override
+    public ResponseEntity<String> deleteBoxStatus(final String id) {
+        de.fzi.efeu.db.model.BoxStatus dbBoxStatus = boxStatusRepository.findByBoxId(id);
+        boxStatusRepository.delete(dbBoxStatus);
+        return ResponseEntity.ok("");
+    }
 }

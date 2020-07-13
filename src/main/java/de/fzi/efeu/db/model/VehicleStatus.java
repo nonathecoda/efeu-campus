@@ -1,6 +1,6 @@
 package de.fzi.efeu.db.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,6 +23,7 @@ public class VehicleStatus {
     private Long id;
 
     @NonNull
+    @Column(unique=true)
     private String vehicleId;
 
     @Enumerated(EnumType.ORDINAL)
@@ -40,8 +41,8 @@ public class VehicleStatus {
 
     private String boxId;
 
-    @Column(columnDefinition = "TIMESTAMP")
+    @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
     @NonNull
-    private LocalDateTime timestamp;
+    private OffsetDateTime timestamp;
 
 }

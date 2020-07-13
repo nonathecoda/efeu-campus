@@ -65,4 +65,11 @@ public class MountStatusApiController implements MountStatusApi {
         mountStatusRepository.save(dbStatus);
         return ResponseEntity.ok(mountStatus);
     }
+
+    @Override
+    public ResponseEntity<String> deleteMountStatus(final String id) {
+        de.fzi.efeu.db.model.MountStatus dbStatus = mountStatusRepository.findByMountId(id);
+        mountStatusRepository.delete(dbStatus);
+        return ResponseEntity.ok("");
+    }
 }

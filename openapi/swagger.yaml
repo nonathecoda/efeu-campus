@@ -18,6 +18,18 @@ paths:
             text/plain:
               schema:
                 type: string
+  /process/plan:
+    post:
+      tags:
+        - Process
+      operationId: plan
+      responses:
+        200:
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: string
   /process/trips/{id}/fix:
     post:
       tags:
@@ -141,26 +153,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BoxStatus'
-  /orderStatus/:
-    get:
+    delete:
       tags:
-        - OrderStatus
-      description: ''
-      operationId: getOrderStatusList
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OrderStatus'
-  /orderStatus/{id}:
-    get:
-      tags:
-        - OrderStatus
-      operationId: getOrderStatus
+        - BoxStatus
+      operationId: deleteBoxStatus
       parameters:
         - in: path
           name: id
@@ -172,55 +168,9 @@ paths:
         200:
           description: Success
           content:
-            application/json:
+            text/plain:
               schema:
-                $ref: '#/components/schemas/OrderStatus'
-    post:
-      tags:
-        - OrderStatus
-      operationId: createOrderStatus
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
-          description: efeu ID
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/OrderStatus'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OrderStatus'
-    put:
-      tags:
-        - OrderStatus
-      operationId: updateOrderStatus
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
-          description: efeu ID
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/OrderStatus'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OrderStatus'
+                type: string
   /vehicleStatus/:
     get:
       tags:
@@ -301,6 +251,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/VehicleStatus'
+    delete:
+      tags:
+        - VehicleStatus
+      operationId: deleteVehicleStatus
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: efeu ID
+      responses:
+        200:
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: string
   /mountStatus/:
     get:
       tags:
@@ -381,6 +349,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MountStatus'
+    delete:
+      tags:
+        - MountStatus
+      operationId: deleteMountStatus
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: efeu ID
+      responses:
+        200:
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: string
   /chargingStationStatus/:
     get:
       tags:
@@ -461,6 +447,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ChargingStationStatus'
+    delete:
+      tags:
+        - ChargingStationStatus
+      operationId: deleteChargingStationStatus
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: efeu ID
+      responses:
+        200:
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: string
 components:
   schemas:
     BoxStatus:
@@ -500,28 +504,6 @@ components:
           type: string
         mountId:
           type: string
-    OrderStatus:
-      required:
-          - id
-          - state
-          - timestamp
-      type: object
-      properties:
-        id:
-          type: string
-        orderState:
-          type: string
-          enum:
-            - New
-            - ReadyForPlanning
-            - Planned
-            - InExecution
-            - Finished
-            - Aborted
-            - Disrupted
-        timestamp:
-          type: string
-          format: date-time
     VehicleStatus:
       required:
           - id
@@ -580,7 +562,6 @@ components:
       required:
         - id
         - state
-        - vehicleId
         - timestamp
       type: object
       properties:

@@ -67,4 +67,11 @@ public class ChargingStationStatusApiController implements ChargingStationStatus
         chargingStationStatusRepository.save(dbStatus);
         return ResponseEntity.ok(chargingStationStatus);
     }
+
+    @Override
+    public ResponseEntity<String> deleteChargingStationStatus(final String id) {
+        de.fzi.efeu.db.model.ChargingStationStatus dbStatus = chargingStationStatusRepository.findByChargingStationId(id);
+        chargingStationStatusRepository.delete(dbStatus);
+        return ResponseEntity.ok("");
+    }
 }

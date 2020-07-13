@@ -26,7 +26,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-07-01T13:33:10.937421600+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-07-10T14:10:36.203026900+02:00[Europe/Berlin]")
 
 @Validated
 @Api(value = "mountStatus", description = "the mountStatus API")
@@ -50,7 +50,9 @@ public interface MountStatusApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    default ResponseEntity<MountStatus> createMountStatus(@ApiParam(value = "efeu ID",required=true) @PathVariable("id") String id,@ApiParam(value = ""  )  @Valid @RequestBody(required = false) MountStatus mountStatus) {
+    default ResponseEntity<MountStatus> createMountStatus(
+            @ApiParam(value = "efeu ID", required = true) @PathVariable("id") String id,
+            @ApiParam(value = "") @Valid @RequestBody(required = false) MountStatus mountStatus) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
@@ -60,6 +62,25 @@ public interface MountStatusApi {
                 }
             }
         });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * DELETE /mountStatus/{id}
+     *
+     * @param id efeu ID (required)
+     * @return Success (status code 200)
+     */
+    @ApiOperation(value = "", nickname = "deleteMountStatus", notes = "", response = String.class, tags={ "MountStatus", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Success", response = String.class) })
+    @RequestMapping(value = "/mountStatus/{id}",
+        produces = { "text/plain" }, 
+        method = RequestMethod.DELETE)
+    default ResponseEntity<String> deleteMountStatus(
+            @ApiParam(value = "efeu ID", required = true) @PathVariable("id") String id) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -77,7 +98,8 @@ public interface MountStatusApi {
     @RequestMapping(value = "/mountStatus/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    default ResponseEntity<MountStatus> getMountStatus(@ApiParam(value = "efeu ID",required=true) @PathVariable("id") String id) {
+    default ResponseEntity<MountStatus> getMountStatus(
+            @ApiParam(value = "efeu ID", required = true) @PathVariable("id") String id) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
@@ -132,7 +154,9 @@ public interface MountStatusApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.PUT)
-    default ResponseEntity<MountStatus> updateMountStatus(@ApiParam(value = "efeu ID",required=true) @PathVariable("id") String id,@ApiParam(value = ""  )  @Valid @RequestBody(required = false) MountStatus mountStatus) {
+    default ResponseEntity<MountStatus> updateMountStatus(
+            @ApiParam(value = "efeu ID", required = true) @PathVariable("id") String id,
+            @ApiParam(value = "") @Valid @RequestBody(required = false) MountStatus mountStatus) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {

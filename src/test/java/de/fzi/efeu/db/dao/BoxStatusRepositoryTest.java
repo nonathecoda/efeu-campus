@@ -6,6 +6,8 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +28,8 @@ public class BoxStatusRepositoryTest {
     @Test
     public void whenFindById_thenShouldBeFound() {
         LocalDateTime localDateTime = LocalDateTime.of(2020, 5, 27, 17, 17);
-        BoxStatus boxStatus = new BoxStatus("1", BoxState.FREE, 42.0, 13.0, BoxLoad.EMPTY, localDateTime);
+        OffsetDateTime offsetDateTime = OffsetDateTime.of(localDateTime, ZoneOffset.UTC);
+        BoxStatus boxStatus = new BoxStatus("1", BoxState.FREE, 42.0, 13.0, BoxLoad.EMPTY, offsetDateTime);
         boxStatusRepository.save(boxStatus);
 
         boxStatus = boxStatusRepository.findByBoxId("1");
@@ -36,7 +39,7 @@ public class BoxStatusRepositoryTest {
 
     @Test
     public void whenFindByInvalidId_thenShouldBeNull() {
-        BoxStatus boxStatus = new BoxStatus("1", BoxState.FREE, 42.0, 13.0, BoxLoad.EMPTY, LocalDateTime.now());
+        BoxStatus boxStatus = new BoxStatus("1", BoxState.FREE, 42.0, 13.0, BoxLoad.EMPTY, OffsetDateTime.now());
         boxStatusRepository.save(boxStatus);
 
         boxStatus = boxStatusRepository.findByBoxId("2");

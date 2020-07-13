@@ -26,7 +26,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-07-01T13:33:10.937421600+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-07-10T14:10:36.203026900+02:00[Europe/Berlin]")
 
 @Validated
 @Api(value = "boxStatus", description = "the boxStatus API")
@@ -50,16 +50,37 @@ public interface BoxStatusApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    default ResponseEntity<BoxStatus> createBoxStatus(@ApiParam(value = "efeu ID",required=true) @PathVariable("id") String id,@ApiParam(value = ""  )  @Valid @RequestBody(required = false) BoxStatus boxStatus) {
+    default ResponseEntity<BoxStatus> createBoxStatus(
+            @ApiParam(value = "efeu ID", required = true) @PathVariable("id") String id,
+            @ApiParam(value = "") @Valid @RequestBody(required = false) BoxStatus boxStatus) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"mountId\" : \"mountId\", \"boxState\" : \"Free\", \"latitude\" : 0.8008282, \"boxLoad\" : \"empty\", \"id\" : \"id\", \"vehicleId\" : \"vehicleId\", \"longitude\" : 6.0274563, \"timestamp\" : \"2000-01-23T04:56:07.000+00:00\" }";
+                    String exampleString = "{ \"mountId\" : \"mountId\", \"boxState\" : \"Free\", \"latitude\" : 0.8008282, \"boxLoad\" : \"Empty\", \"id\" : \"id\", \"vehicleId\" : \"vehicleId\", \"longitude\" : 6.0274563, \"timestamp\" : \"2000-01-23T04:56:07.000+00:00\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
             }
         });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * DELETE /boxStatus/{id}
+     *
+     * @param id efeu ID (required)
+     * @return Success (status code 200)
+     */
+    @ApiOperation(value = "", nickname = "deleteBoxStatus", notes = "", response = String.class, tags={ "BoxStatus", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Success", response = String.class) })
+    @RequestMapping(value = "/boxStatus/{id}",
+        produces = { "text/plain" }, 
+        method = RequestMethod.DELETE)
+    default ResponseEntity<String> deleteBoxStatus(
+            @ApiParam(value = "efeu ID", required = true) @PathVariable("id") String id) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -77,11 +98,12 @@ public interface BoxStatusApi {
     @RequestMapping(value = "/boxStatus/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    default ResponseEntity<BoxStatus> getBoxStatus(@ApiParam(value = "efeu ID",required=true) @PathVariable("id") String id) {
+    default ResponseEntity<BoxStatus> getBoxStatus(
+            @ApiParam(value = "efeu ID", required = true) @PathVariable("id") String id) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"mountId\" : \"mountId\", \"boxState\" : \"Free\", \"latitude\" : 0.8008282, \"boxLoad\" : \"empty\", \"id\" : \"id\", \"vehicleId\" : \"vehicleId\", \"longitude\" : 6.0274563, \"timestamp\" : \"2000-01-23T04:56:07.000+00:00\" }";
+                    String exampleString = "{ \"mountId\" : \"mountId\", \"boxState\" : \"Free\", \"latitude\" : 0.8008282, \"boxLoad\" : \"Empty\", \"id\" : \"id\", \"vehicleId\" : \"vehicleId\", \"longitude\" : 6.0274563, \"timestamp\" : \"2000-01-23T04:56:07.000+00:00\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -107,7 +129,7 @@ public interface BoxStatusApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"mountId\" : \"mountId\", \"boxState\" : \"Free\", \"latitude\" : 0.8008282, \"boxLoad\" : \"empty\", \"id\" : \"id\", \"vehicleId\" : \"vehicleId\", \"longitude\" : 6.0274563, \"timestamp\" : \"2000-01-23T04:56:07.000+00:00\" }";
+                    String exampleString = "{ \"mountId\" : \"mountId\", \"boxState\" : \"Free\", \"latitude\" : 0.8008282, \"boxLoad\" : \"Empty\", \"id\" : \"id\", \"vehicleId\" : \"vehicleId\", \"longitude\" : 6.0274563, \"timestamp\" : \"2000-01-23T04:56:07.000+00:00\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -132,11 +154,13 @@ public interface BoxStatusApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.PUT)
-    default ResponseEntity<BoxStatus> updateBoxStatus(@ApiParam(value = "efeu ID",required=true) @PathVariable("id") String id,@ApiParam(value = ""  )  @Valid @RequestBody(required = false) BoxStatus boxStatus) {
+    default ResponseEntity<BoxStatus> updateBoxStatus(
+            @ApiParam(value = "efeu ID", required = true) @PathVariable("id") String id,
+            @ApiParam(value = "") @Valid @RequestBody(required = false) BoxStatus boxStatus) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"mountId\" : \"mountId\", \"boxState\" : \"Free\", \"latitude\" : 0.8008282, \"boxLoad\" : \"empty\", \"id\" : \"id\", \"vehicleId\" : \"vehicleId\", \"longitude\" : 6.0274563, \"timestamp\" : \"2000-01-23T04:56:07.000+00:00\" }";
+                    String exampleString = "{ \"mountId\" : \"mountId\", \"boxState\" : \"Free\", \"latitude\" : 0.8008282, \"boxLoad\" : \"Empty\", \"id\" : \"id\", \"vehicleId\" : \"vehicleId\", \"longitude\" : 6.0274563, \"timestamp\" : \"2000-01-23T04:56:07.000+00:00\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
