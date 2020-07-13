@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.nullValue;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 
 import org.junit.Test;
@@ -28,13 +29,15 @@ public class BoxStatusRepositoryTest {
     @Test
     public void whenFindById_thenShouldBeFound() {
         LocalDateTime localDateTime = LocalDateTime.of(2020, 5, 27, 17, 17);
-        OffsetDateTime offsetDateTime = OffsetDateTime.of(localDateTime, ZoneOffset.UTC);
+        ZoneId zone = ZoneId.of("Europe/Berlin");
+        ZoneOffset zoneOffSet = zone.getRules().getOffset(localDateTime);
+        OffsetDateTime offsetDateTime = OffsetDateTime.of(localDateTime, zoneOffSet);
         BoxStatus boxStatus = new BoxStatus("1", BoxState.FREE, 42.0, 13.0, BoxLoad.EMPTY, offsetDateTime);
         boxStatusRepository.save(boxStatus);
 
         boxStatus = boxStatusRepository.findByBoxId("1");
         assertThat(boxStatus, notNullValue());
-        assertThat(boxStatus.getTimestamp(), is(localDateTime));
+        assertThat(boxStatus.getTimestamp(), is(offsetDateTime));
     }
 
     @Test
