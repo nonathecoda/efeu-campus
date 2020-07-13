@@ -19,7 +19,6 @@ build:
   stage: build
   image: maven:3.6.0-jdk-13
   script:
-    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
     - mvn $MAVEN_CLI_OPTS package
 
 docker:
