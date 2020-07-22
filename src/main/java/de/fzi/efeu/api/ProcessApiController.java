@@ -41,7 +41,12 @@ public class ProcessApiController implements ProcessApi {
 
     @Override
     public ResponseEntity<String> plan() {
-        processService.plan();
+        try {
+            processService.plan();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         return ResponseEntity.ok("");
     }
 

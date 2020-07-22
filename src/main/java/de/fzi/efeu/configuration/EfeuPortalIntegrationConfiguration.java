@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import de.fzi.efeu.efeuportal.ApiClient;
+import de.fzi.efeu.efeuportal.api.ContactApi;
 import de.fzi.efeu.efeuportal.api.OrderApi;
 import de.fzi.efeu.efeuportal.auth.JwtAuthenticator;
 
@@ -33,4 +34,7 @@ public class EfeuPortalIntegrationConfiguration {
     public OrderApi orderApi() {
         return new OrderApi(apiClient());
     }
+
+    @Bean
+    public ContactApi contactApi() { return new ContactApi(apiClient()); }
 }
