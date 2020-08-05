@@ -22,14 +22,47 @@ public class BoxOrderService {
     private OrderApi orderApi;
 
     @Autowired
+    private OrderSearchService orderSearchService;
+
+    @Autowired
     private TimeSlotService timeSlotService;
 
-    public void createAndPersistMissingBoxOrders(final List<EfCaOrder> packageOrders) throws ApiException, ParseException {
+    public void createAndPersistMissingBoxOrders() throws ApiException, ParseException {
+        List<EfCaOrder> packageOrders = orderSearchService.findNewOrModifiedPackageOrders();
         for (EfCaOrder o : packageOrders) {
             if (o.getLinkedBoxOrderId() == null) {
                 createMissingBoxOrdersForPackageOrder(o);
             }
         }
+    }
+
+    public void setBoxOrdersReadyForPlanning() throws ApiException {
+        List<EfCaOrder> boxOrders = orderSearchService.findNewOrModifiedBoxOrders();
+        for (EfCaOrder boxOrder : boxOrders) {
+            if (isBoxOrderReadyForPlanning(boxOrder)) {
+                updateBoxOrderReadyForPlanning(boxOrder);
+            }
+        }
+    }
+
+    public void exportReadyForPlanningOrders() throws ApiException {
+        List<EfCaOrder> readyForPlanningOrders = orderSearchService.findReadyForPlanningBoxOrders();
+        EfCaModelCollector modelCollector = new EfCaModelCollector();
+        for (final EfCaOrder readyForPlanningOrder : readyForPlanningOrders) {
+            modelCollector.addIdentsItem(readyForPlanningOrder.getIdent());
+        }
+        orderApi.postAddWebApiOrder(modelCollector);
+    }
+
+    private boolean isBoxOrderReadyForPlanning(final EfCaOrder boxOrder) {
+        return boxOrder.getPickup() != null && boxOrder.getDelivery() != null
+                && boxOrder.getPickupTimeSlots() != null && boxOrder.getDeliveryTimeSlots() != null
+                && !boxOrder.getPickupTimeSlots().isEmpty() && ! boxOrder.getDeliveryTimeSlots().isEmpty();
+    }
+
+    private void updateBoxOrderReadyForPlanning(final EfCaOrder boxOrder) throws ApiException {
+        boxOrder.state(OrderState.READY_FOR_PLANNING.name());
+        orderApi.putOrder(boxOrder);
     }
 
     private void createMissingBoxOrdersForPackageOrder(final EfCaOrder packageOrder) throws ApiException,

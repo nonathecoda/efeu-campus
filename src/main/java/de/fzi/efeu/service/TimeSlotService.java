@@ -24,6 +24,11 @@ public class TimeSlotService {
     @Autowired
     private ContactApi contactApi;
 
+    public EfCaOrder setBoxOrderPickupTimeSlotsFromStart(final EfCaOrder order, final OffsetDateTime start) {
+        order.setPickupTimeSlots(List.of(new EfCaDateTimeSlot().start(start).end(start.plusDays(1))));
+        return order;
+    }
+
     public EfCaOrder setBoxOrderPickupTimeSlotsFromContact(final EfCaOrder order) throws ParseException, ApiException {
         EfCaContactResp pickupContact = contactApi.findContactsByFinder(
                 new EfCaContact().ident(order.getPickup().getStorageIds().getContactId()));

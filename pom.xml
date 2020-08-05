@@ -18,7 +18,7 @@
         <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
         <h2.version>1.4.197</h2.version>
         <hamcrest.version>2.2</hamcrest.version>
-        <efeuportal.version>0.0.5-SNAPSHOT</efeuportal.version>
+        <efeuportal.version>0.0.8-SNAPSHOT</efeuportal.version>
         <modelmapper.version>2.3.8</modelmapper.version>
     </properties>
     <parent>
@@ -219,13 +219,6 @@
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
             <version>${modelmapper.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>de.fzi.lieferbot</groupId>
-            <artifactId>lieferbot-e-data-model</artifactId>
-            <version>0.1-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>C:/git/lso/efeu-simulation/lieferbot-e-data-model-0.1-SNAPSHOT.jar</systemPath>
         </dependency>
 
     </dependencies>

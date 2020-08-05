@@ -35,7 +35,12 @@ public class ProcessApiController implements ProcessApi {
 
     @Override
     public ResponseEntity<String> fixTrip(final String id) {
-        processService.fixTrip(id);
+        try {
+            processService.fixTrip(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         return ResponseEntity.ok("");
     }
 

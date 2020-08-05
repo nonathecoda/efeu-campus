@@ -45,7 +45,7 @@ public class ModelMapperConfiguration {
         return modelMapper;
     }
 
-    public void configureBoxStatusMapping(ModelMapper modelMapper) {
+    private void configureBoxStatusMapping(ModelMapper modelMapper) {
         modelMapper
                 .typeMap(de.fzi.efeu.model.BoxStatus.class, BoxStatus.class)
                 .addMappings(mapper -> {
@@ -61,7 +61,7 @@ public class ModelMapperConfiguration {
         });
     }
 
-    public void configureChargingStationStatusMapping(ModelMapper modelMapper) {
+    private void configureChargingStationStatusMapping(ModelMapper modelMapper) {
         modelMapper
                 .typeMap(de.fzi.efeu.model.ChargingStationStatus.class, ChargingStationStatus.class)
                 .addMappings(mapper -> {
@@ -75,7 +75,7 @@ public class ModelMapperConfiguration {
                 });
     }
 
-    public void configureMountStatusMapping(ModelMapper modelMapper) {
+    private void configureMountStatusMapping(ModelMapper modelMapper) {
         modelMapper
                 .typeMap(de.fzi.efeu.model.MountStatus.class, MountStatus.class)
                 .addMappings(mapper -> {
@@ -89,7 +89,7 @@ public class ModelMapperConfiguration {
         });
     }
 
-    public void configureVehicleStatusMapping(ModelMapper modelMapper) {
+    private void configureVehicleStatusMapping(ModelMapper modelMapper) {
         modelMapper
                 .typeMap(de.fzi.efeu.model.VehicleStatus.class, VehicleStatus.class)
                 .addMappings(mapper -> {

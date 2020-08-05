@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import de.fzi.efeu.efeuportal.ApiClient;
 import de.fzi.efeu.efeuportal.api.ContactApi;
 import de.fzi.efeu.efeuportal.api.OrderApi;
+import de.fzi.efeu.efeuportal.api.ProcessMgmtApi;
 import de.fzi.efeu.efeuportal.auth.JwtAuthenticator;
 
 @Configuration
@@ -14,6 +15,12 @@ public class EfeuPortalIntegrationConfiguration {
 
     @Value("${efeuportal.url}")
     private String efeuPortalUrl;
+
+    @Value("${efeuportal.user}")
+    private String efeuPortalUser;
+
+    @Value("${efeuportal.password}")
+    private String efeuPortalPassword;
 
     @Bean
     public ApiClient apiClient() {
@@ -24,8 +31,8 @@ public class EfeuPortalIntegrationConfiguration {
                 .getHttpClient()
                 .newBuilder().authenticator(new JwtAuthenticator(
                         apiClient,
-                        "efeusystem@efeuCampus.eu",
-                        "geheim"))
+                        efeuPortalUser,
+                        efeuPortalPassword))
                 .build());
         return apiClient;
     }
@@ -37,4 +44,7 @@ public class EfeuPortalIntegrationConfiguration {
 
     @Bean
     public ContactApi contactApi() { return new ContactApi(apiClient()); }
+
+    @Bean
+    public ProcessMgmtApi processMgmtApi() { return new ProcessMgmtApi(apiClient()); }
 }
