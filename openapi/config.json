@@ -1,6 +1,6 @@
 {
     "apiPackage": "de.fzi.efeu.api",
-    "artifactId": "process-management",
+    "artifactId": "recharging-scheduling",
     "basePackage": "de.fzi.efeu",
     "configPackage": "de.fzi.efeu.configuration",
     "dateLibrary": "java8",
@@ -9,6 +9,6 @@
     "licenseName": "",
     "licenseUrl": "",
     "modelPackage": "de.fzi.efeu.model",
-    "title": "Process management",
+    "title": "Recharging Scheduling",
     "useOptional": true
 }
