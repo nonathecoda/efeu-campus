@@ -11,11 +11,6 @@ import org.modelmapper.spi.MappingContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import de.fzi.efeu.db.model.BoxStatus;
-import de.fzi.efeu.db.model.ChargingStationStatus;
-import de.fzi.efeu.db.model.MountStatus;
-import de.fzi.efeu.db.model.VehicleStatus;
-
 @Configuration
 public class ModelMapperConfiguration {
 

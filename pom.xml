@@ -45,7 +45,7 @@
     
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
-        <finalName>process-management</finalName>
+        <finalName>recharging-scheduling</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -209,12 +209,7 @@
             <version>${hamcrest.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>de.fzi.efeu</groupId>
-            <artifactId>efeuportal-client</artifactId>
-            <version>${efeuportal.version}</version>
-            <scope>compile</scope>
-        </dependency>
+
         <dependency>
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>

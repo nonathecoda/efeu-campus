@@ -1,580 +1,90 @@
 openapi: 3.0.1
 info:
-  title: Process management
-  description: Process management
+  title: Recharging Scheduling
+  description: Recharging Scheduling
   version: 1.0.0
 servers:
 - url: /
+tags:
+  - name: Recharging Scheduling
+    description: Recharching Scheduling Service
 paths:
-  /process/health/:
+  /getInitialChargingOrders/:
     get:
       tags:
-        - Process
-      operationId: getHealth
-      responses:
-        200:
-          description: Success
-          content:
-            text/plain:
-              schema:
-                type: string
-  /process/plan:
-    post:
-      tags:
-        - Process
-      operationId: plan
-      responses:
-        200:
-          description: Success
-          content:
-            text/plain:
-              schema:
-                type: string
-  /process/trips/{id}/fix:
-    post:
-      tags:
-        - Process
-      operationId: fixTrip
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
-          description: efeu ID
-      responses:
-        200:
-          description: Success
-          content:
-            text/plain:
-              schema:
-                type: string
-  /process/trips/update/:
-    post:
-      tags:
-        - Process
-      operationId: updateTrips
-      responses:
-        200:
-          description: Success
-          content:
-            text/plain:
-              schema:
-                type: string
-  /process/orders/update/:
-    post:
-      tags:
-        - Process
-      operationId: updateOrders
-      responses:
-        200:
-          description: Success
-          content:
-            text/plain:
-              schema:
-                type: string
-  /boxStatus/:
-    get:
-      tags:
-        - BoxStatus
-      description: ''
-      operationId: getBoxStatusList
+        - Recharging Scheduling
+      summary: get initial recharging order for the day
+      operationId: getInitialChargingOrders
       responses:
         200:
           description: Success
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/BoxStatus'
-  /boxStatus/{id}:
-    get:
-      tags:
-        - BoxStatus
-      operationId: getBoxStatus
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
-          description: efeu ID
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BoxStatus'
-    post:
-      tags:
-        - BoxStatus
-      operationId: createBoxStatus
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
-          description: efeu ID
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BoxStatus'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BoxStatus'
-    put:
-      tags:
-        - BoxStatus
-      operationId: updateBoxStatus
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
-          description: efeu ID
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BoxStatus'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BoxStatus'
-    delete:
-      tags:
-        - BoxStatus
-      operationId: deleteBoxStatus
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
-          description: efeu ID
-      responses:
-        200:
-          description: Success
-          content:
-            text/plain:
-              schema:
-                type: string
-  /vehicleStatus/:
-    get:
-      tags:
-        - VehicleStatus
-      description: ''
-      operationId: getVehicleStatusList
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/VehicleStatus'
-  /vehicleStatus/{id}:
-    get:
-      tags:
-        - VehicleStatus
-      operationId: getVehicleStatus
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
-          description: efeu ID
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/VehicleStatus'
-    post:
-      tags:
-        - VehicleStatus
-      operationId: createVehicleStatus
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
-          description: efeu ID
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/VehicleStatus'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/VehicleStatus'
-    put:
-      tags:
-        - VehicleStatus
-      operationId: updateVehicleStatus
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
-          description: efeu ID
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/VehicleStatus'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/VehicleStatus'
-    delete:
-      tags:
-        - VehicleStatus
-      operationId: deleteVehicleStatus
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
-          description: efeu ID
-      responses:
-        200:
-          description: Success
-          content:
-            text/plain:
-              schema:
-                type: string
-  /mountStatus/:
-    get:
-      tags:
-        - MountStatus
-      description: ''
-      operationId: getMountStatusList
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/MountStatus'
-  /mountStatus/{id}:
-    get:
-      tags:
-        - MountStatus
-      operationId: getMountStatus
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
-          description: efeu ID
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MountStatus'
-    post:
-      tags:
-        - MountStatus
-      operationId: createMountStatus
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
-          description: efeu ID
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/MountStatus'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MountStatus'
-    put:
-      tags:
-        - MountStatus
-      operationId: updateMountStatus
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
-          description: efeu ID
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/MountStatus'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MountStatus'
-    delete:
-      tags:
-        - MountStatus
-      operationId: deleteMountStatus
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
-          description: efeu ID
-      responses:
-        200:
-          description: Success
-          content:
-            text/plain:
-              schema:
-                type: string
-  /chargingStationStatus/:
-    get:
-      tags:
-        - ChargingStationStatus
-      description: ''
-      operationId: getChargingStationList
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ChargingStationStatus'
-  /chargingStationStatus/{id}:
-    get:
-      tags:
-        - ChargingStationStatus
-      operationId: getChargingStationStatus
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
-          description: efeu ID
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ChargingStationStatus'
-    post:
-      tags:
-        - ChargingStationStatus
-      operationId: createChargingStationStatus
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
-          description: efeu ID
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ChargingStationStatus'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ChargingStationStatus'
-    put:
-      tags:
-        - ChargingStationStatus
-      operationId: updateChargingStationStatus
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
-          description: efeu ID
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ChargingStationStatus'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ChargingStationStatus'
-    delete:
-      tags:
-        - ChargingStationStatus
-      operationId: deleteChargingStationStatus
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
-          description: efeu ID
-      responses:
-        200:
-          description: Success
-          content:
-            text/plain:
-              schema:
-                type: string
+                $ref: '#/components/schemas/chargingOrder'
+        400:
+          description: Failure
+          content: {}
+    x-openapi-router-controller: de.fzi.efeu.api.HealthController
 components:
   schemas:
-    BoxStatus:
+    chargingOrder:
       required:
-        - id
-        - state
-        - latitude
-        - longitude
-        - boxLoad
-        - timestamp
+        - start
+        - end
+        - vehicle
+        - chargingStation
       type: object
       properties:
-        id:
+        start:
           type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+        vehicle:
+          type: string
+        charging station:
+          type: string
+    statusBox:
+      required:
+        - boxId
+        - boxState
+        - boxPosition
+        - boxLoad
+        - boxChangeTimestamp
+      type: object
+      properties:
+        boxId:
+          type: integer
         boxState:
           type: string
           enum:
-            - Free
-            - InUse
-            - Dirty
-            - Disrupted
-        latitude:
-          type: number
-          format: float
-        longitude:
-          type: number
-          format: float
+            - idle
+            - inUse
+            - unclean
+            - disruption
+        boxPosition:
+          type: object
+          required:
+            - lat
+            - long
+          properties:
+            lat:
+              type: number
+              format: float
+            long:
+              type: number
+              format: float
         boxLoad:
           type: string
           enum:
-            - Empty
-            - Full
-        timestamp:
+            - empty
+            - loaded
+        boxChangeTimestamp:
           type: string
           format: date-time
         vehicleId:
-          type: string
-        mountId:
-          type: string
-    VehicleStatus:
-      required:
-          - id
-          - state
-          - latitude
-          - longitude
-          - remainingRange
-          - timestamp
-      type: object
-      properties:
-        id:
-          type: string
-        vehicleState:
-          type: string
-          enum:
-            - Idle
-            - Driving
-            - Recharging
-            - Loading
-            - Waiting
-            - Disrupted
-        latitude:
-          type: number
-          format: float
-        longitude:
-          type: number
-          format: float
-        boxId:
-          type: string
-        remainingRange:
           type: integer
-        timestamp:
-          type: string
-          format: date-time
-    MountStatus:
-      required:
-        - id
-        - state
-        - timestamp
-      type: object
-      properties:
-        id:
-          type: string
-        mountState:
-          type: string
-          enum:
-            - Free
-            - InUse
-            - Disrupted
-        boxId:
-          type: string
-        timestamp:
-          type: string
-          format: date-time
-    ChargingStationStatus:
-      required:
-        - id
-        - state
-        - timestamp
-      type: object
-      properties:
-        id:
-          type: string
-        chargingStationState:
-          type: string
-          enum:
-            - Free
-            - InUse
-            - Disrupted
-        vehicleId:
-          type: string
-        timestamp:
-          type: string
-          format: date-time
+        mountId:
+          type: integer
