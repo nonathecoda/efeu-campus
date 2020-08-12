@@ -1,118 +1,116 @@
 package de.fzi.efeu.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.time.OffsetDateTime;
-import org.openapitools.jackson.nullable.JsonNullable;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import java.time.OffsetDateTime;
+import java.util.Objects;
 
 /**
  * ChargingOrder
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-08-06T17:41:28.964+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-08-12T13:24:01.196099800+02:00[Europe/Berlin]")
 
 public class ChargingOrder   {
-  @JsonProperty("start")
+  @JsonProperty("connection_time")
   @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
-  private OffsetDateTime start;
+  private OffsetDateTime connectionTime;
 
-  @JsonProperty("end")
+  @JsonProperty("disconnection_time")
   @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
-  private OffsetDateTime end;
+  private OffsetDateTime disconnectionTime;
 
-  @JsonProperty("vehicle")
-  private String vehicle;
+  @JsonProperty("vehicleId")
+  private String vehicleId;
 
-  @JsonProperty("charging station")
-  private String chargingStation;
+  @JsonProperty("charging station Id")
+  private String chargingStationId;
 
-  public ChargingOrder start(OffsetDateTime start) {
-    this.start = start;
+  public ChargingOrder connectionTime(OffsetDateTime connectionTime) {
+    this.connectionTime = connectionTime;
     return this;
   }
 
   /**
-   * Get start
-   * @return start
+   * Get connectionTime
+   * @return connectionTime
   */
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
   @Valid
 
-  public OffsetDateTime getStart() {
-    return start;
+  public OffsetDateTime getConnectionTime() {
+    return connectionTime;
   }
 
-  public void setStart(OffsetDateTime start) {
-    this.start = start;
+  public void setConnectionTime(OffsetDateTime connectionTime) {
+    this.connectionTime = connectionTime;
   }
 
-  public ChargingOrder end(OffsetDateTime end) {
-    this.end = end;
+  public ChargingOrder disconnectionTime(OffsetDateTime disconnectionTime) {
+    this.disconnectionTime = disconnectionTime;
     return this;
   }
 
   /**
-   * Get end
-   * @return end
+   * Get disconnectionTime
+   * @return disconnectionTime
   */
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
   @Valid
 
-  public OffsetDateTime getEnd() {
-    return end;
+  public OffsetDateTime getDisconnectionTime() {
+    return disconnectionTime;
   }
 
-  public void setEnd(OffsetDateTime end) {
-    this.end = end;
+  public void setDisconnectionTime(OffsetDateTime disconnectionTime) {
+    this.disconnectionTime = disconnectionTime;
   }
 
-  public ChargingOrder vehicle(String vehicle) {
-    this.vehicle = vehicle;
+  public ChargingOrder vehicleId(String vehicleId) {
+    this.vehicleId = vehicleId;
     return this;
   }
 
   /**
-   * Get vehicle
-   * @return vehicle
+   * Get vehicleId
+   * @return vehicleId
   */
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
 
-  public String getVehicle() {
-    return vehicle;
+  public String getVehicleId() {
+    return vehicleId;
   }
 
-  public void setVehicle(String vehicle) {
-    this.vehicle = vehicle;
+  public void setVehicleId(String vehicleId) {
+    this.vehicleId = vehicleId;
   }
 
-  public ChargingOrder chargingStation(String chargingStation) {
-    this.chargingStation = chargingStation;
+  public ChargingOrder chargingStationId(String chargingStationId) {
+    this.chargingStationId = chargingStationId;
     return this;
   }
 
   /**
-   * Get chargingStation
-   * @return chargingStation
+   * Get chargingStationId
+   * @return chargingStationId
   */
   @ApiModelProperty(value = "")
 
 
-  public String getChargingStation() {
-    return chargingStation;
+  public String getChargingStationId() {
+    return chargingStationId;
   }
 
-  public void setChargingStation(String chargingStation) {
-    this.chargingStation = chargingStation;
+  public void setChargingStationId(String chargingStationId) {
+    this.chargingStationId = chargingStationId;
   }
 
 
@@ -125,15 +123,15 @@ public class ChargingOrder   {
       return false;
     }
     ChargingOrder chargingOrder = (ChargingOrder) o;
-    return Objects.equals(this.start, chargingOrder.start) &&
-        Objects.equals(this.end, chargingOrder.end) &&
-        Objects.equals(this.vehicle, chargingOrder.vehicle) &&
-        Objects.equals(this.chargingStation, chargingOrder.chargingStation);
+    return Objects.equals(this.connectionTime, chargingOrder.connectionTime) &&
+        Objects.equals(this.disconnectionTime, chargingOrder.disconnectionTime) &&
+        Objects.equals(this.vehicleId, chargingOrder.vehicleId) &&
+        Objects.equals(this.chargingStationId, chargingOrder.chargingStationId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(start, end, vehicle, chargingStation);
+    return Objects.hash(connectionTime, disconnectionTime, vehicleId, chargingStationId);
   }
 
   @Override
@@ -141,10 +139,10 @@ public class ChargingOrder   {
     StringBuilder sb = new StringBuilder();
     sb.append("class ChargingOrder {\n");
     
-    sb.append("    start: ").append(toIndentedString(start)).append("\n");
-    sb.append("    end: ").append(toIndentedString(end)).append("\n");
-    sb.append("    vehicle: ").append(toIndentedString(vehicle)).append("\n");
-    sb.append("    chargingStation: ").append(toIndentedString(chargingStation)).append("\n");
+    sb.append("    connectionTime: ").append(toIndentedString(connectionTime)).append("\n");
+    sb.append("    disconnectionTime: ").append(toIndentedString(disconnectionTime)).append("\n");
+    sb.append("    vehicleId: ").append(toIndentedString(vehicleId)).append("\n");
+    sb.append("    chargingStationId: ").append(toIndentedString(chargingStationId)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -12,10 +12,11 @@ public class ChargingOrderCreator {
 
         ChargingOrder chargingOrder = new ChargingOrder();
 
-        chargingOrder.setStart(OffsetDateTime.parse("2020-07-31T08:00-06:00"));
-        chargingOrder.setEnd(OffsetDateTime.parse("2020-07-31T10:00-06:00"));
+        chargingOrder.setConnectionTime(OffsetDateTime.parse("2020-07-31T08:00-06:00"));
+        chargingOrder.setDisconnectionTime(OffsetDateTime.parse("2020-07-31T10:00-06:00"));
 
-        chargingOrder.setChargingStation();
+        chargingOrder.setChargingStationId();
+        chargingOrder.setVehicleId();
 
         return chargingOrder;
     }

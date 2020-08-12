@@ -1,14 +1,12 @@
 package de.fzi.efeu.db.converter;
 
-import java.io.IOException;
-
-import javax.persistence.AttributeConverter;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import de.fzi.efeu.efeuportal.model.EfCaTour;
+
+import javax.persistence.AttributeConverter;
+import java.io.IOException;
 
 public class EfCaTourConverter implements AttributeConverter<EfCaTour, String> {
 

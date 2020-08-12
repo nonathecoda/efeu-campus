@@ -9,12 +9,12 @@ tags:
   - name: Recharging Scheduling
     description: Recharching Scheduling Service
 paths:
-  /getInitialChargingOrders/:
-    get:
+  /ChargingOrders/: #selber benennen
+    get: #Rest-Befehl
       tags:
         - Recharging Scheduling
-      summary: get initial recharging order for the day
-      operationId: getInitialChargingOrders
+      summary: get initial recharging order for the day #für mich
+      operationId: getInitialChargingOrders #
       responses:
         200:
           description: Success
