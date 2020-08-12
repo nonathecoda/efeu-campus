@@ -215,6 +215,11 @@
             <artifactId>modelmapper</artifactId>
             <version>${modelmapper.version}</version>
         </dependency>
+        <dependency>
+            <groupId>de.fzi.efeu</groupId>
+            <artifactId>efeuportal-client</artifactId>
+            <version>0.0.5-SNAPSHOT</version>
+        </dependency>
 
     </dependencies>
 </project>

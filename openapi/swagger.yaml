@@ -30,25 +30,25 @@ components:
   schemas:
     chargingOrder:
       required:
-        - start
-        - end
-        - vehicle
-        - chargingStation
+        - connection_time
+        - disconnection_time
+        - vehicleId
+        - chargingStationId
       type: object
       properties:
-        start:
+        connection_time:
           type: string
           format: date-time
-        end:
+        disconnection_time:
           type: string
           format: date-time
-        vehicle:
+        vehicleId:
           type: string
-        charging station:
+        charging station Id:
           type: string
-    statusBox:
+    VehicleSoC:
       required:
-        - boxId
+        - vehicleId
         - boxState
         - boxPosition
         - boxLoad
