@@ -10,18 +10,18 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * VehicleSoCBoxPosition
+ * VehicleVehiclePosition
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-08-12T13:24:01.196099800+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-08-24T14:20:58.073280700+02:00[Europe/Berlin]")
 
-public class VehicleSoCBoxPosition   {
+public class VehicleVehiclePosition   {
   @JsonProperty("lat")
   private Float lat;
 
   @JsonProperty("long")
   private Float _long;
 
-  public VehicleSoCBoxPosition lat(Float lat) {
+  public VehicleVehiclePosition lat(Float lat) {
     this.lat = lat;
     return this;
   }
@@ -42,7 +42,7 @@ public class VehicleSoCBoxPosition   {
     this.lat = lat;
   }
 
-  public VehicleSoCBoxPosition _long(Float _long) {
+  public VehicleVehiclePosition _long(Float _long) {
     this._long = _long;
     return this;
   }
@@ -72,9 +72,9 @@ public class VehicleSoCBoxPosition   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    VehicleSoCBoxPosition vehicleSoCBoxPosition = (VehicleSoCBoxPosition) o;
-    return Objects.equals(this.lat, vehicleSoCBoxPosition.lat) &&
-        Objects.equals(this._long, vehicleSoCBoxPosition._long);
+    VehicleVehiclePosition vehicleVehiclePosition = (VehicleVehiclePosition) o;
+    return Objects.equals(this.lat, vehicleVehiclePosition.lat) &&
+        Objects.equals(this._long, vehicleVehiclePosition._long);
   }
 
   @Override
@@ -85,7 +85,7 @@ public class VehicleSoCBoxPosition   {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class VehicleSoCBoxPosition {\n");
+    sb.append("class VehicleVehiclePosition {\n");
     
     sb.append("    lat: ").append(toIndentedString(lat)).append("\n");
     sb.append("    _long: ").append(toIndentedString(_long)).append("\n");

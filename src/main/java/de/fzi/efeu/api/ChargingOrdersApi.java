@@ -27,7 +27,7 @@ import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-08-12T13:24:01.196099800+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-08-24T14:20:58.073280700+02:00[Europe/Berlin]")
 
 @Validated
 @Api(value = "ChargingOrders", description = "the ChargingOrders API")
@@ -43,14 +43,14 @@ public interface ChargingOrdersApi {
      * @return Success (status code 200)
      *         or Failure (status code 400)
      */
-    @ApiOperation(value = "get initial recharging order for the day", nickname = "getInitialCharging", notes = "", response = ChargingOrder.class, tags={ "Recharging Scheduling", })
+    @ApiOperation(value = "get initial recharging order for the day", nickname = "getInitialChargingOrders", notes = "", response = ChargingOrder.class, tags={ "Recharging Scheduling", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Success", response = ChargingOrder.class),
         @ApiResponse(code = 400, message = "Failure") })
     @RequestMapping(value = "/ChargingOrders/",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    default ResponseEntity<ChargingOrder> getInitialCharging() {
+    default ResponseEntity<ChargingOrder> getInitialChargingOrders() {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {

@@ -46,25 +46,24 @@ components:
           type: string
         charging station Id:
           type: string
-    VehicleSoC:
+    Vehicle:
       required:
         - vehicleId
-        - boxState
-        - boxPosition
-        - boxLoad
-        - boxChangeTimestamp
+        - vehicleState
+        - vehiclePosition
+        - vehicleSoC
       type: object
       properties:
-        boxId:
-          type: integer
-        boxState:
+        vehicleId:
+          type: string
+        vehicleState:
           type: string
           enum:
             - idle
-            - inUse
-            - unclean
+            - driving
+            - recharging
             - disruption
-        boxPosition:
+        vehiclePosition:
           type: object
           required:
             - lat
@@ -76,15 +75,12 @@ components:
             long:
               type: number
               format: float
-        boxLoad:
-          type: string
-          enum:
-            - empty
-            - loaded
-        boxChangeTimestamp:
-          type: string
-          format: date-time
-        vehicleId:
-          type: integer
-        mountId:
-          type: integer
+        vehicleSoC:
+          type: float
+    ChargingPlanManager:
+      required:
+        - chargeOrder
+      type: object
+      properties:
+        chargeOrder:
+          type: chargingOrder

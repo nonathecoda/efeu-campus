@@ -11,7 +11,7 @@ import java.util.Objects;
 /**
  * ChargingOrder
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-08-12T13:24:01.196099800+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-08-24T14:20:58.073280700+02:00[Europe/Berlin]")
 
 public class ChargingOrder   {
   @JsonProperty("connection_time")

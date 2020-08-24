@@ -1,0 +1,83 @@
+package de.fzi.efeu.model;
+
+import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import de.fzi.efeu.model.ChargingOrder;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import org.openapitools.jackson.nullable.JsonNullable;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
+
+/**
+ * ChargingPlanManager
+ */
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-08-24T14:20:58.073280700+02:00[Europe/Berlin]")
+
+public class ChargingPlanManager   {
+  @JsonProperty("chargeOrder")
+  private ChargingOrder chargeOrder = null;
+
+  public ChargingPlanManager chargeOrder(ChargingOrder chargeOrder) {
+    this.chargeOrder = chargeOrder;
+    return this;
+  }
+
+  /**
+   * Get chargeOrder
+   * @return chargeOrder
+  */
+  @ApiModelProperty(required = true, value = "")
+  @NotNull
+
+  @Valid
+
+  public ChargingOrder getChargeOrder() {
+    return chargeOrder;
+  }
+
+  public void setChargeOrder(ChargingOrder chargeOrder) {
+    this.chargeOrder = chargeOrder;
+  }
+
+
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    ChargingPlanManager chargingPlanManager = (ChargingPlanManager) o;
+    return Objects.equals(this.chargeOrder, chargingPlanManager.chargeOrder);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(chargeOrder);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class ChargingPlanManager {\n");
+    
+    sb.append("    chargeOrder: ").append(toIndentedString(chargeOrder)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
+}
+
