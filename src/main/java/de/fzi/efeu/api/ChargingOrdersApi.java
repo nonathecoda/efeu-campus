@@ -5,7 +5,6 @@
  */
 package de.fzi.efeu.api;
 
-import de.fzi.efeu.api_model.ChargingOrder;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,7 +16,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 
 import java.util.List;
 import java.util.Optional;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-09-02T10:03:59.283+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-09-02T10:27:20.357+02:00[Europe/Berlin]")
 
 @Validated
 @Api(value = "ChargingOrders", description = "the ChargingOrders API")
@@ -28,19 +27,19 @@ public interface ChargingOrdersApi {
     }
 
     /**
-     * GET /ChargingOrders/ : get initial recharging order for the day
+     * GET /ChargingOrders/ : get recharging order
      *
      * @return Success (status code 200)
      *         or Failure (status code 400)
      */
-    @ApiOperation(value = "get initial recharging order for the day", nickname = "getInitialChargingOrders", notes = "", response = ChargingOrder.class, responseContainer = "List", tags={ "Recharging Scheduling", })
+    @ApiOperation(value = "get recharging order", nickname = "getChargingOrders", notes = "", response = ChargingOrder.class, responseContainer = "List", tags={ "Recharging Scheduling", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Success", response = ChargingOrder.class, responseContainer = "List"),
         @ApiResponse(code = 400, message = "Failure") })
     @RequestMapping(value = "/ChargingOrders/",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    default ResponseEntity<List<ChargingOrder>> getInitialChargingOrders() {
+    default ResponseEntity<List<ChargingOrder>> getChargingOrders() {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
