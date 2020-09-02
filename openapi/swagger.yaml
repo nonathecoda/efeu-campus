@@ -13,15 +13,17 @@ paths:
     get: #Rest-Befehl
       tags:
         - Recharging Scheduling
-      summary: get initial recharging order for the day #für mich
-      operationId: getInitialChargingOrders #
+      summary: get recharging order #für mich
+      operationId: getChargingOrders #
       responses:
         200:
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/chargingOrder'
+                type: array
+                items:
+                  $ref: '#/components/schemas/chargingOrder'
         400:
           description: Failure
           content: {}
@@ -46,41 +48,3 @@ components:
           type: string
         charging station Id:
           type: string
-    Vehicle:
-      required:
-        - vehicleId
-        - vehicleState
-        - vehiclePosition
-        - vehicleSoC
-      type: object
-      properties:
-        vehicleId:
-          type: string
-        vehicleState:
-          type: string
-          enum:
-            - idle
-            - driving
-            - recharging
-            - disruption
-        vehiclePosition:
-          type: object
-          required:
-            - lat
-            - long
-          properties:
-            lat:
-              type: number
-              format: float
-            long:
-              type: number
-              format: float
-        vehicleSoC:
-          type: float
-    ChargingPlanManager:
-      required:
-        - chargeOrder
-      type: object
-      properties:
-        chargeOrder:
-          type: chargingOrder

@@ -1,6 +1,6 @@
 package de.fzi.efeu.service;
 
-import de.fzi.efeu.model.ChargingOrder;
+import de.fzi.efeu.api_model.ChargingOrder;
 import org.springframework.stereotype.Component;
 
 import java.time.OffsetDateTime;
@@ -19,6 +19,7 @@ public class ChargingOrderCreator {
         chargingOrder.setVehicleId();
 
         return chargingOrder;
+
     }
 
 

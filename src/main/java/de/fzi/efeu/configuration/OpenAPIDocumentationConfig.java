@@ -1,14 +1,10 @@
 package de.fzi.efeu.configuration;
 
-import java.util.Optional;
-
-import javax.servlet.ServletContext;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.util.UriComponentsBuilder;
 
+import org.springframework.web.util.UriComponentsBuilder;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -19,7 +15,10 @@ import springfox.documentation.spring.web.paths.RelativePathProvider;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-05-27T14:00:01.918549+02:00[Europe/Berlin]")
+import java.util.Optional;
+import javax.servlet.ServletContext;
+
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-09-02T10:03:59.283+02:00[Europe/Berlin]")
 
 @Configuration
 @EnableSwagger2
@@ -27,8 +26,8 @@ public class OpenAPIDocumentationConfig {
 
     ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-            .title("Process management")
-            .description("Process management")
+            .title("Recharging Scheduling")
+            .description("Recharging Scheduling")
             .license("")
             .licenseUrl("")
             .termsOfServiceUrl("")
@@ -38,7 +37,7 @@ public class OpenAPIDocumentationConfig {
     }
 
     @Bean
-    public Docket customImplementation(ServletContext servletContext, @Value("${openapi.Process management.base-path:}") String basePath) {
+    public Docket customImplementation(ServletContext servletContext, @Value("${openapi.Recharging Scheduling.base-path:}") String basePath) {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                     .apis(RequestHandlerSelectors.basePackage("de.fzi.efeu.api"))

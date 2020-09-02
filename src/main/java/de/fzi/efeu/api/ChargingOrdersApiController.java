@@ -1,10 +1,14 @@
 package de.fzi.efeu.api;
 
+import de.fzi.efeu.api_model.ChargingOrder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.NativeWebRequest;
+
+import java.util.List;
 import java.util.Optional;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-08-24T14:20:58.073280700+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-09-02T10:03:59.283+02:00[Europe/Berlin]")
 
 @Controller
 @RequestMapping("${openapi.Recharging Scheduling.base-path:}")
@@ -22,4 +26,8 @@ public class ChargingOrdersApiController implements ChargingOrdersApi {
         return Optional.ofNullable(request);
     }
 
+    @Override
+    public ResponseEntity<List<ChargingOrder>> getInitialChargingOrders() {
+        return null;
+    }
 }

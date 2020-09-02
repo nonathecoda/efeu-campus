@@ -24,6 +24,7 @@ public class EfeuPortalIntegrationConfiguration {
 
     @Bean
     public ApiClient apiClient() {
+
         ApiClient apiClient = new ApiClient()
                 .setVerifyingSsl(false)
                 .setBasePath(efeuPortalUrl);
