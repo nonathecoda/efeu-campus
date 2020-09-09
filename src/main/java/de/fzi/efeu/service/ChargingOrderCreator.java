@@ -1,24 +1,32 @@
 package de.fzi.efeu.service;
 
-import de.fzi.efeu.api_model.ChargingOrder;
+import de.fzi.efeu.model.ChargingOrder;
+import de.fzi.efeu.efeuportal.model.EfCaChargingStation;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
 import java.time.OffsetDateTime;
+import java.util.Date;
 
 @Component
 public class ChargingOrderCreator {
 
     public ChargingOrder createChargingOrder () {
 
-        ChargingOrder chargingOrder = new ChargingOrder();
+        // Daily fixed charging time blocks, independent of logistic tours
+        // Daily from 1:00 to 5:00 a.m, 12:00 to 12:45 a.m
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String today = df.format(new Date()); // Get date
 
-        chargingOrder.setConnectionTime(OffsetDateTime.parse("2020-07-31T08:00-06:00"));
-        chargingOrder.setDisconnectionTime(OffsetDateTime.parse("2020-07-31T10:00-06:00"));
+        ChargingOrder chargingOrder_fix = new ChargingOrder();
 
-        chargingOrder.setChargingStationId();
-        chargingOrder.setVehicleId();
+        chargingOrder_fix.setConnectionTime(OffsetDateTime.parse("2020-09-09T00:00-05:00"));
+        chargingOrder_fix.setDisconnectionTime(OffsetDateTime.parse("2020-09-09T12:00-12:45"));
 
-        return chargingOrder;
+        chargingOrder_fix.setChargingStationId();
+        chargingOrder_fix.setVehicleId();
+
+        return chargingOrder_fix;
 
     }
 

@@ -1,16 +1,19 @@
-package de.fzi.efeu.api_model;
+package de.fzi.efeu.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.OffsetDateTime;
+import org.openapitools.jackson.nullable.JsonNullable;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
  * ChargingOrder
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-09-02T10:03:59.283+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-09-08T11:27:14.804+02:00[Europe/Berlin]")
 
 public class ChargingOrder   {
   @JsonProperty("connection_time")
@@ -26,6 +29,9 @@ public class ChargingOrder   {
 
   @JsonProperty("charging station Id")
   private String chargingStationId;
+
+  @JsonProperty("amount_energy")
+  private Float amountEnergy = null;
 
   public ChargingOrder connectionTime(OffsetDateTime connectionTime) {
     this.connectionTime = connectionTime;
@@ -112,6 +118,27 @@ public class ChargingOrder   {
     this.chargingStationId = chargingStationId;
   }
 
+  public ChargingOrder amountEnergy(Float amountEnergy) {
+    this.amountEnergy = amountEnergy;
+    return this;
+  }
+
+  /**
+   * Get amountEnergy
+   * @return amountEnergy
+  */
+  @ApiModelProperty(required = true, value = "")
+  @NotNull
+
+
+  public Float getAmountEnergy() {
+    return amountEnergy;
+  }
+
+  public void setAmountEnergy(Float amountEnergy) {
+    this.amountEnergy = amountEnergy;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -125,12 +152,13 @@ public class ChargingOrder   {
     return Objects.equals(this.connectionTime, chargingOrder.connectionTime) &&
         Objects.equals(this.disconnectionTime, chargingOrder.disconnectionTime) &&
         Objects.equals(this.vehicleId, chargingOrder.vehicleId) &&
-        Objects.equals(this.chargingStationId, chargingOrder.chargingStationId);
+        Objects.equals(this.chargingStationId, chargingOrder.chargingStationId) &&
+        Objects.equals(this.amountEnergy, chargingOrder.amountEnergy);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(connectionTime, disconnectionTime, vehicleId, chargingStationId);
+    return Objects.hash(connectionTime, disconnectionTime, vehicleId, chargingStationId, amountEnergy);
   }
 
   @Override
@@ -142,6 +170,7 @@ public class ChargingOrder   {
     sb.append("    disconnectionTime: ").append(toIndentedString(disconnectionTime)).append("\n");
     sb.append("    vehicleId: ").append(toIndentedString(vehicleId)).append("\n");
     sb.append("    chargingStationId: ").append(toIndentedString(chargingStationId)).append("\n");
+    sb.append("    amountEnergy: ").append(toIndentedString(amountEnergy)).append("\n");
     sb.append("}");
     return sb.toString();
   }

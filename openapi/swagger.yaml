@@ -36,6 +36,7 @@ components:
         - disconnection_time
         - vehicleId
         - chargingStationId
+        - amount_energy
       type: object
       properties:
         connection_time:
@@ -48,3 +49,5 @@ components:
           type: string
         charging station Id:
           type: string
+        amount_energy:
+          type: float

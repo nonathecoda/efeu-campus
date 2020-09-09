@@ -1,5 +1,5 @@
 java ^
--Dapi_models ^
+-Dmodels ^
 -Dapis ^
 -jar C:/Users/rd877/IdeaProjects/openapi-generator.jar generate ^
 -g spring ^
