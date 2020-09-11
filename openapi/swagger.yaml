@@ -46,8 +46,68 @@ components:
           type: string
           format: date-time
         vehicleId:
-          type: string
+          type: integer
         charging station Id:
-          type: string
+          type: integer
         amount_energy:
+          type: float
+    statusStation:
+      required:
+        - stationId
+        - stationState
+        - stationPosition
+        - stationChargeTimestamp
+      type: object
+      properties:
+        stationId:
+          type: integer
+        stationState:
+          type: string
+          enum:
+            - idle
+            - inUse
+            - disruption
+        stationPosition:
+          type: object
+          required:
+            - lat
+            - long
+          properties:
+            lat:
+              type: number
+              format: float
+            long:
+              type: number
+              format: float
+        stationChargeTimestamp:
+          type: string
+          format: date-time
+    statusVehicle:
+      required:
+        - vehicleId
+        - vehicleState
+        - vehiclePosition
+        - vehicleSoC
+      type: object
+      properties:
+        vehicleState:
+          type: string
+          enum:
+            - idle
+            - driving
+            - charging
+            - disruption
+        vehiclePosition:
+          type: object
+          required:
+            - lat
+            - long
+          properties:
+            lat:
+              type: number
+              format: float
+            long:
+              type: number
+              format: float
+        vehicleSoC:
           type: float

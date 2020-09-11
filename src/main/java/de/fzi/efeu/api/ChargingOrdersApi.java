@@ -27,7 +27,7 @@ import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-09-08T11:27:14.804+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-09-11T12:48:58.805+02:00[Europe/Berlin]")
 
 @Validated
 @Api(value = "ChargingOrders", description = "the ChargingOrders API")
@@ -54,7 +54,7 @@ public interface ChargingOrdersApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"charging station Id\" : \"charging station Id\", \"connection_time\" : \"2000-01-23T04:56:07.000+00:00\", \"amount_energy\" : \"\", \"vehicleId\" : \"vehicleId\", \"disconnection_time\" : \"2000-01-23T04:56:07.000+00:00\" }";
+                    String exampleString = "{ \"charging station Id\" : 6, \"connection_time\" : \"2000-01-23T04:56:07.000+00:00\", \"amount_energy\" : \"\", \"vehicleId\" : 0, \"disconnection_time\" : \"2000-01-23T04:56:07.000+00:00\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

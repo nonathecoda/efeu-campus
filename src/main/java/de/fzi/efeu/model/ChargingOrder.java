@@ -13,7 +13,7 @@ import javax.validation.constraints.*;
 /**
  * ChargingOrder
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-09-08T11:27:14.804+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-09-11T12:48:58.805+02:00[Europe/Berlin]")
 
 public class ChargingOrder   {
   @JsonProperty("connection_time")
@@ -25,10 +25,10 @@ public class ChargingOrder   {
   private OffsetDateTime disconnectionTime;
 
   @JsonProperty("vehicleId")
-  private String vehicleId;
+  private Integer vehicleId;
 
   @JsonProperty("charging station Id")
-  private String chargingStationId;
+  private Integer chargingStationId;
 
   @JsonProperty("amount_energy")
   private Float amountEnergy = null;
@@ -77,7 +77,7 @@ public class ChargingOrder   {
     this.disconnectionTime = disconnectionTime;
   }
 
-  public ChargingOrder vehicleId(String vehicleId) {
+  public ChargingOrder vehicleId(Integer vehicleId) {
     this.vehicleId = vehicleId;
     return this;
   }
@@ -90,15 +90,15 @@ public class ChargingOrder   {
   @NotNull
 
 
-  public String getVehicleId() {
+  public Integer getVehicleId() {
     return vehicleId;
   }
 
-  public void setVehicleId(String vehicleId) {
+  public void setVehicleId(Integer vehicleId) {
     this.vehicleId = vehicleId;
   }
 
-  public ChargingOrder chargingStationId(String chargingStationId) {
+  public ChargingOrder chargingStationId(Integer chargingStationId) {
     this.chargingStationId = chargingStationId;
     return this;
   }
@@ -110,11 +110,11 @@ public class ChargingOrder   {
   @ApiModelProperty(value = "")
 
 
-  public String getChargingStationId() {
+  public Integer getChargingStationId() {
     return chargingStationId;
   }
 
-  public void setChargingStationId(String chargingStationId) {
+  public void setChargingStationId(Integer chargingStationId) {
     this.chargingStationId = chargingStationId;
   }
 
