@@ -1,13 +1,11 @@
 package de.fzi.efeu.configuration;
 
+import de.fzi.efeu.efeuportal.api.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import de.fzi.efeu.efeuportal.ApiClient;
-import de.fzi.efeu.efeuportal.api.ContactApi;
-import de.fzi.efeu.efeuportal.api.OrderApi;
-import de.fzi.efeu.efeuportal.api.ProcessMgmtApi;
 import de.fzi.efeu.efeuportal.auth.JwtAuthenticator;
 
 @Configuration
@@ -48,4 +46,14 @@ public class EfeuPortalIntegrationConfiguration {
 
     @Bean
     public ProcessMgmtApi processMgmtApi() { return new ProcessMgmtApi(apiClient()); }
+
+    @Bean
+    public VehicleApi vehicleApi() {
+        return new VehicleApi(apiClient());
+    }
+
+    @Bean
+    public ChargingStationApi vehicleApi() {
+        return new VehicleApi(apiClient());
+    }
 }
