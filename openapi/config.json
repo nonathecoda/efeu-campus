@@ -10,5 +10,6 @@
     "licenseUrl": "",
     "modelPackage": "de.fzi.efeu.model",
     "title": "Recharging Scheduling",
-    "useOptional": true
+    "useOptional": true,
+    "useTags": true
 }

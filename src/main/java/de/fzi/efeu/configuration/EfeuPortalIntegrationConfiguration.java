@@ -53,7 +53,12 @@ public class EfeuPortalIntegrationConfiguration {
     }
 
     @Bean
-    public ChargingStationApi vehicleApi() {
-        return new VehicleApi(apiClient());
+    public ChargingStationApi chargingStationApi() {
+        return new ChargingStationApi(apiClient());
+    }
+
+    @Bean
+    public BoxMountingDeviceApi boxMountingDeviceApi() {
+        return new BoxMountingDeviceApi(apiClient());
     }
 }

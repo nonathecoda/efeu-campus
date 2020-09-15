@@ -5,7 +5,6 @@
  */
 package de.fzi.efeu.api;
 
-import de.fzi.efeu.model.ChargingOrder;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,39 +26,29 @@ import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-09-11T12:48:58.805+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-09-15T09:15:36.283107100+02:00[Europe/Berlin]")
 
 @Validated
-@Api(value = "ChargingOrders", description = "the ChargingOrders API")
-public interface ChargingOrdersApi {
+@Api(value = "RechargingScheduling", description = "the RechargingScheduling API")
+public interface RechargingSchedulingApi {
 
     default Optional<NativeWebRequest> getRequest() {
         return Optional.empty();
     }
 
     /**
-     * GET /ChargingOrders/ : get recharging order
+     * POST /scheduleRechargingOrders/ : schedule new recharging orders
      *
      * @return Success (status code 200)
      *         or Failure (status code 400)
      */
-    @ApiOperation(value = "get recharging order", nickname = "getChargingOrders", notes = "", response = ChargingOrder.class, responseContainer = "List", tags={ "Recharging Scheduling", })
+    @ApiOperation(value = "schedule new recharging orders", nickname = "scheduleRechargingOrders", notes = "", tags={ "RechargingScheduling", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Success", response = ChargingOrder.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "Success"),
         @ApiResponse(code = 400, message = "Failure") })
-    @RequestMapping(value = "/ChargingOrders/",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    default ResponseEntity<List<ChargingOrder>> getChargingOrders() {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"charging station Id\" : 6, \"connection_time\" : \"2000-01-23T04:56:07.000+00:00\", \"amount_energy\" : \"\", \"vehicleId\" : 0, \"disconnection_time\" : \"2000-01-23T04:56:07.000+00:00\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-            }
-        });
+    @RequestMapping(value = "/scheduleRechargingOrders/",
+        method = RequestMethod.POST)
+    default ResponseEntity<Void> scheduleRechargingOrders() {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }

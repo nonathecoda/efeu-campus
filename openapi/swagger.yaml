@@ -6,48 +6,19 @@ info:
 servers:
 - url: /
 tags:
-  - name: Recharging Scheduling
+  - name: RechargingScheduling
     description: Recharching Scheduling Service
 paths:
-  /ChargingOrders/: #selber benennen
-    get: #Rest-Befehl
+  /scheduleRechargingOrders/:
+    post:
       tags:
-        - Recharging Scheduling
-      summary: get recharging order #für mich
-      operationId: getChargingOrders #
+        - RechargingScheduling
+      summary: schedule new recharging orders
+      operationId: scheduleRechargingOrders
       responses:
         200:
           description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/chargingOrder'
+          content: {}
         400:
           description: Failure
           content: {}
-    x-openapi-router-controller: de.fzi.efeu.api.HealthController
-components:
-  schemas:
-    chargingOrder:
-      required:
-        - connection_time
-        - disconnection_time
-        - vehicleId
-        - chargingStationId
-        - amount_energy
-      type: object
-      properties:
-        connection_time:
-          type: string
-          format: date-time
-        disconnection_time:
-          type: string
-          format: date-time
-        vehicleId:
-          type: integer
-        charging station Id:
-          type: integer
-        amount_energy:
-          type: float
