@@ -61,4 +61,10 @@ public class EfeuPortalIntegrationConfiguration {
     public BoxMountingDeviceApi boxMountingDeviceApi() {
         return new BoxMountingDeviceApi(apiClient());
     }
+
+    @Bean
+    public AddressApi addressApi() { return new AddressApi(apiClient()); }
+
+    @Bean
+    public BuildingApi buildingApi() { return new BuildingApi(apiClient()); }
 }
