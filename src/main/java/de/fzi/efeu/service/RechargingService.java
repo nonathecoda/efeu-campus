@@ -142,14 +142,14 @@ public class RechargingService {
             final OffsetDateTime time) throws ApiException {
         EfCaDateTimeSlot orderTimeSlot = new EfCaDateTimeSlot()
                 .start(time)
-//                .end(time.plusHours(24));
-                .end(time.plusSeconds(rechargingDuration));
+                .end(time.plusHours(24));
+//                .end(time.plusSeconds(rechargingDuration));
         EfCaDateTimeSlot pickupTimeSlot = new EfCaDateTimeSlot()
                 .start(time)
-//                .end(time.plusHours(24));
-                .end(time.plusSeconds(rechargingDuration));
+                .end(time.plusHours(24));
+//                .end(time.plusSeconds(rechargingDuration));
         EfCaDateTimeSlot deliveryTimeSlot = new EfCaDateTimeSlot()
-                .start(pickupTimeSlot.getEnd())
+                .start(pickupTimeSlot.getStart())
                 .end(pickupTimeSlot.getEnd());
         EfCaOrder rechargingOrder = new EfCaOrder()
                 .orderType(OrderType.RECHARGING.name())
