@@ -115,13 +115,16 @@ public class RechargingService {
             final Duration vehicleOffset,
             final OffsetDateTime now) throws ApiException {
         if (existingOrders == null || existingOrders.isEmpty()) {
-            OffsetDateTime start = scheduleFirstRechargingOrder(vehicle, vehicleOffset, now);
-//            scheduleSecondRechargingOrder(vehicle, vehicleOffset, chargingStation, start);
+            OffsetDateTime endOfCharging = scheduleFirstRechargingOrder(vehicle, vehicleOffset, now);
+            scheduleSecondRechargingOrder(vehicle, vehicleOffset, endOfCharging);
         }
         if (existingOrders.size() == 1) {
-//            scheduleSecondRechargingOrder(vehicle, vehicleOffset, chargingStation,
-//                    existingOrders.get(0).getOrderTimeSlot().getStart());
+            scheduleSecondRechargingOrder(vehicle, vehicleOffset, getEndOfCharging(existingOrders.get(0)));
         }
+    }
+
+    private OffsetDateTime getEndOfCharging(final EfCaOrder order) {
+        return order.getDeliveryTimeSlots().get(0).getEnd();
     }
 
     private void scheduleSecondRechargingOrder(final EfCaVehicle vehicle, final Duration vehicleOffset,
@@ -138,22 +141,19 @@ public class RechargingService {
         return start;
     }
 
-    private void scheduleRechargingOrderForVehicleAndTime(final EfCaVehicle vehicle,
+    private OffsetDateTime scheduleRechargingOrderForVehicleAndTime(final EfCaVehicle vehicle,
             final OffsetDateTime time) throws ApiException {
         EfCaDateTimeSlot orderTimeSlot = new EfCaDateTimeSlot()
-                .start(time)
-                .end(time.plusHours(24));
-//                .end(time.plusSeconds(rechargingDuration));
+                .start(time.minusHours(6))
+                .end(time.plusHours(6));
         EfCaDateTimeSlot pickupTimeSlot = new EfCaDateTimeSlot()
-                .start(time)
-                .end(time.plusHours(24));
-//                .end(time.plusSeconds(rechargingDuration));
+                .start(time.minusSeconds(rechargingDuration))
+                .end(time.plusSeconds(rechargingDuration));
         EfCaDateTimeSlot deliveryTimeSlot = new EfCaDateTimeSlot()
-                .start(pickupTimeSlot.getStart())
-                .end(pickupTimeSlot.getEnd());
+                .start(time)
+                .end(time.plusSeconds(rechargingDuration));
         EfCaOrder rechargingOrder = new EfCaOrder()
                 .orderType(OrderType.RECHARGING.name())
-                .orderMode(OrderMode.ASYNCHRON.name())
                 .orderUnit(OrderUnit.PACKAGE_BOX.name())
                 .packageMode(1)
                 .state(OrderState.READY_FOR_PLANNING.name())
@@ -166,6 +166,7 @@ public class RechargingService {
                 .quantities(new EfCaQuantities().weight(0.1));
         rechargingOrder.getPickup().getStorageIds().setChargingStationId(rechargingOrder.getDelivery().getStorageIds().getChargingStationId());
         orderApi.postAddOrders(new EfCaModelCollector().addOrdersItem(rechargingOrder));
+        return deliveryTimeSlot.getEnd();
     }
 
     private EfCaStorage createPickupStorage() throws ApiException {
