@@ -1,7 +1,6 @@
 package de.fzi.efeu.service;
 
 import de.fzi.efeu.model.ChargingOrder;
-import de.fzi.efeu.service.ChargingOrderCreator;
 import liquibase.pro.packaged.F;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.text.SimpleDateFormat;
 import java.time.OffsetDateTime;
 import java.util.Date;
-import java.util.List;
 
 @lombok.Getter
 @lombok.Setter
@@ -23,7 +21,7 @@ import java.util.List;
 public class ChargingOrderCreatorTest {
 
     @Autowired
-    private ChargingOrderCreator chargingOrderCreator;
+    private RechargingBasedOnSoC_old chargingOrderCreator;
 
     @Test
     public void test() {
@@ -51,14 +49,14 @@ public class ChargingOrderCreatorTest {
         OffsetDateTime stopTime2 = OffsetDateTime.parse(today + "T07:00");
 
         for(int i=0; i<5; i++) {
-            ChargingOrderCreator.createChargingOrder(startTime1, stopTime1, i);
-            ChargingOrderCreator.createChargingOrder(startTime2, stopTime2, i);
+            RechargingBasedOnSoC_old.createChargingOrder(startTime1, stopTime1, i);
+            RechargingBasedOnSoC_old.createChargingOrder(startTime2, stopTime2, i);
         }
 
         // Other Orders
         Float vehSOC = 0.4f;
-        if (ChargingOrderCreator.needToCreateChargingOrder(vehSOC))
-            ChargingOrderCreator.createChargingOrder(startTime1, vehSOC, 1);
+        if (RechargingBasedOnSoC_old.needToCreateChargingOrder(vehSOC))
+            RechargingBasedOnSoC_old.createChargingOrder(startTime1, vehSOC, 1);
     }
 
 }

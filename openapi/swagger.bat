@@ -1,7 +1,7 @@
 java ^
 -Dmodels ^
 -Dapis ^
--jar C:/Users/rd877/IdeaProjects/openapi-generator.jar generate ^
+-jar C:/dev/swagger/swagger.jar generate ^
 -g spring ^
 -o ../ ^
 -i swagger.yaml ^

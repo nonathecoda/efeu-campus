@@ -14,7 +14,7 @@ import java.time.OffsetDateTime;
 import java.util.Date;
 
 @Component
-public class ChargingOrderCreator {
+public class RechargingBasedOnSoC_old {
 
     @Autowired
     private ProcessMgmtApi processMgmtApi;

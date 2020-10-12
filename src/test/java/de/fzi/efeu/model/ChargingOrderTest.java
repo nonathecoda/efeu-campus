@@ -14,6 +14,6 @@ import static de.fzi.efeu.model.testBoxOrderConverter.BoxOrderConverterTestSuppo
 @RunWith(SpringRunner.class)
 @SpringBootTest
 
-public class CHargingOrderTest {
+public class ChargingOrderTest {
 
 }
