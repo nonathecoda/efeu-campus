@@ -1,6 +1,5 @@
 package de.fzi.efeu.service;
 
-import de.fzi.efeu.model.ChargingOrder;
 import liquibase.pro.packaged.F;
 import org.junit.Test;
 import org.junit.runner.RunWith;

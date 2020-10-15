@@ -5,7 +5,6 @@ import de.fzi.efeu.efeuportal.api.*;
 import de.fzi.efeu.efeuportal.model.*;
 import de.fzi.efeu.util.TimeProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -21,6 +20,9 @@ public class ChargingStationAssignment {
     private VehicleApi vehicleApi;
 
     @Autowired
+    private ChargingStationApi chargingStationApi;
+
+    @Autowired
     private ProcessMgmtApi processMgmtApi;
 
     @Autowired
@@ -32,5 +34,23 @@ public class ChargingStationAssignment {
     @Autowired
     private BuildingApi buildingApi;
 
-}
+    // Vehicle-Station-Assignment: Vehicle i to Station i
+    public List<EfCaChargingStation> listChargingStation() throws ApiException {
+        List<EfCaChargingStation> chargingStations = chargingStationApi.getAllChargingStations().getChargingStations();
+        return chargingStations;
+    }
+    
+    public void getVehicleStation() throws ApiException {
+        List<EfCaVehicle> vehicles = vehicleApi.getAllVehicles().getVehicles();
+        for (final EfCaVehicle vehicle : vehicles) assignVehicleToStation(vehicle);
+    }
+    // Assign stations to vehicles
+    private Map<String, String> mapVehicleStation = new HashMap<>();
 
+    private String assignVehicleToStation(final EfCaVehicle vehicle) throws ApiException {
+        for (int i = 0; i < 5; i++) {
+            mapVehicleStation.put(vehicle.getIdent(),listChargingStation().get(i).getIdent());
+        }
+        return mapVehicleStation.get(vehicle.getIdent());
+    }
+}

@@ -1,17 +1,11 @@
 package de.fzi.efeu.service;
 
-import de.fzi.efeu.efeuportal.ApiException;
 import de.fzi.efeu.efeuportal.api.ProcessMgmtApi;
-import de.fzi.efeu.efeuportal.model.VehicleStatus;
-import de.fzi.efeu.model.ChargingOrder;
-import de.fzi.efeu.efeuportal.model.EfCaChargingStation;
 import de.fzi.efeu.model.VehicleStationAssignment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.text.SimpleDateFormat;
 import java.time.OffsetDateTime;
-import java.util.Date;
 
 @Component
 public class RechargingBasedOnSoC_old {
