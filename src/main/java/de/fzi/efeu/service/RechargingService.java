@@ -45,6 +45,7 @@ public class RechargingService {
 
     @Value("${recharging.frequency}")
     private Integer rechargingFrequency;
+    
 
     private Map<String, Duration> offsetByVehicle = new HashMap<>();
 
@@ -121,7 +122,7 @@ public class RechargingService {
         OffsetDateTime start = now.plusSeconds(rechargingFrequency);
         start = start.plus(vehicleOffset);
         scheduleRechargingOrderForVehicleAndTime(vehicle, start);
-        return start;
+        return start;  //Assume: at the beginning robot has full battery
     }
 
     private OffsetDateTime scheduleRechargingOrderForVehicleAndTime(final EfCaVehicle vehicle,
