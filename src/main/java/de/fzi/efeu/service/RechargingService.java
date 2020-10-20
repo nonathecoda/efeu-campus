@@ -45,7 +45,7 @@ public class RechargingService {
 
     @Value("${recharging.frequency}")
     private Integer rechargingFrequency;
-    
+
 
     private Map<String, Duration> offsetByVehicle = new HashMap<>();
 
