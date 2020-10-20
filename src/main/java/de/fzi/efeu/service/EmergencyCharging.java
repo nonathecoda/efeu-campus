@@ -70,6 +70,7 @@ public class EmergencyCharging {
         return vehicleSoC;
     }
 
+    //TODO: check set building
     private EfCaStorage createPickupStorage() throws ApiException {
         EfCaStorage storage = new EfCaStorage();
         EfCaConnectionIds connectionIds = new EfCaConnectionIds();
