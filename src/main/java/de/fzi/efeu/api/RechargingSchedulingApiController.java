@@ -1,6 +1,5 @@
 package de.fzi.efeu.api;
 
-import de.fzi.efeu.service.EmergencyCharging;
 import de.fzi.efeu.service.RechargingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +20,7 @@ public class RechargingSchedulingApiController implements RechargingSchedulingAp
 
     @Autowired
     private RechargingService rechargingService;
-    private EmergencyCharging emergencyCharging;
+    //private EmergencyCharging emergencyCharging;
 
     @Autowired
     public RechargingSchedulingApiController(NativeWebRequest request) {
@@ -41,6 +40,8 @@ public class RechargingSchedulingApiController implements RechargingSchedulingAp
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+
         return ResponseEntity.ok(null);
     }
 }
