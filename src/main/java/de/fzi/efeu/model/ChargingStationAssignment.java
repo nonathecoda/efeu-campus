@@ -39,15 +39,11 @@ public class ChargingStationAssignment {
 
 
     // Vehicle-Station-Assignment: Vehicle i to Station i
-    public List<EfCaChargingStation> listChargingStation() throws ApiException {
-        List<EfCaChargingStation> chargingStations = chargingStationApi.getAllChargingStations().getChargingStations();
-        return chargingStations;
-    }
-
     public void assignVehicleToStation() throws ApiException {
         List<EfCaVehicle> vehicles = vehicleApi.getAllVehicles().getVehicles();
+        List<EfCaChargingStation> chargingStations = chargingStationApi.getAllChargingStations().getChargingStations();
         for (int i = 0; i < 5; i++) {
-            mapVehicleStation.put(vehicles.get(i).getIdent(),listChargingStation().get(i).getIdent());
+            mapVehicleStation.put(vehicles.get(i).getIdent(), chargingStations.get(i).getIdent());
         }
     }
 

@@ -3,7 +3,6 @@ package de.fzi.efeu.service;
 import de.fzi.efeu.efeuportal.ApiException;
 import de.fzi.efeu.efeuportal.api.*;
 import de.fzi.efeu.efeuportal.model.*;
-import de.fzi.efeu.service.*;
 import de.fzi.efeu.model.ChargingStationAssignment;
 import de.fzi.efeu.util.OrderState;
 import de.fzi.efeu.util.OrderType;
@@ -19,7 +18,7 @@ import java.util.TimerTask;
 
 class EmergencyCharging extends TimerTask {
     @Autowired
-    private ChargingStationAssignment chargingStationAssignment;
+    private ChargingStationAssignment chargingStationAssignment; // Klasse wird instanziert
 
     @Autowired
     private OrderApi orderApi;

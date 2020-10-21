@@ -103,6 +103,14 @@
                         <referenceUrl>hibernate:spring:de.fzi.efeu?dialect=org.hibernate.dialect.H2Dialect&amp; hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp; hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy</referenceUrl>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>9</source>
+                        <target>9</target>
+                    </configuration>
+                </plugin>
             </plugins>
         </build>
         <dependencies>
