@@ -42,11 +42,18 @@ class EmergencyCharging extends TimerTask {
     private BuildingApi buildingApi;
 
     @Value("${emergencyRecharging.duration}")
-    private Integer emergencyRechargingDuration; //set 20 min
+    private Integer emergencyRechargingDuration; //set 15 min in application.properties
 
-    public int getVehicleSoC(final EfCaVehicle vehicle) throws ApiException {
-        int vehicleSoC = processMgmtApi.getVehicleStatus(vehicle.getIdent()).getRemainingRange(); //Assume: RemainingRange is x%.
-        return vehicleSoC;
+    EmergencyCharging() //Constructor
+    {
+        // 1-min-interval
+        Timer timer = new Timer();
+        timer.schedule(new EmergencyCharging(), 0, 60000); //1 min = 600000 ms
+    }
+
+    public int getVehicleRemainingRange(final EfCaVehicle vehicle) throws ApiException {
+        int vehicleRemainingRange = processMgmtApi.getVehicleStatus(vehicle.getIdent()).getRemainingRange(); //Assume: RemainingRange is x%. --> min or meters
+        return vehicleRemainingRange;
     }
 
     //TODO: check set building
@@ -75,24 +82,19 @@ class EmergencyCharging extends TimerTask {
         return storage;
     }
 
-    EmergencyCharging() //Constructor
-    {
-        // 1-min-interval
-        Timer timer = new Timer();
-        timer.schedule(new EmergencyCharging(), 0, 60000); //1 min = 600000 ms
-    }
+
     public void run() {
         try {
             List<EfCaVehicle> vehicles = vehicleApi.getAllVehicles().getVehicles();
-            int currentSoC = 0;
+            int currentRemainingRange = 0;
             for (EfCaVehicle vehicle : vehicles) {
-                currentSoC = getVehicleSoC(vehicle);
-                if (currentSoC < 30) {
+                currentRemainingRange = getVehicleRemainingRange(vehicle);
+                if (currentRemainingRange < 1000) { //1 km
                     OffsetDateTime now = timeProvider.now();
                     //TODO: Create charging order with duration 20 min
                     //TODO: Flxexibel duration
                     EfCaDateTimeSlot orderTimeSlot = new EfCaDateTimeSlot()
-                            .start(now.minusHours(6))
+                            .start(now.minusHours(6)) //Why?
                             .end(now.plusHours(6));
                     EfCaDateTimeSlot pickupTimeSlot = new EfCaDateTimeSlot()
                             .start(now.minusSeconds(emergencyRechargingDuration))
@@ -106,10 +108,10 @@ class EmergencyCharging extends TimerTask {
                             .packageMode(1)
                             .state(OrderState.READY_FOR_PLANNING.name())
                             .orderTimeSlot(orderTimeSlot)
-                            .pickupTimeSlots(List.of(pickupTimeSlot))
-                            .deliveryTimeSlots(List.of(deliveryTimeSlot))
-                            .pickup(createPickupStorage())
-                            .delivery(createDeliveryStorage())
+                            //.pickupTimeSlots(List.of(pickupTimeSlot))
+                            //.deliveryTimeSlots(List.of(deliveryTimeSlot))
+                            //.pickup(createPickupStorage())
+                            //.delivery(createDeliveryStorage())
                             .preassignedVehicleId(vehicle.getIdent())
                             .quantities(new EfCaQuantities().weight(0.1));
                     //rechargingOrder.getPickup().getStorageIds().setChargingStationId(rechargingOrder.getDelivery().getStorageIds().getChargingStationId());

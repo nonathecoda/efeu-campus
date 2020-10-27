@@ -37,17 +37,22 @@ public class ChargingStationAssignment {
     // Assign stations to vehicles
     private Map<String, String> mapVehicleStation = new HashMap<>();
 
-
     // Vehicle-Station-Assignment: Vehicle i to Station i
-    public void assignVehicleToStation() throws ApiException {
+    // Assumption: only 5 robots and 5 stations and stations are in hub
+    //TODO: Fahrzeug zur nahsten Ladestation
+    //TODO: wie wärs wenn der Übergabebock besetzt ist?
+
+    public void getListVehicleAndStation() throws ApiException {
         List<EfCaVehicle> vehicles = vehicleApi.getAllVehicles().getVehicles();
         List<EfCaChargingStation> chargingStations = chargingStationApi.getAllChargingStations().getChargingStations();
+    }
+
+    public void assignVehicleToStation(List<EfCaVehicle> vehicles, List<EfCaChargingStation> chargingStations) throws ApiException {
         for (int i = 0; i < 5; i++) {
             mapVehicleStation.put(vehicles.get(i).getIdent(), chargingStations.get(i).getIdent());
         }
     }
 
-    //Assumption: only 5 robots and 5 stations
     public String getAssignedStation(final EfCaVehicle vehicle) throws ApiException {
         return mapVehicleStation.get(vehicle.getIdent());
     }
