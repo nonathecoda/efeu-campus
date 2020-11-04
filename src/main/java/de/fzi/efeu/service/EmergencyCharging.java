@@ -3,7 +3,6 @@ package de.fzi.efeu.service;
 import de.fzi.efeu.efeuportal.ApiException;
 import de.fzi.efeu.efeuportal.api.*;
 import de.fzi.efeu.efeuportal.model.*;
-import de.fzi.efeu.model.ChargingStationAssignment;
 import de.fzi.efeu.util.OrderState;
 import de.fzi.efeu.util.OrderType;
 import de.fzi.efeu.util.OrderUnit;
@@ -15,6 +14,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.ArrayList;
 
 class EmergencyCharging extends TimerTask {
     @Autowired
@@ -25,9 +25,6 @@ class EmergencyCharging extends TimerTask {
 
     @Autowired
     private VehicleApi vehicleApi;
-
-    @Autowired
-    private BoxMountingDeviceApi boxMountingDeviceApi;
 
     @Autowired
     private ProcessMgmtApi processMgmtApi;
@@ -41,8 +38,11 @@ class EmergencyCharging extends TimerTask {
     @Autowired
     private BuildingApi buildingApi;
 
+    @Autowired
+    private ChargingStationApi chargingStationApi;
+
     @Value("${emergencyRecharging.duration}")
-    private Integer emergencyRechargingDuration; //set 15 min in application.properties
+    private Integer emergencyRechargingDuration; //set 20 min in application.properties
 
     EmergencyCharging() //Constructor
     {
@@ -52,16 +52,15 @@ class EmergencyCharging extends TimerTask {
     }
 
     public int getVehicleRemainingRange(final EfCaVehicle vehicle) throws ApiException {
-        int vehicleRemainingRange = processMgmtApi.getVehicleStatus(vehicle.getIdent()).getRemainingRange(); //Assume: RemainingRange is x%. --> min or meters
+        int vehicleRemainingRange = processMgmtApi.getVehicleStatus(vehicle.getIdent()).getRemainingRange(); //Assume: RemainingRange is meter
         return vehicleRemainingRange;
     }
 
-    //TODO: check set building
+    //Pickup --> Dummy
     public EfCaStorage createPickupStorage() throws ApiException {
         EfCaStorage storage = new EfCaStorage();
         EfCaConnectionIds connectionIds = new EfCaConnectionIds();
-        EfCaBuilding building = buildingApi.findBuildingsByFinder(new EfCaBuilding().type("DEPOT"))
-                .getBuildings().get(0);
+        EfCaBuilding building = buildingApi.findBuildingsByFinder(new EfCaBuilding().type("DEPOT")).getBuildings().get(0);
         connectionIds.setBuildingId(building.getIdent());
         connectionIds.setAddressId(building.getAddressId());
         storage.storageIds(connectionIds);
@@ -69,14 +68,20 @@ class EmergencyCharging extends TimerTask {
         return storage;
     }
 
-    public EfCaStorage createDeliveryStorage() throws ApiException {
+    //Delivery --> Charging Station
+    public EfCaStorage createDeliveryStorage(EfCaVehicle vehicle) throws ApiException {
         EfCaStorage storage = new EfCaStorage();
         EfCaConnectionIds connectionIds = new EfCaConnectionIds();
-        EfCaBuilding building = buildingApi.findBuildingsByFinder(new EfCaBuilding().type("CHARGING_AREA"))
-                .getBuildings().get(0);
-        connectionIds.setBuildingId(building.getIdent());
-        connectionIds.setAddressId(building.getAddressId());
-        connectionIds.setChargingStationId(building.getChargingStationIds().get(0));
+
+        //Todo: Find building by Charging Station Id
+        //EfCaBuilding building = buildingApi.findBuildingsByFinder(new EfCaBuilding().type("CHARGING_AREA")).getBuildings().get(0);
+        //new EfCaBuilding().getChargingStationIds();
+        //EfCaBuilding building = buildingApi.findBuildingsByFinder(new EfCaBuilding().chargingStationIds(chargingStationIds)).ident(chargingStationAssignment.getAssignedStation(vehicle));
+        //connectionIds.setBuildingId(building.getIdent());
+        //connectionIds.setAddressId(building.getAddressId());
+        //connectionIds.setChargingStationId(building.getChargingStationIds().get(0));
+        connectionIds.setChargingStationId(chargingStationAssignment.getAssignedStation(vehicle));
+        connectionIds.setAddressId(chargingStationAssignment.getAssignedStation(vehicle));
         storage.storageIds(connectionIds);
         storage.setServiceTime(emergencyRechargingDuration);
         return storage;
@@ -92,26 +97,26 @@ class EmergencyCharging extends TimerTask {
                 if (currentRemainingRange < 1000) { //1 km
                     OffsetDateTime now = timeProvider.now();
                     //TODO: Create charging order with duration 20 min
-                    //TODO: Flxexibel duration
+                    //TODO: Flexible duration
                     EfCaDateTimeSlot orderTimeSlot = new EfCaDateTimeSlot()
-                            .start(now.minusHours(6)) //Why?
+                            .start(now.minusHours(6)) //Dummy setting to ensure orderTimeSlot longer than pickup and delivery timeslot
                             .end(now.plusHours(6));
                     EfCaDateTimeSlot pickupTimeSlot = new EfCaDateTimeSlot()
                             .start(now.minusSeconds(emergencyRechargingDuration))
-                            .end(now.plusSeconds(emergencyRechargingDuration));
+                            .end(now.plusSeconds(emergencyRechargingDuration)); //Dummy
                     EfCaDateTimeSlot deliveryTimeSlot = new EfCaDateTimeSlot()
                             .start(now)
-                            .end(now.plusSeconds(emergencyRechargingDuration));
+                            .end(now.plusSeconds(emergencyRechargingDuration)); //Delivery Slot is Charging time slot
                     EfCaOrder rechargingOrder = new EfCaOrder()
                             .orderType(OrderType.RECHARGING.name())
                             .orderUnit(OrderUnit.PACKAGE_BOX.name())
                             .packageMode(1)
                             .state(OrderState.READY_FOR_PLANNING.name())
                             .orderTimeSlot(orderTimeSlot)
-                            //.pickupTimeSlots(List.of(pickupTimeSlot))
-                            //.deliveryTimeSlots(List.of(deliveryTimeSlot))
-                            //.pickup(createPickupStorage())
-                            //.delivery(createDeliveryStorage())
+                            .pickupTimeSlots(List.of(pickupTimeSlot))
+                            .deliveryTimeSlots(List.of(deliveryTimeSlot))
+                            .pickup(createPickupStorage())
+                            .delivery(createDeliveryStorage(vehicle))
                             .preassignedVehicleId(vehicle.getIdent())
                             .quantities(new EfCaQuantities().weight(0.1));
                     //rechargingOrder.getPickup().getStorageIds().setChargingStationId(rechargingOrder.getDelivery().getStorageIds().getChargingStationId());

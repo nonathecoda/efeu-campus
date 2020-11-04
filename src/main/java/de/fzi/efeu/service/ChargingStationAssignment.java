@@ -1,4 +1,4 @@
-package de.fzi.efeu.model;
+package de.fzi.efeu.service;
 
 import de.fzi.efeu.efeuportal.ApiException;
 import de.fzi.efeu.efeuportal.api.*;
@@ -32,7 +32,7 @@ public class ChargingStationAssignment {
     private AddressApi addressApi;
 
     @Autowired
-    private BuildingApi buildingApi;
+    private BuildingApi buildingApi; //Later might be used
 
     // Assign stations to vehicles
     private Map<String, String> mapVehicleStation = new HashMap<>();
@@ -42,13 +42,10 @@ public class ChargingStationAssignment {
     //TODO: Fahrzeug zur nahsten Ladestation
     //TODO: wie wärs wenn der Übergabebock besetzt ist?
 
-    public void getListVehicleAndStation() throws ApiException {
+    public void assignVehicleToStation() throws ApiException {
         List<EfCaVehicle> vehicles = vehicleApi.getAllVehicles().getVehicles();
         List<EfCaChargingStation> chargingStations = chargingStationApi.getAllChargingStations().getChargingStations();
-    }
-
-    public void assignVehicleToStation(List<EfCaVehicle> vehicles, List<EfCaChargingStation> chargingStations) throws ApiException {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < vehicles.size(); i++) {
             mapVehicleStation.put(vehicles.get(i).getIdent(), chargingStations.get(i).getIdent());
         }
     }
