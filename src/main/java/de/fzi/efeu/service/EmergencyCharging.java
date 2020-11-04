@@ -51,11 +51,6 @@ class EmergencyCharging extends TimerTask {
         timer.schedule(new EmergencyCharging(), 0, 60000); //1 min = 600000 ms
     }
 
-    public int getVehicleRemainingRange(final EfCaVehicle vehicle) throws ApiException {
-        int vehicleRemainingRange = processMgmtApi.getVehicleStatus(vehicle.getIdent()).getRemainingRange(); //Assume: RemainingRange is meter
-        return vehicleRemainingRange;
-    }
-
     //Pickup --> Dummy
     public EfCaStorage createPickupStorage() throws ApiException {
         EfCaStorage storage = new EfCaStorage();
@@ -93,7 +88,7 @@ class EmergencyCharging extends TimerTask {
             List<EfCaVehicle> vehicles = vehicleApi.getAllVehicles().getVehicles();
             int currentRemainingRange = 0;
             for (EfCaVehicle vehicle : vehicles) {
-                currentRemainingRange = getVehicleRemainingRange(vehicle);
+                currentRemainingRange = processMgmtApi.getVehicleStatus(vehicle.getIdent()).getRemainingRange();
                 if (currentRemainingRange < 1000) { //1 km
                     OffsetDateTime now = timeProvider.now();
                     //TODO: Create charging order with duration 20 min
