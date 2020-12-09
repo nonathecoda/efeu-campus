@@ -1,4 +1,4 @@
-/*package de.fzi.efeu.service;
+package de.fzi.efeu.service;
 
 
 import de.fzi.efeu.efeuportal.ApiException;
@@ -72,29 +72,30 @@ public class ChargingStationAssignmentMockTest {
         vehicleApi.putVehicle(vehicle2);
         vehicleApi.putVehicle(vehicle3);
         vehicleApi.putVehicle(vehicle4);
-        vehicleApi.putVehicle(vehicle5);*/
+        vehicleApi.putVehicle(vehicle5);
 
-        /*chargingStationApi.putChargingStation(chargingStation1);
+        chargingStationApi.putChargingStation(chargingStation1);
         chargingStationApi.putChargingStation(chargingStation2);
         chargingStationApi.putChargingStation(chargingStation3);
         chargingStationApi.putChargingStation(chargingStation4);
         chargingStationApi.putChargingStation(chargingStation5);*/
 
-        /*String chargingStationId1 = chargingStationAssignment.getAssignedStation(vehicle1);
+        String chargingStationId1 = chargingStationAssignment.getAssignedStation(vehicle1);
         String chargingStationId2 = chargingStationAssignment.getAssignedStation(vehicle2);
         String chargingStationId3 = chargingStationAssignment.getAssignedStation(vehicle3);
         String chargingStationId4 = chargingStationAssignment.getAssignedStation(vehicle4);
         String chargingStationId5 = chargingStationAssignment.getAssignedStation(vehicle5);
 
         //assertEquals(expected, actual)
-        assertNotNull(chargingStationId1);
-        assertEquals(chargingStation1.getIdent(), chargingStationId1);
+        //assertNotNull(chargingStationId1);
+        /*assertEquals(chargingStation1.getIdent(), chargingStationId1);
         assertEquals(chargingStation2.getIdent(), chargingStationId2);
         assertEquals(chargingStation3.getIdent(), chargingStationId3);
         assertEquals(chargingStation4.getIdent(), chargingStationId4);
-        assertEquals(chargingStation5.getIdent(), chargingStationId5);
+        assertEquals(chargingStation5.getIdent(), chargingStationId5);*/
     }
 
 }
 
-*/
+
+
