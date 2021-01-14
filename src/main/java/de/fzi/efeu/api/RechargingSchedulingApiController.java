@@ -20,7 +20,6 @@ public class RechargingSchedulingApiController implements RechargingSchedulingAp
 
     @Autowired
     private RechargingService rechargingService;
-    //private EmergencyCharging emergencyCharging;
 
     @Autowired
     public RechargingSchedulingApiController(NativeWebRequest request) {
@@ -40,8 +39,6 @@ public class RechargingSchedulingApiController implements RechargingSchedulingAp
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-
         return ResponseEntity.ok(null);
     }
 }

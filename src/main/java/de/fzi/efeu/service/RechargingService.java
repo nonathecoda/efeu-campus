@@ -1,5 +1,8 @@
 package de.fzi.efeu.service;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.fzi.efeu.efeuportal.ApiException;
 import de.fzi.efeu.efeuportal.api.*;
 import de.fzi.efeu.efeuportal.model.*;
@@ -11,12 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.OffsetDateTime;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,7 +40,7 @@ public class RechargingService {
 
     @Autowired
     private BuildingApi buildingApi;
-
+//Value adjustment under resources.application.properties
     @Value("${recharging.duration}")
     private Integer rechargingDuration;
 
@@ -51,40 +52,25 @@ public class RechargingService {
 
     public void scheduleRechargingOrders() throws ApiException {
         List<EfCaVehicle> vehicles = vehicleApi.getAllVehicles().getVehicles();
-        OffsetDateTime now = timeProvider.now();
+        OffsetDateTime now = timeProvider.now(); //now: orders have been planned
         for (final EfCaVehicle vehicle : vehicles) scheduleRechargingOrdersForVehicle(vehicle, now);
     }
 
     private void scheduleRechargingOrdersForVehicle(final EfCaVehicle vehicle,
             final OffsetDateTime now) throws ApiException {
-        Duration vehicleOffset = getOffsetByVehicle(vehicle);
-        List<EfCaOrder> existingOrders = getChargingOrdersByVehicle(vehicle);
+        Duration vehicleOffset = getOffsetByVehicle(vehicle); //1.Duration
+        List<EfCaOrder> existingOrders = getChargingOrdersByVehicle(vehicle);//2.Planned recharging orders
         scheduleRechargingOrdersForVehicleAndLatestTime(vehicle, existingOrders, vehicleOffset, now);
     }
 
-    private List<EfCaOrder> getChargingOrdersByVehicle(final EfCaVehicle vehicle) throws ApiException {
-        List<EfCaOrder> existingOrders = orderApi.findOrdersByFinder(new EfCaOrder()
-                .orderType(OrderType.RECHARGING.name())
-                .preassignedVehicleId(vehicle.getIdent()))
-                .getOrders();
-        if (existingOrders != null) {
-            existingOrders = existingOrders
-                    .stream()
-                    .filter(efCaOrder -> efCaOrder.getPreassignedVehicleId() != null && efCaOrder.getPreassignedVehicleId().equals(vehicle.getIdent())).collect(Collectors.toList());
-        }
-        if (existingOrders != null && !existingOrders.isEmpty()) {
-            existingOrders.sort(Comparator.comparing((EfCaOrder o) -> o.getOrderTimeSlot().getStart()));
-        }
-        return existingOrders;
-    }
-
+    //Put charging duration to all vehicles.
     private Duration getOffsetByVehicle(final EfCaVehicle vehicle) {
         if (!offsetByVehicle.containsKey(vehicle.getIdent())) {
             Duration largestOffset = offsetByVehicle
                     .values()
                     .stream()
                     .max(Duration::compareTo)
-                    .orElse(null);
+                    .orElse(null); //check the longest duration
             if (largestOffset == null) {
                 offsetByVehicle.put(vehicle.getIdent(), Duration.ZERO);
             } else {
@@ -92,6 +78,22 @@ public class RechargingService {
             }
         }
         return offsetByVehicle.get(vehicle.getIdent());
+    }
+
+    private List<EfCaOrder> getChargingOrdersByVehicle(final EfCaVehicle vehicle) throws ApiException {
+        List<EfCaOrder> existingOrders = orderApi.findOrdersByFinder(new EfCaOrder()
+                .orderType(OrderType.RECHARGING.name())
+                .preassignedVehicleId(vehicle.getIdent()))
+                .getOrders(); //Find recharging orders for vehicles and store them in existingOrders
+        if (existingOrders != null) {
+            existingOrders = existingOrders
+                    .stream()
+                    .filter(efCaOrder -> efCaOrder.getPreassignedVehicleId() != null && efCaOrder.getPreassignedVehicleId().equals(vehicle.getIdent())).collect(Collectors.toList());
+        }
+        if (existingOrders != null && !existingOrders.isEmpty()) {
+            existingOrders.sort(Comparator.comparing((EfCaOrder o) -> o.getOrderTimeSlot().getStart()));
+        } //Sort existing orders based on start time
+        return existingOrders;
     }
 
     private void scheduleRechargingOrdersForVehicleAndLatestTime(final EfCaVehicle vehicle,
@@ -107,8 +109,12 @@ public class RechargingService {
         }
     }
 
-    private OffsetDateTime getEndOfCharging(final EfCaOrder order) {
-        return order.getDeliveryTimeSlots().get(0).getEnd();
+    private OffsetDateTime scheduleFirstRechargingOrder(final EfCaVehicle vehicle, final Duration vehicleOffset,
+                                                        final OffsetDateTime now) throws ApiException {
+        OffsetDateTime start = now.plusSeconds(rechargingFrequency);
+        start = start.plus(vehicleOffset); //End of charging
+        scheduleRechargingOrderForVehicleAndTime(vehicle, start);
+        return start;  //Assume: at the beginning robot has full battery
     }
 
     private void scheduleSecondRechargingOrder(final EfCaVehicle vehicle, final Duration vehicleOffset,
@@ -117,12 +123,8 @@ public class RechargingService {
         scheduleRechargingOrderForVehicleAndTime(vehicle, start);
     }
 
-    private OffsetDateTime scheduleFirstRechargingOrder(final EfCaVehicle vehicle, final Duration vehicleOffset,
-            final OffsetDateTime now) throws ApiException {
-        OffsetDateTime start = now.plusSeconds(rechargingFrequency);
-        start = start.plus(vehicleOffset);
-        scheduleRechargingOrderForVehicleAndTime(vehicle, start);
-        return start;  //Assume: at the beginning robot has full battery
+    private OffsetDateTime getEndOfCharging(final EfCaOrder order) {
+        return order.getDeliveryTimeSlots().get(0).getEnd();
     }
 
     private OffsetDateTime scheduleRechargingOrderForVehicleAndTime(final EfCaVehicle vehicle,
