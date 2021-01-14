@@ -80,7 +80,6 @@ public class ChargingStationAssignmentTest {
         chargingStationApi.putChargingStation(chargingStation4);
         chargingStationApi.putChargingStation(chargingStation5);*/
 
-<<<<<<< HEAD:src/test/java/de/fzi/efeu/service/ChargingStationAssignmentTest.java
 
         //assertEquals(expected, actual)
         //assertNotNull(chargingStationId1);
@@ -89,21 +88,8 @@ public class ChargingStationAssignmentTest {
         assertEquals(chargingStation3.getIdent(), testMapVehicleStation.get(vehicle3.getIdent()));
         assertEquals(chargingStation4.getIdent(), testMapVehicleStation.get(vehicle4.getIdent()));
         assertEquals(chargingStation5.getIdent(), testMapVehicleStation.get(vehicle5.getIdent()));
-=======
-        String chargingStationId1 = chargingStationAssignment.getAssignedStation(vehicle1);
-        String chargingStationId2 = chargingStationAssignment.getAssignedStation(vehicle2);
-        String chargingStationId3 = chargingStationAssignment.getAssignedStation(vehicle3);
-        String chargingStationId4 = chargingStationAssignment.getAssignedStation(vehicle4);
-        String chargingStationId5 = chargingStationAssignment.getAssignedStation(vehicle5);
 
-        //assertEquals(expected, actual)
-        //assertNotNull(chargingStationId1);
-        /*assertEquals(chargingStation1.getIdent(), chargingStationId1);
-        assertEquals(chargingStation2.getIdent(), chargingStationId2);
-        assertEquals(chargingStation3.getIdent(), chargingStationId3);
-        assertEquals(chargingStation4.getIdent(), chargingStationId4);
-        assertEquals(chargingStation5.getIdent(), chargingStationId5);*/
->>>>>>> origin/master:src/test/java/de/fzi/efeu/service/ChargingStationAssignmentMockTest.java
+
     }
 
 }
