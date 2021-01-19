@@ -17,9 +17,9 @@ import java.util.TimerTask;
 import java.util.ArrayList;
 
 class EmergencyCharging extends TimerTask {
-    @Autowired
-    private ChargingStationAssignment chargingStationAssignment; // Klasse wird instanziert
 
+    @Autowired
+    private ChargingStationAssignment chargingStationAssignment;
     @Autowired
     private OrderApi orderApi;
 
@@ -43,6 +43,7 @@ class EmergencyCharging extends TimerTask {
 
     @Value("${emergencyRecharging.duration}")
     private Integer emergencyRechargingDuration; //set 20 min in application.properties
+
 
     EmergencyCharging() //Constructor
     {
@@ -82,17 +83,15 @@ class EmergencyCharging extends TimerTask {
         return storage;
     }
 
-
     public void run() {
         try {
             List<EfCaVehicle> vehicles = vehicleApi.getAllVehicles().getVehicles();
             int currentRemainingRange = 0;
             for (EfCaVehicle vehicle : vehicles) {
                 currentRemainingRange = processMgmtApi.getVehicleStatus(vehicle.getIdent()).getRemainingRange();
-                if (currentRemainingRange < 1000) { //1 km
+                if (currentRemainingRange < 0.3) { //30% float
                     OffsetDateTime now = timeProvider.now();
-                    //TODO: Create charging order with duration 20 min
-                    //TODO: Flexible duration
+                    //Create charging order with duration 20 min
                     EfCaDateTimeSlot orderTimeSlot = new EfCaDateTimeSlot()
                             .start(now.minusHours(6)) //Dummy setting to ensure orderTimeSlot longer than pickup and delivery timeslot
                             .end(now.plusHours(6));
@@ -115,6 +114,7 @@ class EmergencyCharging extends TimerTask {
                             .preassignedVehicleId(vehicle.getIdent())
                             .quantities(new EfCaQuantities().weight(0.1));
                     //rechargingOrder.getPickup().getStorageIds().setChargingStationId(rechargingOrder.getDelivery().getStorageIds().getChargingStationId());
+                    chargingStationAssignment.assignVehicleToStation();
                     rechargingOrder.getPickup().getStorageIds().setChargingStationId(chargingStationAssignment.getAssignedStation(vehicle));
                     orderApi.postAddOrders(new EfCaModelCollector().addOrdersItem(rechargingOrder));
                 }

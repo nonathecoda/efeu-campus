@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +37,7 @@ public class ChargingStationAssignmentTest {
     @Test
     public void testChargingStationAssignment() {
         List<EfCaChargingStation> chargingStations = new ArrayList<>();
-        List<EfCaVehicle> vehicles = new ArrayList<>();
+        //List<EfCaVehicle> vehicles = new ArrayList<>();
 
         EfCaChargingStation chargingStation1 = new EfCaChargingStation().ident("S1");
         EfCaChargingStation chargingStation2 = new EfCaChargingStation().ident("S2");
@@ -56,11 +57,14 @@ public class ChargingStationAssignmentTest {
         EfCaVehicle vehicle4 = new EfCaVehicle().ident("V4");
         EfCaVehicle vehicle5 = new EfCaVehicle().ident("V5");
 
-        vehicles.add(vehicle1);
+        /*vehicles.add(vehicle1);
         vehicles.add(vehicle2);
         vehicles.add(vehicle3);
         vehicles.add(vehicle4);
-        vehicles.add(vehicle5);
+        vehicles.add(vehicle5);*/
+
+//A faster way to create a list
+        List<EfCaVehicle> vehicles = List.of(vehicle1, vehicle2, vehicle3, vehicle4, vehicle5);
 
         Map<String, String> testMapVehicleStation = new HashMap<>();
         for (int i = 0; i < vehicles.size(); i++) {
@@ -79,7 +83,6 @@ public class ChargingStationAssignmentTest {
         chargingStationApi.putChargingStation(chargingStation3);
         chargingStationApi.putChargingStation(chargingStation4);
         chargingStationApi.putChargingStation(chargingStation5);*/
-
 
         //assertEquals(expected, actual)
         //assertNotNull(chargingStationId1);
