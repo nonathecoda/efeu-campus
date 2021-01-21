@@ -145,11 +145,11 @@ public class RechargingWithPlannedTour {
         double currentVehicleSoC = processMgmtApi.getVehicleStatus(vehicle.getIdent()).getStateOfCharge();
         if (energyConsumptionTour >= (currentVehicleSoC - 0.5) * batteryCapacity) {
             OffsetDateTime time = checkLatestPlannedTour(vehicle).getTourHeader().getEndDateTime();
-            createRechargingOrder(time, vehicle, currentVehicleSoC, energyConsumptionTour);
+            createRechargingOrderPlannedTour(time, vehicle, currentVehicleSoC, energyConsumptionTour);
         }
     }
 
-    private void createRechargingOrder(OffsetDateTime time, EfCaVehicle vehicle, double SoC, double energyConsumption) throws ApiException {
+    private void createRechargingOrderPlannedTour(OffsetDateTime time, EfCaVehicle vehicle, double SoC, double energyConsumption) throws ApiException {
             OffsetDateTime chargingStartTime = time; //Create a charging order before this tour
             //Charge battery until it's full again
             long chargingDurationPlannedTour = (long) ((batteryCapacity-SoC+energyConsumption)/chargingPower*3600);

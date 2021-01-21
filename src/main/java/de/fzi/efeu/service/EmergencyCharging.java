@@ -52,6 +52,52 @@ class EmergencyCharging extends TimerTask {
         timer.schedule(new EmergencyCharging(), 0, 60000); //1 min = 600000 ms
     }
 
+    @Override
+    public void run() {
+        try {
+            List<EfCaVehicle> vehicles = vehicleApi.getAllVehicles().getVehicles();
+            float SoC;
+            for (EfCaVehicle vehicle : vehicles) {
+                SoC = processMgmtApi.getVehicleStatus(vehicle.getIdent()).getStateOfCharge();
+                if (SoC < 0.3f) {
+                    OffsetDateTime now = timeProvider.now();
+                    createRechargingOrderEmergency(now, vehicle);
+                }
+            }
+            } catch(ApiException e){
+                e.printStackTrace();
+            }
+        }
+        
+
+    private void createRechargingOrderEmergency(OffsetDateTime time, EfCaVehicle vehicle) throws ApiException {
+            OffsetDateTime now = time;
+            EfCaDateTimeSlot orderTimeSlot = new EfCaDateTimeSlot()
+                    .start(now.minusHours(6)) //Dummy setting to ensure orderTimeSlot longer than pickup and delivery timeslot
+                    .end(now.plusHours(6));
+            EfCaDateTimeSlot pickupTimeSlot = new EfCaDateTimeSlot()
+                    .start(now.minusSeconds(emergencyRechargingDuration))
+                    .end(now.plusSeconds(emergencyRechargingDuration)); //Dummy
+            EfCaDateTimeSlot deliveryTimeSlot = new EfCaDateTimeSlot()
+                    .start(now)
+                    .end(now.plusSeconds(emergencyRechargingDuration)); //Delivery Slot is Charging time slot
+            EfCaOrder rechargingOrder = new EfCaOrder()
+                    .orderType(OrderType.RECHARGING.name())
+                    .orderUnit(OrderUnit.PACKAGE_BOX.name())
+                    .packageMode(1)
+                    .state(OrderState.READY_FOR_PLANNING.name())
+                    .orderTimeSlot(orderTimeSlot)
+                    .pickupTimeSlots(List.of(pickupTimeSlot))
+                    .deliveryTimeSlots(List.of(deliveryTimeSlot))
+                    .pickup(createPickupStorage())
+                    .delivery(createDeliveryStorage(vehicle))
+                    .preassignedVehicleId(vehicle.getIdent())
+                    .quantities(new EfCaQuantities().weight(0.1));
+            //rechargingOrder.getPickup().getStorageIds().setChargingStationId(rechargingOrder.getDelivery().getStorageIds().getChargingStationId());
+            rechargingOrder.getPickup().getStorageIds().setChargingStationId(chargingStationAssignment.getAssignedStation(vehicle));
+            orderApi.postAddOrders(new EfCaModelCollector().addOrdersItem(rechargingOrder));
+    }
+
     //Pickup --> Dummy
     private EfCaStorage createPickupStorage() throws ApiException {
         EfCaStorage storage = new EfCaStorage();
@@ -81,45 +127,5 @@ class EmergencyCharging extends TimerTask {
         storage.storageIds(connectionIds);
         storage.setServiceTime(emergencyRechargingDuration);
         return storage;
-    }
-
-    public void run() {
-        try {
-            List<EfCaVehicle> vehicles = vehicleApi.getAllVehicles().getVehicles();
-            int currentRemainingRange = 0;
-            for (EfCaVehicle vehicle : vehicles) {
-                currentRemainingRange = processMgmtApi.getVehicleStatus(vehicle.getIdent()).getRemainingRange();
-                if (currentRemainingRange < 0.3) { //30% float
-                    OffsetDateTime now = timeProvider.now();
-                    //Create charging order with duration 20 min
-                    EfCaDateTimeSlot orderTimeSlot = new EfCaDateTimeSlot()
-                            .start(now.minusHours(6)) //Dummy setting to ensure orderTimeSlot longer than pickup and delivery timeslot
-                            .end(now.plusHours(6));
-                    EfCaDateTimeSlot pickupTimeSlot = new EfCaDateTimeSlot()
-                            .start(now.minusSeconds(emergencyRechargingDuration))
-                            .end(now.plusSeconds(emergencyRechargingDuration)); //Dummy
-                    EfCaDateTimeSlot deliveryTimeSlot = new EfCaDateTimeSlot()
-                            .start(now)
-                            .end(now.plusSeconds(emergencyRechargingDuration)); //Delivery Slot is Charging time slot
-                    EfCaOrder rechargingOrder = new EfCaOrder()
-                            .orderType(OrderType.RECHARGING.name())
-                            .orderUnit(OrderUnit.PACKAGE_BOX.name())
-                            .packageMode(1)
-                            .state(OrderState.READY_FOR_PLANNING.name())
-                            .orderTimeSlot(orderTimeSlot)
-                            .pickupTimeSlots(List.of(pickupTimeSlot))
-                            .deliveryTimeSlots(List.of(deliveryTimeSlot))
-                            .pickup(createPickupStorage())
-                            .delivery(createDeliveryStorage(vehicle))
-                            .preassignedVehicleId(vehicle.getIdent())
-                            .quantities(new EfCaQuantities().weight(0.1));
-                    //rechargingOrder.getPickup().getStorageIds().setChargingStationId(rechargingOrder.getDelivery().getStorageIds().getChargingStationId());
-                    rechargingOrder.getPickup().getStorageIds().setChargingStationId(chargingStationAssignment.getAssignedStation(vehicle));
-                    orderApi.postAddOrders(new EfCaModelCollector().addOrdersItem(rechargingOrder));
-                }
-            }
-        } catch (ApiException e) {
-            e.printStackTrace();
-        }
     }
 }
