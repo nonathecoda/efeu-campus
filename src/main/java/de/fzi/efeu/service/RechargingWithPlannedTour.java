@@ -152,7 +152,7 @@ public class RechargingWithPlannedTour {
     private void createRechargingOrder(OffsetDateTime time, EfCaVehicle vehicle, double SoC, double energyConsumption) throws ApiException {
             OffsetDateTime chargingStartTime = time; //Create a charging order before this tour
             //Charge battery until it's full again
-            long chargingDurationPlannedTour = (long) (batteryCapacity-SoC+energyConsumption)/chargingPower*3600);
+            long chargingDurationPlannedTour = (long) ((batteryCapacity-SoC+energyConsumption)/chargingPower*3600);
             EfCaDateTimeSlot orderTimeSlot = new EfCaDateTimeSlot()
                         .start(chargingStartTime.minusHours(6)) //Dummy setting to ensure orderTimeSlot longer than pickup and delivery timeslot
                         .end(chargingStartTime.plusHours(6));
