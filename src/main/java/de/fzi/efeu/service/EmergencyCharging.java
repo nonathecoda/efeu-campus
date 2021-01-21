@@ -53,7 +53,7 @@ class EmergencyCharging extends TimerTask {
     }
 
     //Pickup --> Dummy
-    public EfCaStorage createPickupStorage() throws ApiException {
+    private EfCaStorage createPickupStorage() throws ApiException {
         EfCaStorage storage = new EfCaStorage();
         EfCaConnectionIds connectionIds = new EfCaConnectionIds();
         EfCaBuilding building = buildingApi.findBuildingsByFinder(new EfCaBuilding().type("DEPOT")).getBuildings().get(0);
@@ -65,7 +65,7 @@ class EmergencyCharging extends TimerTask {
     }
 
     //Delivery --> Charging Station
-    public EfCaStorage createDeliveryStorage(EfCaVehicle vehicle) throws ApiException {
+    private EfCaStorage createDeliveryStorage(EfCaVehicle vehicle) throws ApiException {
         EfCaStorage storage = new EfCaStorage();
         EfCaConnectionIds connectionIds = new EfCaConnectionIds();
 
@@ -114,7 +114,6 @@ class EmergencyCharging extends TimerTask {
                             .preassignedVehicleId(vehicle.getIdent())
                             .quantities(new EfCaQuantities().weight(0.1));
                     //rechargingOrder.getPickup().getStorageIds().setChargingStationId(rechargingOrder.getDelivery().getStorageIds().getChargingStationId());
-                    chargingStationAssignment.assignVehicleToStation();
                     rechargingOrder.getPickup().getStorageIds().setChargingStationId(chargingStationAssignment.getAssignedStation(vehicle));
                     orderApi.postAddOrders(new EfCaModelCollector().addOrdersItem(rechargingOrder));
                 }

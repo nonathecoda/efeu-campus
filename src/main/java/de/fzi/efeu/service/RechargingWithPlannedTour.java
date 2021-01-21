@@ -11,6 +11,7 @@ import de.fzi.efeu.util.OrderState;
 import de.fzi.efeu.util.OrderType;
 import de.fzi.efeu.util.OrderUnit;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.*;
 
@@ -53,16 +54,14 @@ public class RechargingWithPlannedTour {
     private Integer chargingPower;
 
     //Get tour information
-    List<EfCaTour> tours = new ArrayList<>();
-
-    private void checkPlannedTour() throws ApiException {
+    private List<EfCaTour> checkPlannedTour() throws ApiException {
         ObjectMapper objectMapper = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false)
                 .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
         objectMapper.registerModule(new JavaTimeModule());
 
         List<TourStatus> tourStatusList = processMgmtApi.getTourStatusList();
-
+        List<EfCaTour> tours = new ArrayList<>();
         for (TourStatus tourStatus : tourStatusList) {
             try {
                 tours.add(objectMapper.readValue(tourStatus.getTourString(), EfCaTour.class));
@@ -70,56 +69,100 @@ public class RechargingWithPlannedTour {
                 e.printStackTrace();
             }
         }
+        return tours;
     }
 
-        //TODO: Sicherstellen --> One tour just for one vehicle? One tour multiple stops?
-    List<Double> energyConsumption = new ArrayList<>(); //Calculate energy consumption of each stop
-    List<OffsetDateTime> routeStartServiceTime = new ArrayList<>(); //Calculate start service time of each stop
-    private void checkEnergyConsumptionPlannedTourPerVehicle() throws ApiException {
-        List<EfCaVehicle> vehicles = vehicleApi.getAllVehicles().getVehicles();
-        for (EfCaTour tour : tours) {
-            for (EfCaVehicle vehicle : vehicles) { //Calculate energy consumption per vehicle
-//1. Driving distance --> Fahrleistung: 0,074 Wh pro Meter (400Wh / 1,5m/s / 3600 s)
-//2. Driving duration --> Standleistung
-                if (vehicle.getIdent() == tour.getTourHeader().getVehicleExtId1()) {
-                    //TODO: Which field can I use? tourDistance, startDistance, predDistance --> PTV
-                    List<Integer> routeDistance = new ArrayList<>();
-                    List<Integer> routeDuration = new ArrayList<>();
-                    for (EfCaTourStop stop : tour.getTourStops()) {
-                        routeDistance.add(stop.getPredDistance());
-                        routeDuration.add(stop.getRouteDuration());
-                        routeStartServiceTime.add(stop.getStartServiceTime());
-                    }
-                    //TODO: Can I use route duration? What's the definition of route duration? From depot to end of service time? --> PTV
-                    //TODO: How to export a route plan? Robo 3T?
-// Energy Consumption
-                    for (int i = 0; i < routeDistance.size(); i++) {
-                        energyConsumption.add(consumptionDriving / 1.5 / 3600 * routeDistance.get(i) + consumptionStanding * routeDuration.get(i));
-                    }
-                    createChargingOrderPlannedTour(vehicle);
+    //Select tours for vehicle and sort them based on their start time
+    private List<EfCaTour> selectAndSortTourPerVehicle(EfCaVehicle vehicle) throws ApiException {
+        List<EfCaTour> tours = checkPlannedTour();
+        List <EfCaTour> toursForVehicle = new ArrayList<>();
+        for (EfCaTour tour : tours){
+            if (tour.getTourHeader().getVehicleExtId1().equals(vehicle.getIdent())){
+                toursForVehicle.add(tour);
+            }
+        }
+        //Sort tours based on their start time
+        Collections.sort(toursForVehicle, new Comparator<EfCaTour>() {
+            @Override
+            public int compare(EfCaTour u1, EfCaTour u2) {
+                return u1.getTourHeader().getStartDateTime().compareTo(u2.getTourHeader().getStartDateTime());
+            }
+        });
+        return toursForVehicle;
+    }
+
+    //Note: One tour just for one vehicle. One tour contains multiple stops
+    //Note: How to export a route plan? Robo 3T? Swagger while Simulation is running
+
+    //Calculate energy consumption until the next charging stop
+    private double checkEnergyConsumptionPlannedToursPerVehicle(EfCaVehicle vehicle) throws ApiException {
+        List<EfCaTour> toursForVehicle = selectAndSortTourPerVehicle(vehicle);
+        double energyConsumptionTour = 0;
+        for (EfCaTour tourForVehicle : toursForVehicle) {
+            for (EfCaTourStop stop : tourForVehicle.getTourStops()) {
+                if (checkIfChargingStop(stop)){
+                    break;
+                }
+                //Two factors determine energy consumption
+                //1. Driving distance --> Fahrleistung: 0,074 Wh pro Meter (400Wh / 1,5m/s / 3600 s)
+                //2. Driving duration --> Standleistung
+                energyConsumptionTour += consumptionDriving / 1.5 / 3600 * stop.getPredDistance() + consumptionStanding / 3600 * stop.getRouteDuration(); //Wh
+            }
+        }
+        return energyConsumptionTour;
+    }
+
+    //Get the latest unplanned tour --> get its start time and create recharging order at this time point
+    private EfCaTour checkLatestPlannedTour(EfCaVehicle vehicle) throws ApiException {
+        List<EfCaTour> toursForVehicle = selectAndSortTourPerVehicle(vehicle);
+        List<EfCaTour> plannedTour = new ArrayList<>();
+        outerLoop:
+        for (EfCaTour tourForVehicle : toursForVehicle) {
+            for (EfCaTourStop stop : tourForVehicle.getTourStops()) {
+                if (checkIfChargingStop(stop)){
+                    break outerLoop;
                 }
             }
+            plannedTour.add(tourForVehicle);
+        }
+        return plannedTour.get(plannedTour.size() - 1);
+    }
+
+    //Check if there is recharging stops along a tour (via action point type == "Recharging")
+    private boolean checkIfChargingStop(EfCaTourStop stop) throws ApiException {
+        for (EfCaTourActionPoint actionPoint: stop.getTourActionPoints()){
+            EfCaOrderResp actionPointOrderResp = orderApi.findOrdersByFinder(new EfCaOrder().ident(actionPoint.getOrderExtId1()));
+            EfCaOrder actionPointOrder = actionPointOrderResp.getOrders().get(0); //This list only contains one element
+            if (actionPointOrder.getOrderType().equals("RECHARGING")){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void scheduleRechargingOrderPlannedTour(EfCaVehicle vehicle) throws ApiException {
+        double energyConsumptionTour = checkEnergyConsumptionPlannedToursPerVehicle(vehicle);
+        double currentVehicleSoC = processMgmtApi.getVehicleStatus(vehicle.getIdent()).getStateOfCharge();
+        if (energyConsumptionTour >= (currentVehicleSoC - 0.5) * batteryCapacity) {
+            OffsetDateTime time = checkLatestPlannedTour(vehicle).getTourHeader().getEndDateTime();
+            createRechargingOrder(time, vehicle, currentVehicleSoC, energyConsumptionTour);
         }
     }
 
-    private void createChargingOrderPlannedTour(EfCaVehicle vehicle) throws ApiException {
-        double energyConsumptionAtStop = 0;
-        for (int j = 0; j < energyConsumption.size(); j++) {
-            energyConsumptionAtStop = energyConsumptionAtStop + energyConsumption.get(j); //Total energy consumption along multiple stops
-            if (energyConsumptionAtStop >= 0.5 * batteryCapacity) { //TODO: Wird der Tour erneut geplant?
-                OffsetDateTime chargingStartTime = routeStartServiceTime.get(j); //Create a charging order before this stop
-                //Create charging order with duration of energy consumption --> Battery full again
-                long chargingDurationPlannedTour = (long) (energyConsumptionAtStop/chargingPower*3600);
-                EfCaDateTimeSlot orderTimeSlot = new EfCaDateTimeSlot()
+    private void createRechargingOrder(OffsetDateTime time, EfCaVehicle vehicle, double SoC, double energyConsumption) throws ApiException {
+            OffsetDateTime chargingStartTime = time; //Create a charging order before this tour
+            //Charge battery until it's full again
+            long chargingDurationPlannedTour = (long) (batteryCapacity-SoC+energyConsumption)/chargingPower*3600);
+            EfCaDateTimeSlot orderTimeSlot = new EfCaDateTimeSlot()
                         .start(chargingStartTime.minusHours(6)) //Dummy setting to ensure orderTimeSlot longer than pickup and delivery timeslot
                         .end(chargingStartTime.plusHours(6));
-                EfCaDateTimeSlot pickupTimeSlot = new EfCaDateTimeSlot()
+            EfCaDateTimeSlot pickupTimeSlot = new EfCaDateTimeSlot()
                         .start(chargingStartTime.minusSeconds(chargingDurationPlannedTour))
                         .end(chargingStartTime.plusSeconds(chargingDurationPlannedTour)); //Dummy
-                EfCaDateTimeSlot deliveryTimeSlot = new EfCaDateTimeSlot()
+            EfCaDateTimeSlot deliveryTimeSlot = new EfCaDateTimeSlot()
                         .start(chargingStartTime)
                         .end(chargingStartTime.plusSeconds(chargingDurationPlannedTour)); //Delivery Slot is Charging time slot
-                EfCaOrder rechargingOrder = new EfCaOrder()
+            EfCaOrder rechargingOrder = new EfCaOrder()
                         .orderType(OrderType.RECHARGING.name())
                         .orderUnit(OrderUnit.PACKAGE_BOX.name())
                         .packageMode(1)
@@ -131,13 +174,10 @@ public class RechargingWithPlannedTour {
                         .delivery(createDeliveryStorage(vehicle, (int) (chargingDurationPlannedTour)))
                         .preassignedVehicleId(vehicle.getIdent())
                         .quantities(new EfCaQuantities().weight(0.1));
-                //rechargingOrder.getPickup().getStorageIds().setChargingStationId(rechargingOrder.getDelivery().getStorageIds().getChargingStationId());
-                chargingStationAssignment.assignVehicleToStation();
-                rechargingOrder.getPickup().getStorageIds().setChargingStationId(chargingStationAssignment.getAssignedStation(vehicle));
-                orderApi.postAddOrders(new EfCaModelCollector().addOrdersItem(rechargingOrder));
+            //rechargingOrder.getPickup().getStorageIds().setChargingStationId(rechargingOrder.getDelivery().getStorageIds().getChargingStationId());
+            rechargingOrder.getPickup().getStorageIds().setChargingStationId(chargingStationAssignment.getAssignedStation(vehicle));
+            orderApi.postAddOrders(new EfCaModelCollector().addOrdersItem(rechargingOrder));
             }
-        }
-    }
 
         //Pickup --> Dummy
         public EfCaStorage createPickupStorage () throws ApiException {
