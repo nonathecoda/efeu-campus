@@ -45,7 +45,7 @@ class EmergencyCharging extends TimerTask {
     private Integer emergencyRechargingDuration; //set 20 min in application.properties
 
 
-    EmergencyCharging() //Constructor
+    EmergencyCharging() //Constructor //Todo not correct yet
     {
         // 1-min-interval
         Timer timer = new Timer();
@@ -68,7 +68,7 @@ class EmergencyCharging extends TimerTask {
                 e.printStackTrace();
             }
         }
-        
+
 
     private void createRechargingOrderEmergency(OffsetDateTime time, EfCaVehicle vehicle) throws ApiException {
             OffsetDateTime now = time;

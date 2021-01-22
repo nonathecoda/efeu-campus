@@ -6,12 +6,66 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.fzi.efeu.efeuportal.ApiException;
 import de.fzi.efeu.efeuportal.api.*;
 import de.fzi.efeu.efeuportal.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.*;
 
 public class RechargingWithPlannedTourSupporter {
+    @Autowired
+    private RechargingWithPlannedTour rechargingWithPlannedTour;
+
+    @Autowired
+    OrderApi orderApi;
+
+    @Autowired
+    ProcessMgmtApi processMgmtApi;
+
+    @Autowired
+    private ChargingStationAssignment chargingStationAssignment;
+
+    @Autowired
+    private VehicleApi vehicleApi;
+
+    @Autowired
+    private ChargingStationApi chargingStationApi;
+
+    @Autowired
+    private BuildingApi buildingApi;
+
+    @Value("${consumption.driving}") //Energieverbrauch während Fahren
+    private Integer consumptionDriving;
+
+    @Value("${consumption.standing}") //Standleistung
+    private Integer consumptionStanding;
+
+    @Value("${battery.capacity}")
+    private Integer batteryCapacity;
+
+    @Value("${charging.power}")
+    private Integer chargingPower;
+
+    
     //Todo: Objectmapper testen?
+    private List<EfCaTour> checkPlannedTour() throws ApiException {
+        ObjectMapper objectMapper = new ObjectMapper()
+                .configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false)
+                .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+        objectMapper.registerModule(new JavaTimeModule());
+
+        List<TourStatus> tourStatusList = processMgmtApi.getTourStatusList();
+        List<EfCaTour> tours = new ArrayList<>();
+        for (TourStatus tourStatus : tourStatusList) {
+            try {
+                tours.add(objectMapper.readValue(tourStatus.getTourString(), EfCaTour.class));
+            } catch (final IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return tours;
+    }
     //Vehicle id
     EfCaVehicle vehicle1 = new EfCaVehicle().ident("V1");
     EfCaVehicle vehicle2 = new EfCaVehicle().ident("V2");

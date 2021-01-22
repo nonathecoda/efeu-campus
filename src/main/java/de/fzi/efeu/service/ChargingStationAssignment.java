@@ -16,9 +16,6 @@ import java.util.Map;
 //@SpringBootApplication
 public class ChargingStationAssignment {
     @Autowired
-    private OrderApi orderApi;
-
-    @Autowired
     private VehicleApi vehicleApi;
 
     @Autowired
@@ -26,16 +23,6 @@ public class ChargingStationAssignment {
 
     @Autowired
     private ProcessMgmtApi processMgmtApi;
-
-    @Autowired
-    private TimeProvider timeProvider;
-
-    @Autowired
-    private AddressApi addressApi;
-
-    @Autowired
-    private BuildingApi buildingApi; //Later might be used
-
 
     // Vehicle-Station-Assignment: Vehicle i to Station i
     //TODO: Fahrzeug zur nahsten Ladestation
