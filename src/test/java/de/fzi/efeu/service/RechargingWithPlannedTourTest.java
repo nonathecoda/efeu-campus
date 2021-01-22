@@ -31,13 +31,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 public class RechargingWithPlannedTourTest {
     @Autowired
-    private RechargingWithPlannedTour rechargingWithPlannedTour;
+    private RechargingWithPlannedTourTestVersion rechargingWithPlannedTourTestVersion;
+
 
     @Autowired
-    OrderApi orderApi;
+    private OrderApi orderApi;
 
     @Autowired
-    ProcessMgmtApi processMgmtApi;
+    private ProcessMgmtApi processMgmtApi;
 
     @Autowired
     private ChargingStationAssignment chargingStationAssignment;

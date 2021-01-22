@@ -44,6 +44,9 @@ class EmergencyCharging extends TimerTask {
     @Value("${emergencyRecharging.duration}")
     private Integer emergencyRechargingDuration; //set 20 min in application.properties
 
+    @Value("${thresholdSoC.emergency}")
+    private Integer thresholdSoCEmergency; //set 20 min in application.properties
+
 
     EmergencyCharging() //Constructor //Todo not correct yet
     {
@@ -59,7 +62,7 @@ class EmergencyCharging extends TimerTask {
             float SoC;
             for (EfCaVehicle vehicle : vehicles) {
                 SoC = processMgmtApi.getVehicleStatus(vehicle.getIdent()).getStateOfCharge();
-                if (SoC < 0.3f) {
+                if (SoC < thresholdSoCEmergency) {
                     OffsetDateTime now = timeProvider.now();
                     createRechargingOrderEmergency(now, vehicle);
                 }

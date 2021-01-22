@@ -53,6 +53,10 @@ public class RechargingWithPlannedTour {
     @Value("${charging.power}")
     private Integer chargingPower;
 
+    @Value("${thresholdSoC.plannedTour}")
+    private Integer thresholdSoCPlannedTour;
+
+
     //Idea: check energy consumption of planned tours (until the next recharging stop) for each vehicle. If the energy
     //consumption more than a threshold, trigger creating a charging order. Start charging time should be the end of the
     //latest successfully planned tour.
@@ -154,12 +158,12 @@ public class RechargingWithPlannedTour {
     private void scheduleRechargingOrderPlannedTour(EfCaVehicle vehicle) throws ApiException {
         double energyConsumptionTours = checkEnergyConsumptionPlannedToursPerVehicle(vehicle);
         double currentVehicleSoC = processMgmtApi.getVehicleStatus(vehicle.getIdent()).getStateOfCharge();
-        if (energyConsumptionTours >= (currentVehicleSoC - 0.3) * batteryCapacity) { //SoC always above 30%
+        if (energyConsumptionTours >= (currentVehicleSoC - thresholdSoCPlannedTour) * batteryCapacity) { //SoC always above 30%, thresholdSoCPlannedTour = 0.3
             OffsetDateTime time = checkLatestPlannedTour(vehicle).getTourHeader().getEndDateTime();
             createRechargingOrderPlannedTour(time, vehicle, currentVehicleSoC, energyConsumptionTours);
         }
     }
-//For loop create for all vehicles --> Todo: who should run this method? --> Schnittstelle, evtl process management, wenn Tourplannung beginnt --> Rename
+//For loop create for all vehicles --> Todo: who should run this method? --> Schnittstelle, evtl. process management, wenn Tourplannung beginnt --> Rename method
     private void scheduleRechargingOrderAllVehicles() throws ApiException {
         List<EfCaVehicle> vehicles = vehicleApi.getAllVehicles().getVehicles();
         for (EfCaVehicle vehicle : vehicles){
@@ -167,11 +171,11 @@ public class RechargingWithPlannedTour {
         }
     }
 
-    private void createRechargingOrderPlannedTour(OffsetDateTime chargingStartTime, EfCaVehicle vehicle, double SoC, double energyConsumption) throws ApiException {
+    private void createRechargingOrderPlannedTour(OffsetDateTime chargingStartTime, EfCaVehicle vehicle, double currentVehicleSoC, double energyConsumption) throws ApiException {
         //Create a charging order before this tour
         // Charge battery until it's full again
         //ToDo:Optimierungsmöglichkeit: Charging duration
-            long chargingDurationPlannedTour = (long) ((batteryCapacity-SoC*batteryCapacity+energyConsumption)/chargingPower*3600); //seconds
+            long chargingDurationPlannedTour = (long) ((batteryCapacity-currentVehicleSoC*batteryCapacity+energyConsumption)/chargingPower*3600); //seconds
             EfCaDateTimeSlot orderTimeSlot = new EfCaDateTimeSlot()
                         .start(chargingStartTime.minusHours(6)) //Dummy setting to ensure orderTimeSlot longer than pickup and delivery timeslot
                         .end(chargingStartTime.plusHours(6));

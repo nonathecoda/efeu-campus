@@ -15,13 +15,13 @@ import java.util.*;
 
 public class RechargingWithPlannedTourSupporter {
     @Autowired
-    private RechargingWithPlannedTour rechargingWithPlannedTour;
+    private RechargingWithPlannedTourTestVersion rechargingWithPlannedTourTestVersion;
 
     @Autowired
-    OrderApi orderApi;
+    private OrderApi orderApi;
 
     @Autowired
-    ProcessMgmtApi processMgmtApi;
+    private ProcessMgmtApi processMgmtApi;
 
     @Autowired
     private ChargingStationAssignment chargingStationAssignment;
@@ -47,7 +47,7 @@ public class RechargingWithPlannedTourSupporter {
     @Value("${charging.power}")
     private Integer chargingPower;
 
-    
+
     //Todo: Objectmapper testen?
     private List<EfCaTour> checkPlannedTour() throws ApiException {
         ObjectMapper objectMapper = new ObjectMapper()
