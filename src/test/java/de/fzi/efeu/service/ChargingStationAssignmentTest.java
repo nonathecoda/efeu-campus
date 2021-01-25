@@ -5,13 +5,13 @@ import de.fzi.efeu.efeuportal.api.ChargingStationApi;
 import de.fzi.efeu.efeuportal.api.VehicleApi;
 import de.fzi.efeu.efeuportal.model.EfCaChargingStation;
 import de.fzi.efeu.efeuportal.model.EfCaVehicle;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

@@ -104,7 +104,6 @@ public class RechargingWithPlannedTour {
         });
         return toursForVehicle;
     }
-
     //Note: One tour just for one vehicle. One tour contains multiple stops
     //Note: How to export a route plan? Robo 3T? Swagger while Simulation is running
 
@@ -223,8 +222,10 @@ public class RechargingWithPlannedTour {
             //connectionIds.setBuildingId(building.getIdent());
             //connectionIds.setAddressId(building.getAddressId());
             //connectionIds.setChargingStationId(building.getChargingStationIds().get(0));
+            EfCaBuilding buildingWithAssignedChargingStation = findBuildingWithAssignedChargingStation(vehicle);
             connectionIds.setChargingStationId(chargingStationAssignment.getAssignedStation(vehicle));
-            connectionIds.setAddressId(findBuildingWithAssignedChargingStation(vehicle).getAddressId());
+            connectionIds.setBuildingId(buildingWithAssignedChargingStation.getIdent());
+            connectionIds.setAddressId(buildingWithAssignedChargingStation.getAddressId());
             storage.storageIds(connectionIds);
             storage.setServiceTime((int) duration); //chargingDurationPlannedTour
             return storage;

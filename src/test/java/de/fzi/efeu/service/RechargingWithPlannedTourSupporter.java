@@ -2,37 +2,64 @@ package de.fzi.efeu.service;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
-import de.fzi.efeu.efeuportal.ApiException;
-import de.fzi.efeu.efeuportal.api.*;
-import de.fzi.efeu.efeuportal.model.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.*;
 
+
+import de.fzi.efeu.efeuportal.api.ChargingStationApi;
+import de.fzi.efeu.efeuportal.api.VehicleApi;
+import de.fzi.efeu.efeuportal.model.EfCaChargingStation;
+import de.fzi.efeu.efeuportal.model.EfCaVehicle;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.ArgumentMatchers.any;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import de.fzi.efeu.efeuportal.ApiException;
+import de.fzi.efeu.efeuportal.api.OrderApi;
+import de.fzi.efeu.efeuportal.api.*;
+import de.fzi.efeu.efeuportal.model.*;
+import de.fzi.efeu.util.OrderState;
+import de.fzi.efeu.util.TimeProvider;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class RechargingWithPlannedTourSupporter {
     @Autowired
     private RechargingWithPlannedTourTestVersion rechargingWithPlannedTourTestVersion;
 
-    @Autowired
+    @MockBean
     private OrderApi orderApi;
 
-    @Autowired
+    @MockBean
     private ProcessMgmtApi processMgmtApi;
 
     @Autowired
     private ChargingStationAssignment chargingStationAssignment;
 
-    @Autowired
+    @MockBean
     private VehicleApi vehicleApi;
 
-    @Autowired
+    @MockBean
     private ChargingStationApi chargingStationApi;
 
-    @Autowired
+    @MockBean
     private BuildingApi buildingApi;
 
     @Value("${consumption.driving}") //Energieverbrauch während Fahren
@@ -47,8 +74,8 @@ public class RechargingWithPlannedTourSupporter {
     @Value("${charging.power}")
     private Integer chargingPower;
 
-
     //Todo: Objectmapper testen?
+    @Test
     private List<EfCaTour> checkPlannedTour() throws ApiException {
         ObjectMapper objectMapper = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false)

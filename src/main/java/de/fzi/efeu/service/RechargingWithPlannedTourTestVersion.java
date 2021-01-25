@@ -223,10 +223,10 @@ public class RechargingWithPlannedTourTestVersion {
         //connectionIds.setBuildingId(building.getIdent());
         //connectionIds.setAddressId(building.getAddressId());
         //connectionIds.setChargingStationId(building.getChargingStationIds().get(0));
+        EfCaBuilding buildingWithAssignedChargingStation = findBuildingWithAssignedChargingStation(vehicle);
         connectionIds.setChargingStationId(chargingStationAssignment.getAssignedStation(vehicle));
-        //TOdo Charging Station Address
-        //TODO: what if a building contains multiple charging stations? Can the building be found by one charging station?
-        connectionIds.setAddressId(findBuildingWithAssignedChargingStation(vehicle).getAddressId());
+        connectionIds.setBuildingId(buildingWithAssignedChargingStation.getIdent());
+        connectionIds.setAddressId(buildingWithAssignedChargingStation.getAddressId());
         storage.storageIds(connectionIds);
         storage.setServiceTime((int) duration); //chargingDurationPlannedTour
         return storage;

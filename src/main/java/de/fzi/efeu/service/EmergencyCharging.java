@@ -17,9 +17,6 @@ import java.util.TimerTask;
 import java.util.ArrayList;
 
 class EmergencyCharging extends TimerTask {
-
-    @Autowired
-    private ChargingStationAssignment chargingStationAssignment;
     @Autowired
     private OrderApi orderApi;
 
@@ -40,6 +37,9 @@ class EmergencyCharging extends TimerTask {
 
     @Autowired
     private ChargingStationApi chargingStationApi;
+
+    @Autowired
+    private ChargingStationAssignment chargingStationAssignment;
 
     @Value("${emergencyRecharging.duration}")
     private Integer emergencyRechargingDuration; //set 20 min in application.properties
@@ -125,10 +125,22 @@ class EmergencyCharging extends TimerTask {
         //connectionIds.setBuildingId(building.getIdent());
         //connectionIds.setAddressId(building.getAddressId());
         //connectionIds.setChargingStationId(building.getChargingStationIds().get(0));
+        EfCaBuilding buildingWithAssignedChargingStation = findBuildingWithAssignedChargingStation(vehicle);
         connectionIds.setChargingStationId(chargingStationAssignment.getAssignedStation(vehicle));
-        connectionIds.setAddressId(chargingStationAssignment.getAssignedStation(vehicle));
+        connectionIds.setBuildingId(buildingWithAssignedChargingStation.getIdent());
+        connectionIds.setAddressId(buildingWithAssignedChargingStation.getAddressId());
         storage.storageIds(connectionIds);
         storage.setServiceTime(emergencyRechargingDuration);
         return storage;
+    }
+    private EfCaBuilding findBuildingWithAssignedChargingStation (EfCaVehicle vehicle) throws ApiException {
+        List<EfCaBuilding> buildingsWithCharging = buildingApi.findBuildingsByFinder(new EfCaBuilding().type("CHARGING_AREA")).getBuildings();
+        for (int i = 0; i < buildingsWithCharging.size(); i++) {
+            EfCaBuilding buildingWithAssignedChargingStation = buildingsWithCharging.get(i);
+            if (buildingWithAssignedChargingStation.getChargingStationIds().contains(chargingStationAssignment.getAssignedStation(vehicle))) {
+                return buildingWithAssignedChargingStation;
+            }
+        }
+        return null;
     }
 }
