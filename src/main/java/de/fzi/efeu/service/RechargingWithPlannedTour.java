@@ -54,7 +54,7 @@ public class RechargingWithPlannedTour {
     private Integer chargingPower;
 
     @Value("${thresholdSoC.plannedTour}")
-    private Integer thresholdSoCPlannedTour;
+    private Double thresholdSoCPlannedTour;
 
 
     //Idea: check energy consumption of planned tours (until the next recharging stop) for each vehicle. If the energy
@@ -81,7 +81,7 @@ public class RechargingWithPlannedTour {
     }
 
     //Select tours for vehicle and sort them based on their start time
-    private List<EfCaTour> selectAndSortTourPerVehicle(EfCaVehicle vehicle) throws ApiException {
+    public List<EfCaTour> selectAndSortTourPerVehicle(EfCaVehicle vehicle) throws ApiException {
         List<EfCaTour> tours = checkPlannedTour();
         List <EfCaTour> toursForVehicle = new ArrayList<>();
         for (EfCaTour tour : tours){

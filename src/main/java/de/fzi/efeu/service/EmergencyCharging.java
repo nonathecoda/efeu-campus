@@ -45,7 +45,7 @@ class EmergencyCharging extends TimerTask {
     private Integer emergencyRechargingDuration; //set 20 min in application.properties
 
     @Value("${thresholdSoC.emergency}")
-    private Integer thresholdSoCEmergency; //set 20 min in application.properties
+    private Double thresholdSoCEmergency;
 
 
     EmergencyCharging() //Constructor //Todo not correct yet
