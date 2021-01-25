@@ -216,23 +216,31 @@ public class RechargingWithPlannedTourTestVersion {
     }
 
     //Delivery --> Charging Station
-    public EfCaStorage createDeliveryStorage (EfCaVehicle vehicle, long duration) throws ApiException {
+    private EfCaStorage createDeliveryStorage (EfCaVehicle vehicle, long duration) throws ApiException {
         EfCaStorage storage = new EfCaStorage();
         EfCaConnectionIds connectionIds = new EfCaConnectionIds();
-        //EfCaBuilding building = buildingApi.findBuildingsByFinder(new EfCaBuilding().type("CHARGING_AREA")).getBuildings().get(0);
-        //new EfCaBuilding().getChargingStationIds();
         //EfCaBuilding building = buildingApi.findBuildingsByFinder(new EfCaBuilding().chargingStationIds(chargingStationIds)).ident(chargingStationAssignment.getAssignedStation(vehicle));
         //connectionIds.setBuildingId(building.getIdent());
         //connectionIds.setAddressId(building.getAddressId());
         //connectionIds.setChargingStationId(building.getChargingStationIds().get(0));
         connectionIds.setChargingStationId(chargingStationAssignment.getAssignedStation(vehicle));
         //TOdo Charging Station Address
-        //TODO: in a list contains an element
-        //EfCaBuilding building = buildingApi.findBuildingsByFinder(new EfCaBuilding().chargingStationIds(chargingStationAssignment.getAssignedStation(vehicle)));
-        connectionIds.setAddressId(chargingStationAssignment.getAssignedStation(vehicle));
+        //TODO: what if a building contains multiple charging stations? Can the building be found by one charging station?
+        connectionIds.setAddressId(findBuildingWithAssignedChargingStation(vehicle).getAddressId());
         storage.storageIds(connectionIds);
         storage.setServiceTime((int) duration); //chargingDurationPlannedTour
         return storage;
+    }
+
+    private EfCaBuilding findBuildingWithAssignedChargingStation (EfCaVehicle vehicle) throws ApiException {
+        List<EfCaBuilding> buildingsWithCharging = buildingApi.findBuildingsByFinder(new EfCaBuilding().type("CHARGING_AREA")).getBuildings();
+        for (int i = 0; i < buildingsWithCharging.size(); i++) {
+            EfCaBuilding buildingWithAssignedChargingStation = buildingsWithCharging.get(i);
+            if (buildingWithAssignedChargingStation.getChargingStationIds().contains(chargingStationAssignment.getAssignedStation(vehicle))) {
+                return buildingWithAssignedChargingStation;
+            }
+        }
+        return null;
     }
 }
 

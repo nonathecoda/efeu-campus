@@ -143,7 +143,7 @@ public class RechargingWithPlannedTour {
         return latestPlannedTour;
     }
 
-    //Check if there is recharging stops along a tour (via action point type == "Recharging")
+    //Check if there are recharging stops along a tour (via action point type == "Recharging")
     private boolean checkIfChargingStop(EfCaTourStop stop) throws ApiException {
         for (EfCaTourActionPoint actionPoint: stop.getTourActionPoints()){
             EfCaOrderResp actionPointOrderResp = orderApi.findOrdersByFinder(new EfCaOrder().ident(actionPoint.getOrderExtId1())); //An action point has an unique OrderExtId1
@@ -163,7 +163,8 @@ public class RechargingWithPlannedTour {
             createRechargingOrderPlannedTour(time, vehicle, currentVehicleSoC, energyConsumptionTours);
         }
     }
-//For loop create for all vehicles --> Todo: who should run this method? --> Schnittstelle, evtl. process management, wenn Tourplannung beginnt --> Rename method
+//For loop create for all vehicles
+// Todo: who should run this method? --> Schnittstelle, evtl. process management, wenn Tourplannung beginnt --> Rename method
     private void scheduleRechargingOrderAllVehicles() throws ApiException {
         List<EfCaVehicle> vehicles = vehicleApi.getAllVehicles().getVehicles();
         for (EfCaVehicle vehicle : vehicles){
@@ -203,7 +204,7 @@ public class RechargingWithPlannedTour {
             }
 
         //Pickup --> Dummy
-        public EfCaStorage createPickupStorage () throws ApiException {
+        private EfCaStorage createPickupStorage () throws ApiException {
             EfCaStorage storage = new EfCaStorage();
             EfCaConnectionIds connectionIds = new EfCaConnectionIds();
             EfCaBuilding building = buildingApi.findBuildingsByFinder(new EfCaBuilding().type("DEPOT")).getBuildings().get(0);
@@ -215,23 +216,29 @@ public class RechargingWithPlannedTour {
         }
 
         //Delivery --> Charging Station
-        public EfCaStorage createDeliveryStorage (EfCaVehicle vehicle, long duration) throws ApiException {
+        private EfCaStorage createDeliveryStorage (EfCaVehicle vehicle, long duration) throws ApiException {
             EfCaStorage storage = new EfCaStorage();
             EfCaConnectionIds connectionIds = new EfCaConnectionIds();
-            //EfCaBuilding building = buildingApi.findBuildingsByFinder(new EfCaBuilding().type("CHARGING_AREA")).getBuildings().get(0);
-            //new EfCaBuilding().getChargingStationIds();
             //EfCaBuilding building = buildingApi.findBuildingsByFinder(new EfCaBuilding().chargingStationIds(chargingStationIds)).ident(chargingStationAssignment.getAssignedStation(vehicle));
             //connectionIds.setBuildingId(building.getIdent());
             //connectionIds.setAddressId(building.getAddressId());
             //connectionIds.setChargingStationId(building.getChargingStationIds().get(0));
             connectionIds.setChargingStationId(chargingStationAssignment.getAssignedStation(vehicle));
-            //TOdo Charging Station Address
-            //TODO: in a list contains an element
-            //EfCaBuilding building = buildingApi.findBuildingsByFinder(new EfCaBuilding().chargingStationIds(chargingStationAssignment.getAssignedStation(vehicle)));
-            connectionIds.setAddressId(chargingStationAssignment.getAssignedStation(vehicle));
+            connectionIds.setAddressId(findBuildingWithAssignedChargingStation(vehicle).getAddressId());
             storage.storageIds(connectionIds);
             storage.setServiceTime((int) duration); //chargingDurationPlannedTour
             return storage;
+        }
+
+        private EfCaBuilding findBuildingWithAssignedChargingStation (EfCaVehicle vehicle) throws ApiException {
+            List<EfCaBuilding> buildingsWithCharging = buildingApi.findBuildingsByFinder(new EfCaBuilding().type("CHARGING_AREA")).getBuildings();
+            for (int i = 0; i < buildingsWithCharging.size(); i++) {
+                EfCaBuilding buildingWithAssignedChargingStation = buildingsWithCharging.get(i);
+                if (buildingWithAssignedChargingStation.getChargingStationIds().contains(chargingStationAssignment.getAssignedStation(vehicle))) {
+                    return buildingWithAssignedChargingStation;
+                }
+            }
+            return null;
         }
 }
 
