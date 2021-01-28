@@ -1,0 +1,106 @@
+import java.util.*;
+import java.lang.Math.*;
+
+public class Main {
+
+	static public ArrayList<ServiceBot> createBotList(Knot depot) {
+		ArrayList<ServiceBot> botList = new ArrayList<>();
+		for (int i = 0; i < 5; i++) {
+			ServiceBot dummyBot = new ServiceBot(i, 1.0, depot);
+			botList.add(dummyBot);
+		}
+		return botList;
+	}
+
+	static public ArrayList<Order> createOrderList(ArrayList<Knot> knots, Knot depot) {
+		ArrayList<Order> orderList = new ArrayList<>();
+		Knot randomPickUp = depot;
+		Knot randomDelivery = depot;
+		int randomStartingTime = 0;
+		int randomHandlingTime = 0;
+
+		for (int i = 0; i < 10; i++) {
+			// 1 = pickup, 2 = delivery
+			int ran = (int) ((Math.random() * (3 - 1)) + 1);
+			switch (ran) {
+			case 1:
+				randomPickUp = knots.get((int) (Math.random() * knots.size())); // nicht depot
+				randomDelivery = depot;// Depot
+				randomStartingTime = (int) (Math.random() * 480);
+				randomHandlingTime = (int) ((Math.random() * (30 - 5)) + 5);
+				break;
+			case 2:
+				randomPickUp = depot; // Depot
+				randomDelivery = knots.get((int) (Math.random() * knots.size())); // nicht depot
+				randomStartingTime = (int) (Math.random() * 480);
+				randomHandlingTime = (int) ((Math.random() * (30 - 5)) + 5);
+				break;
+
+			}
+
+			Order dummyOrder = new Order(randomPickUp, randomDelivery, randomStartingTime, randomHandlingTime);
+			orderList.add(dummyOrder);
+		}
+
+		// Liste nach startingTime sortieren
+		Collections.sort(orderList, Comparator.comparing(Order::getStartingTime));
+
+		return orderList;
+	}
+
+	public static void main(String[] args) {
+
+		Campus c = new Campus(10);
+		ArrayList<Knot> knots = c.getKnots();
+		Knot depot = c.getDepot();
+		ArrayList<ServiceBot> bots = createBotList(depot);
+		ArrayList<Order> orderList = createOrderList(knots, depot);
+
+		// orders ausgeben:
+		for (int i = 0; i < orderList.size(); i++) {
+			Order dummyOrder = orderList.get(i);
+			Knot dummyPickUpKnot = dummyOrder.pickUpID;
+			Knot dummyDeliveryKnot = dummyOrder.deliveryID;
+
+			System.out.println("PickUpID: " + dummyPickUpKnot.knotID + ", DeliveryID: " + dummyDeliveryKnot.knotID
+					+ ", Starting Time: " + dummyOrder.startingTime + ", Handling Time: " + dummyOrder.handlingTime);
+		}
+
+		double min = 0;
+
+		ServiceBot dummy = bots.get(0);	//nur für einen Bot
+		double velocity = 2; // beispielhafte geschwindigkeit in m/sec
+
+		for (int i = 0; i < orderList.size() && min < 480; i++) { // geht orderliste durch
+
+			Knot currentLocation = dummy.getLocation();
+			Order currentOrder = orderList.get(i);
+			Knot pickUp = currentOrder.getPickUpID();
+			Knot delivery = currentOrder.getDeliveryID();
+
+			// calculate distance from initial point to pickup to delivery:
+
+			double dist1X = currentLocation.getX() + pickUp.getX();
+			double dist1Y = currentLocation.getY() + pickUp.getY();
+			double dist1 = (Math.sqrt(Math.pow(dist1X, 2) + Math.pow(dist1Y, 2)));
+
+			double dist2X = pickUp.getX() + delivery.getX();
+			double dist2Y = pickUp.getY() + delivery.getY();
+			double dist2 = (Math.sqrt(Math.pow(dist2X, 2) + Math.pow(dist2Y, 2)));
+
+			double overallDistance = dist1 + dist2;
+
+			double minutesNeeded = overallDistance / velocity / 60;
+
+			System.out.println("\n");
+			System.out.println("Order Nr. " + (i + 1));
+			System.out.println(
+					"Distanz: " + Math.round(overallDistance) + " Meter, Zeitaufwand: " + Math.round(minutesNeeded) + " Minuten");
+
+			dummy.setLocation(delivery);
+			min = min + minutesNeeded;
+		}
+
+	}
+
+}
