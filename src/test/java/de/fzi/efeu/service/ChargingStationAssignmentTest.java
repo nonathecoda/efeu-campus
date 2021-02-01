@@ -39,7 +39,7 @@ public class ChargingStationAssignmentTest {
         List<EfCaChargingStation> chargingStations = new ArrayList<>();
         //List<EfCaVehicle> vehicles = new ArrayList<>();
 
-        EfCaChargingStation chargingStation1 = new EfCaChargingStation().ident("S1");
+        EfCaChargingStation chargingStation1 = new EfCaChargingStation().ident("S1").latitude(49.116625).longitude(8.588302);
         EfCaChargingStation chargingStation2 = new EfCaChargingStation().ident("S2");
         EfCaChargingStation chargingStation3 = new EfCaChargingStation().ident("S3");
         EfCaChargingStation chargingStation4 = new EfCaChargingStation().ident("S4");
@@ -87,6 +87,7 @@ public class ChargingStationAssignmentTest {
         //assertEquals(expected, actual)
         //assertNotNull(chargingStationId1);
         assertEquals(chargingStation1.getIdent(), testMapVehicleStation.get(vehicle1.getIdent()));
+        //assertEquals(chargingStation1, testMapVehicleStation.get(vehicle1));
         assertEquals(chargingStation2.getIdent(), testMapVehicleStation.get(vehicle2.getIdent()));
         assertEquals(chargingStation3.getIdent(), testMapVehicleStation.get(vehicle3.getIdent()));
         assertEquals(chargingStation4.getIdent(), testMapVehicleStation.get(vehicle4.getIdent()));

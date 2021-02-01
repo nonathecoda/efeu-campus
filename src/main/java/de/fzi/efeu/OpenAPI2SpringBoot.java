@@ -23,6 +23,7 @@ public class OpenAPI2SpringBoot implements CommandLineRunner {
     }
 
     public static void main(String[] args) throws Exception {
+        System.out.println("hehe"+ args);
         new SpringApplication(OpenAPI2SpringBoot.class).run(args);
     }
 
