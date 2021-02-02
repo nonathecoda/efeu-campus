@@ -62,7 +62,7 @@ public class RechargingWithPlannedTour {
     //latest successfully planned tour.
 
     //Get tour information
-    private List<EfCaTour> checkPlannedTour() throws ApiException {
+    public List<EfCaTour> checkPlannedTour() throws ApiException {
         ObjectMapper objectMapper = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false)
                 .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
@@ -89,16 +89,13 @@ public class RechargingWithPlannedTour {
                 toursForVehicle.add(tour);
             }
         }
-        //toursForVehicle.stream().sorted().collect(Collectors.toList());
-        /*List <EfCaTour> sortedToursVehicle = toursForVehicle.stream().sorted((tour1, tour2)->tour1.getTourHeader().getStartDateTime()
-                        .compareTo(tour2.getTourHeader().getStartDateTime())).collect(Collectors.toList());
-
-        return sortedToursVehicle;*/
 
         //Sort tours based on their start time
         Collections.sort(toursForVehicle, new Comparator<EfCaTour>() {
-            @Override
+            //@Override
             public int compare(EfCaTour u1, EfCaTour u2) {
+                if (u1.getTourHeader().getStartDateTime() == null || u2.getTourHeader().getStartDateTime() == null)
+                    return 0;
                 return u1.getTourHeader().getStartDateTime().compareTo(u2.getTourHeader().getStartDateTime());
             }
         });
@@ -126,7 +123,7 @@ public class RechargingWithPlannedTour {
     }
 
     //Get the latest unplanned tour --> get its start time and create recharging order at this time point
-    private EfCaTour checkLatestPlannedTour(EfCaVehicle vehicle) throws ApiException {
+    public EfCaTour checkLatestPlannedTour(EfCaVehicle vehicle) throws ApiException {
         List<EfCaTour> toursForVehicle = selectAndSortTourPerVehicle(vehicle);
         List<EfCaTour> plannedTour = new ArrayList<>();
         outerLoop:
@@ -163,7 +160,7 @@ public class RechargingWithPlannedTour {
         }
     }
 //For loop create for all vehicles
-// Todo: who should run this method? --> Schnittstelle, evtl. process management, wenn Tourplannung beginnt --> Rename method
+// Todo: who should run this method? --> Schnittstelle, evtl. process management, wenn Tourenplanung beginnt --> Rename method
     private void scheduleRechargingOrderAllVehicles() throws ApiException {
         List<EfCaVehicle> vehicles = vehicleApi.getAllVehicles().getVehicles();
         for (EfCaVehicle vehicle : vehicles){

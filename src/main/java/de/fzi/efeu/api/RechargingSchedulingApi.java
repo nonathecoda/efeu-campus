@@ -5,23 +5,31 @@
  */
 package de.fzi.efeu.api;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+import javax.validation.constraints.*;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-09-15T09:15:36.283107100+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-01-26T15:27:31.942536300+01:00[Europe/Berlin]")
 
 @Validated
-@Api(value = "RechargingScheduling", description = "the RechargingScheduling API")
+@Api(value = "rechargingScheduling", description = "the rechargingScheduling API")
 public interface RechargingSchedulingApi {
 
     default Optional<NativeWebRequest> getRequest() {
@@ -29,18 +37,72 @@ public interface RechargingSchedulingApi {
     }
 
     /**
-     * POST /scheduleRechargingOrders/ : schedule new recharging orders
+     * POST /rechargingScheduling/emergencyCharging/ : emergency charging
      *
      * @return Success (status code 200)
      *         or Failure (status code 400)
      */
-    @ApiOperation(value = "schedule new recharging orders", nickname = "scheduleRechargingOrders", notes = "", tags={ "RechargingScheduling", })
+    @ApiOperation(value = "emergency charging", nickname = "emergencyCharging", notes = "", tags={ "Recharging Scheduling", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Success"),
         @ApiResponse(code = 400, message = "Failure") })
-    @RequestMapping(value = "/scheduleRechargingOrders/",
+    @RequestMapping(value = "/rechargingScheduling/emergencyCharging/",
         method = RequestMethod.POST)
-    default ResponseEntity<Void> scheduleRechargingOrders() {
+    default ResponseEntity<Void> emergencyCharging() {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * POST /rechargingScheduling/rechargingPerDaySameTime/ : recharging scheduling each day at same time
+     *
+     * @return Success (status code 200)
+     *         or Failure (status code 400)
+     */
+    @ApiOperation(value = "recharging scheduling each day at same time", nickname = "rechargingPerDaySameTime", notes = "", tags={ "Recharging Scheduling", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Success"),
+        @ApiResponse(code = 400, message = "Failure") })
+    @RequestMapping(value = "/rechargingScheduling/rechargingPerDaySameTime/",
+        method = RequestMethod.POST)
+    default ResponseEntity<Void> rechargingPerDaySameTime() {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * POST /rechargingScheduling/rechargingServiceMatin/ : schedule new recharging orders every hour with duration 30 minutes
+     *
+     * @return Success (status code 200)
+     *         or Failure (status code 400)
+     */
+    @ApiOperation(value = "schedule new recharging orders every hour with duration 30 minutes", nickname = "rechargingServiceMartin", notes = "", tags={ "Recharging Scheduling", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Success"),
+        @ApiResponse(code = 400, message = "Failure") })
+    @RequestMapping(value = "/rechargingScheduling/rechargingServiceMatin/",
+        method = RequestMethod.POST)
+    default ResponseEntity<Void> rechargingServiceMartin() {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * POST /rechargingScheduling/rechargingWithPlannedTour/ : schedule new recharging orders in advance of energy consumption from planned tours
+     *
+     * @return Success (status code 200)
+     *         or Failure (status code 400)
+     */
+    @ApiOperation(value = "schedule new recharging orders in advance of energy consumption from planned tours", nickname = "rechargingWithPlannedTour", notes = "", tags={ "Recharging Scheduling", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Success"),
+        @ApiResponse(code = 400, message = "Failure") })
+    @RequestMapping(value = "/rechargingScheduling/rechargingWithPlannedTour/",
+        method = RequestMethod.POST)
+    default ResponseEntity<Void> rechargingWithPlannedTour() {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }

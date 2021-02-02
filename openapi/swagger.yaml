@@ -9,12 +9,12 @@ tags:
   - name: RechargingScheduling
     description: Recharching Scheduling Service
 paths:
-  /scheduleRechargingOrders/:
+  /rechargingScheduling/rechargingServiceMatin/:
     post:
       tags:
-        - RechargingScheduling
-      summary: schedule new recharging orders
-      operationId: scheduleRechargingOrders
+        - Recharging Scheduling
+      summary: schedule new recharging orders every hour with duration 30 minutes
+      operationId: rechargingServiceMartin
       responses:
         200:
           description: Success
@@ -22,3 +22,45 @@ paths:
         400:
           description: Failure
           content: {}
+
+  /rechargingScheduling/rechargingWithPlannedTour/:
+    post:
+      tags:
+        - Recharging Scheduling
+      summary: schedule new recharging orders in advance of energy consumption from planned tours
+      operationId: rechargingWithPlannedTour
+      responses:
+        200:
+          description: Success
+          content: { }
+        400:
+          description: Failure
+          content: { }
+
+  /rechargingScheduling/emergencyCharging/:
+    post:
+      tags:
+        - Recharging Scheduling
+      summary: emergency charging
+      operationId: emergencyCharging
+      responses:
+        200:
+          description: Success
+          content: { }
+        400:
+          description: Failure
+          content: { }
+
+  /rechargingScheduling/rechargingPerDaySameTime/:
+    post:
+      tags:
+        - Recharging Scheduling
+      summary: recharging scheduling each day at same time
+      operationId: rechargingPerDaySameTime
+      responses:
+        200:
+          description: Success
+          content: { }
+        400:
+          description: Failure
+          content: { }

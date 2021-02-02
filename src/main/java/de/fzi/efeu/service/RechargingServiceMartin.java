@@ -21,7 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class RechargingService {
+public class RechargingServiceMartin {
 
     @Autowired
     private OrderApi orderApi;
