@@ -61,6 +61,15 @@ public class RechargingWithPlannedTour {
     //consumption more than a threshold, trigger creating a charging order. Start charging time should be the end of the
     //latest successfully planned tour.
 
+    //For loop create for all vehicles
+// Todo: who should run this method? --> Schnittstelle, evtl. process management, wenn Tourenplanung beginnt --> Rename method
+    private void scheduleRechargingOrder_PlannedTour() throws ApiException {
+        List<EfCaVehicle> vehicles = vehicleApi.getAllVehicles().getVehicles();
+        for (EfCaVehicle vehicle : vehicles){
+            scheduleRechargingOrderPlannedTour(vehicle);
+        }
+    }
+
     //Get tour information
     public List<EfCaTour> checkPlannedTour() throws ApiException {
         ObjectMapper objectMapper = new ObjectMapper()
@@ -157,14 +166,6 @@ public class RechargingWithPlannedTour {
         if (energyConsumptionTours >= (currentVehicleSoC - thresholdSoCPlannedTour) * batteryCapacity) { //SoC always above 30%, thresholdSoCPlannedTour = 0.3
             OffsetDateTime time = checkLatestPlannedTour(vehicle).getTourHeader().getEndDateTime();
             createRechargingOrderPlannedTour(time, vehicle, currentVehicleSoC, energyConsumptionTours);
-        }
-    }
-//For loop create for all vehicles
-// Todo: who should run this method? --> Schnittstelle, evtl. process management, wenn Tourenplanung beginnt --> Rename method
-    private void scheduleRechargingOrderAllVehicles() throws ApiException {
-        List<EfCaVehicle> vehicles = vehicleApi.getAllVehicles().getVehicles();
-        for (EfCaVehicle vehicle : vehicles){
-            scheduleRechargingOrderPlannedTour(vehicle);
         }
     }
 

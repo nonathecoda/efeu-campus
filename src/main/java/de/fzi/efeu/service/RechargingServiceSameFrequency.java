@@ -21,8 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class RechargingServiceMartin {
-
+public class RechargingServiceSameFrequency {
     @Autowired
     private OrderApi orderApi;
 
@@ -40,6 +39,10 @@ public class RechargingServiceMartin {
 
     @Autowired
     private BuildingApi buildingApi;
+
+    @Autowired
+    private ChargingStationAssignment chargingStationAssignment;
+
 //Value adjustment under resources.application.properties
     @Value("${recharging.duration}")
     private Integer rechargingDuration;
@@ -50,7 +53,7 @@ public class RechargingServiceMartin {
 
     private Map<String, Duration> offsetByVehicle = new HashMap<>();
 
-    public void scheduleRechargingOrders() throws ApiException {
+    public void scheduleRechargingOrders_SameFrequency() throws ApiException {
         List<EfCaVehicle> vehicles = vehicleApi.getAllVehicles().getVehicles();
         OffsetDateTime now = timeProvider.now(); //now: orders have been planned
         for (final EfCaVehicle vehicle : vehicles) scheduleRechargingOrdersForVehicle(vehicle, now);
@@ -147,10 +150,10 @@ public class RechargingServiceMartin {
                 .pickupTimeSlots(List.of(pickupTimeSlot))
                 .deliveryTimeSlots(List.of(deliveryTimeSlot))
                 .pickup(createPickupStorage())
-                .delivery(createDeliveryStorage())
+                .delivery(createDeliveryStorage(vehicle))
                 .preassignedVehicleId(vehicle.getIdent())
                 .quantities(new EfCaQuantities().weight(0.1));
-        rechargingOrder.getPickup().getStorageIds().setChargingStationId(rechargingOrder.getDelivery().getStorageIds().getChargingStationId());
+        rechargingOrder.getPickup().getStorageIds().setChargingStationId(chargingStationAssignment.getAssignedStation(vehicle));
         orderApi.postAddOrders(new EfCaModelCollector().addOrdersItem(rechargingOrder));
         return deliveryTimeSlot.getEnd();
     }
@@ -167,16 +170,25 @@ public class RechargingServiceMartin {
         return storage;
     }
 
-    private EfCaStorage createDeliveryStorage() throws ApiException {
+    private EfCaStorage createDeliveryStorage(EfCaVehicle vehicle) throws ApiException {
         EfCaStorage storage = new EfCaStorage();
         EfCaConnectionIds connectionIds = new EfCaConnectionIds();
-        EfCaBuilding building = buildingApi.findBuildingsByFinder(new EfCaBuilding().type("CHARGING_AREA"))
-                .getBuildings().get(0);
-        connectionIds.setBuildingId(building.getIdent());
-        connectionIds.setAddressId(building.getAddressId());
-        connectionIds.setChargingStationId(building.getChargingStationIds().get(0));
+        EfCaBuilding buildingWithAssignedChargingStation = findBuildingWithAssignedChargingStation(vehicle);
+        connectionIds.setChargingStationId(chargingStationAssignment.getAssignedStation(vehicle));
+        connectionIds.setBuildingId(buildingWithAssignedChargingStation.getIdent());
+        connectionIds.setAddressId(buildingWithAssignedChargingStation.getAddressId());
         storage.storageIds(connectionIds);
         storage.setServiceTime(rechargingDuration);
         return storage;
+    }
+    private EfCaBuilding findBuildingWithAssignedChargingStation (EfCaVehicle vehicle) throws ApiException {
+        List<EfCaBuilding> buildingsWithCharging = buildingApi.findBuildingsByFinder(new EfCaBuilding().type("CHARGING_AREA")).getBuildings();
+        for (int i = 0; i < buildingsWithCharging.size(); i++) {
+            EfCaBuilding buildingWithAssignedChargingStation = buildingsWithCharging.get(i);
+            if (buildingWithAssignedChargingStation.getChargingStationIds().contains(chargingStationAssignment.getAssignedStation(vehicle))) {
+                return buildingWithAssignedChargingStation;
+            }
+        }
+        return null;
     }
 }
