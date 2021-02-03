@@ -196,7 +196,7 @@ public class RechargingWithPlannedTour {
                         .preassignedVehicleId(vehicle.getIdent())
                         .quantities(new EfCaQuantities().weight(0.1));
             //rechargingOrder.getPickup().getStorageIds().setChargingStationId(rechargingOrder.getDelivery().getStorageIds().getChargingStationId());
-            rechargingOrder.getPickup().getStorageIds().setChargingStationId(chargingStationAssignment.getAssignedStation(vehicle));
+            rechargingOrder.getPickup().getStorageIds().setChargingStationId(chargingStationAssignment.getAssignedStationId(vehicle));
             orderApi.postAddOrders(new EfCaModelCollector().addOrdersItem(rechargingOrder));
             }
 
@@ -221,7 +221,7 @@ public class RechargingWithPlannedTour {
             //connectionIds.setAddressId(building.getAddressId());
             //connectionIds.setChargingStationId(building.getChargingStationIds().get(0));
             EfCaBuilding buildingWithAssignedChargingStation = findBuildingWithAssignedChargingStation(vehicle);
-            connectionIds.setChargingStationId(chargingStationAssignment.getAssignedStation(vehicle));
+            connectionIds.setChargingStationId(chargingStationAssignment.getAssignedStationId(vehicle));
             connectionIds.setBuildingId(buildingWithAssignedChargingStation.getIdent());
             connectionIds.setAddressId(buildingWithAssignedChargingStation.getAddressId());
             storage.storageIds(connectionIds);
@@ -233,7 +233,7 @@ public class RechargingWithPlannedTour {
             List<EfCaBuilding> buildingsWithCharging = buildingApi.findBuildingsByFinder(new EfCaBuilding().type("CHARGING_AREA")).getBuildings();
             for (int i = 0; i < buildingsWithCharging.size(); i++) {
                 EfCaBuilding buildingWithAssignedChargingStation = buildingsWithCharging.get(i);
-                if (buildingWithAssignedChargingStation.getChargingStationIds().contains(chargingStationAssignment.getAssignedStation(vehicle))) {
+                if (buildingWithAssignedChargingStation.getChargingStationIds().contains(chargingStationAssignment.getAssignedStationId(vehicle))) {
                     return buildingWithAssignedChargingStation;
                 }
             }

@@ -153,7 +153,7 @@ public class RechargingServiceSameFrequency {
                 .delivery(createDeliveryStorage(vehicle))
                 .preassignedVehicleId(vehicle.getIdent())
                 .quantities(new EfCaQuantities().weight(0.1));
-        rechargingOrder.getPickup().getStorageIds().setChargingStationId(chargingStationAssignment.getAssignedStation(vehicle));
+        rechargingOrder.getPickup().getStorageIds().setChargingStationId(chargingStationAssignment.getAssignedStationId(vehicle));
         orderApi.postAddOrders(new EfCaModelCollector().addOrdersItem(rechargingOrder));
         return deliveryTimeSlot.getEnd();
     }
@@ -174,7 +174,7 @@ public class RechargingServiceSameFrequency {
         EfCaStorage storage = new EfCaStorage();
         EfCaConnectionIds connectionIds = new EfCaConnectionIds();
         EfCaBuilding buildingWithAssignedChargingStation = findBuildingWithAssignedChargingStation(vehicle);
-        connectionIds.setChargingStationId(chargingStationAssignment.getAssignedStation(vehicle));
+        connectionIds.setChargingStationId(chargingStationAssignment.getAssignedStationId(vehicle));
         connectionIds.setBuildingId(buildingWithAssignedChargingStation.getIdent());
         connectionIds.setAddressId(buildingWithAssignedChargingStation.getAddressId());
         storage.storageIds(connectionIds);
@@ -185,7 +185,7 @@ public class RechargingServiceSameFrequency {
         List<EfCaBuilding> buildingsWithCharging = buildingApi.findBuildingsByFinder(new EfCaBuilding().type("CHARGING_AREA")).getBuildings();
         for (int i = 0; i < buildingsWithCharging.size(); i++) {
             EfCaBuilding buildingWithAssignedChargingStation = buildingsWithCharging.get(i);
-            if (buildingWithAssignedChargingStation.getChargingStationIds().contains(chargingStationAssignment.getAssignedStation(vehicle))) {
+            if (buildingWithAssignedChargingStation.getChargingStationIds().contains(chargingStationAssignment.getAssignedStationId(vehicle))) {
                 return buildingWithAssignedChargingStation;
             }
         }
