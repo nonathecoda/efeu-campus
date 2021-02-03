@@ -119,12 +119,6 @@ class EmergencyCharging extends TimerTask {
         EfCaConnectionIds connectionIds = new EfCaConnectionIds();
 
         //Todo: Find building by Charging Station Id
-        //EfCaBuilding building = buildingApi.findBuildingsByFinder(new EfCaBuilding().type("CHARGING_AREA")).getBuildings().get(0);
-        //new EfCaBuilding().getChargingStationIds();
-        //EfCaBuilding building = buildingApi.findBuildingsByFinder(new EfCaBuilding().chargingStationIds(chargingStationIds)).ident(chargingStationAssignment.getAssignedStation(vehicle));
-        //connectionIds.setBuildingId(building.getIdent());
-        //connectionIds.setAddressId(building.getAddressId());
-        //connectionIds.setChargingStationId(building.getChargingStationIds().get(0));
         EfCaBuilding buildingWithAssignedChargingStation = findBuildingWithAssignedChargingStation(vehicle);
         connectionIds.setChargingStationId(chargingStationAssignment.getAssignedStation(vehicle));
         connectionIds.setBuildingId(buildingWithAssignedChargingStation.getIdent());

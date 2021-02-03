@@ -9,12 +9,12 @@ tags:
   - name: RechargingScheduling
     description: Recharching Scheduling Service
 paths:
-  /rechargingScheduling/rechargingServiceMatin/:
+  /rechargingScheduling/rechargingServiceSameFrequency/:
     post:
       tags:
         - Recharging Scheduling
-      summary: schedule new recharging orders every hour with duration 30 minutes
-      operationId: rechargingServiceMartin
+      summary: schedule new recharging orders every 3 hourd with duration 30 minutes
+      operationId: rechargingServiceSameFrequency
       responses:
         200:
           description: Success
@@ -51,16 +51,3 @@ paths:
           description: Failure
           content: { }
 
-  /rechargingScheduling/rechargingPerDaySameTime/:
-    post:
-      tags:
-        - Recharging Scheduling
-      summary: recharging scheduling each day at same time
-      operationId: rechargingPerDaySameTime
-      responses:
-        200:
-          description: Success
-          content: { }
-        400:
-          description: Failure
-          content: { }

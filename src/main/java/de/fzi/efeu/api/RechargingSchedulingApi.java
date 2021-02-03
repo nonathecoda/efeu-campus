@@ -26,7 +26,7 @@ import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-01-26T15:27:31.942536300+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-02-03T08:26:45.573+01:00[Europe/Berlin]")
 
 @Validated
 @Api(value = "rechargingScheduling", description = "the rechargingScheduling API")
@@ -55,36 +55,18 @@ public interface RechargingSchedulingApi {
 
 
     /**
-     * POST /rechargingScheduling/rechargingPerDaySameTime/ : recharging scheduling each day at same time
+     * POST /rechargingScheduling/rechargingServiceSameFrequency/ : schedule new recharging orders every 3 hourd with duration 30 minutes
      *
      * @return Success (status code 200)
      *         or Failure (status code 400)
      */
-    @ApiOperation(value = "recharging scheduling each day at same time", nickname = "rechargingPerDaySameTime", notes = "", tags={ "Recharging Scheduling", })
+    @ApiOperation(value = "schedule new recharging orders every 3 hourd with duration 30 minutes", nickname = "rechargingServiceSameFrequency", notes = "", tags={ "Recharging Scheduling", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Success"),
         @ApiResponse(code = 400, message = "Failure") })
-    @RequestMapping(value = "/rechargingScheduling/rechargingPerDaySameTime/",
+    @RequestMapping(value = "/rechargingScheduling/rechargingServiceSameFrequency/",
         method = RequestMethod.POST)
-    default ResponseEntity<Void> rechargingPerDaySameTime() {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
-
-
-    /**
-     * POST /rechargingScheduling/rechargingServiceMatin/ : schedule new recharging orders every hour with duration 30 minutes
-     *
-     * @return Success (status code 200)
-     *         or Failure (status code 400)
-     */
-    @ApiOperation(value = "schedule new recharging orders every hour with duration 30 minutes", nickname = "rechargingServiceMartin", notes = "", tags={ "Recharging Scheduling", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Success"),
-        @ApiResponse(code = 400, message = "Failure") })
-    @RequestMapping(value = "/rechargingScheduling/rechargingServiceMatin/",
-        method = RequestMethod.POST)
-    default ResponseEntity<Void> rechargingServiceMartin() {
+    default ResponseEntity<Void> rechargingServiceSameFrequency() {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
