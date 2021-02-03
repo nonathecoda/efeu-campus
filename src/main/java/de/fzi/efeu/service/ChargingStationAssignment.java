@@ -46,7 +46,7 @@ public class ChargingStationAssignment {
         return nearestStation.getIdent();
     }
 
-    private Double harvineDist(double lat_cs, double lon_cs, float lat_veh, float lon_veh, double el1, double el2) {
+    public Double harvineDist(double lat_cs, double lon_cs, float lat_veh, float lon_veh, double el1, double el2) {
         double theta_lat = lat_cs - lat_veh;
         double theta_lon = lon_cs - lon_veh;
         final int R = 6371; // Radius of the earth

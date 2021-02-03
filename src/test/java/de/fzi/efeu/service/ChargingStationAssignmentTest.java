@@ -1,21 +1,19 @@
 package de.fzi.efeu.service;
 
 
+import de.fzi.efeu.efeuportal.ApiException;
 import de.fzi.efeu.efeuportal.api.ChargingStationApi;
+import de.fzi.efeu.efeuportal.api.ProcessMgmtApi;
 import de.fzi.efeu.efeuportal.api.VehicleApi;
 import de.fzi.efeu.efeuportal.model.EfCaChargingStation;
-import de.fzi.efeu.efeuportal.model.EfCaVehicle;
-
+import de.fzi.efeu.efeuportal.model.VehicleStatus;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -30,72 +28,53 @@ public class ChargingStationAssignmentTest {
     @Autowired
     private VehicleApi vehicleApi;
 
+    @Autowired
+    private ProcessMgmtApi processMgmtApi;
+
     //@MockBean
     @Autowired
     private ChargingStationApi chargingStationApi;
 
-    @Test
-    public void testChargingStationAssignment() {
-        List<EfCaChargingStation> chargingStations = new ArrayList<>();
-        //List<EfCaVehicle> vehicles = new ArrayList<>();
+    private String getAssignedStationId_2(VehicleStatus vehicle) throws ApiException {
+        Float lat_veh = vehicle.getLatitude();
+        Float lon_veh = vehicle.getLongitude();
 
-        EfCaChargingStation chargingStation1 = new EfCaChargingStation().ident("S1");
-        EfCaChargingStation chargingStation2 = new EfCaChargingStation().ident("S2");
-        EfCaChargingStation chargingStation3 = new EfCaChargingStation().ident("S3");
-        EfCaChargingStation chargingStation4 = new EfCaChargingStation().ident("S4");
-        EfCaChargingStation chargingStation5 = new EfCaChargingStation().ident("S5");
+        EfCaChargingStation nearestStation = null;
+        double nearestDistance = 999999999999.0;
 
-        chargingStations.add(chargingStation1);
-        chargingStations.add(chargingStation2);
-        chargingStations.add(chargingStation3);
-        chargingStations.add(chargingStation4);
-        chargingStations.add(chargingStation5);
+        EfCaChargingStation chargingStation1 = new EfCaChargingStation().ident("S1").latitude(49.116625).longitude(8.588302);
+        EfCaChargingStation chargingStation2 = new EfCaChargingStation().ident("S2").latitude(49.117478).longitude(8.590465);
+        EfCaChargingStation chargingStation3 = new EfCaChargingStation().ident("S3").latitude(49.116569).longitude(8.590589);;
+        EfCaChargingStation chargingStation4 = new EfCaChargingStation().ident("S4").latitude(49.116422).longitude(8.590137);;
 
-        EfCaVehicle vehicle1 = new EfCaVehicle().ident("V1");
-        EfCaVehicle vehicle2 = new EfCaVehicle().ident("V2");
-        EfCaVehicle vehicle3 = new EfCaVehicle().ident("V3");
-        EfCaVehicle vehicle4 = new EfCaVehicle().ident("V4");
-        EfCaVehicle vehicle5 = new EfCaVehicle().ident("V5");
+        List<EfCaChargingStation> chargingStations = List.of(chargingStation1, chargingStation2, chargingStation3, chargingStation4);
 
-        /*vehicles.add(vehicle1);
-        vehicles.add(vehicle2);
-        vehicles.add(vehicle3);
-        vehicles.add(vehicle4);
-        vehicles.add(vehicle5);*/
-
-//A faster way to create a list
-        List<EfCaVehicle> vehicles = List.of(vehicle1, vehicle2, vehicle3, vehicle4, vehicle5);
-
-        Map<String, String> testMapVehicleStation = new HashMap<>();
-        for (int i = 0; i < vehicles.size(); i++) {
-            testMapVehicleStation.put(vehicles.get(i).getIdent(), chargingStations.get(i).getIdent());
+        for (EfCaChargingStation chargingStation : chargingStations) {
+            double el1 = 0.0, el2 = 0.0;
+            double lat_cs = chargingStation.getLatitude();
+            double lon_cs = chargingStation.getLongitude();
+            double distance = chargingStationAssignment.harvineDist(lat_cs, lon_cs, lat_veh, lon_veh, el1, el2);
+            if (distance < nearestDistance) {
+                nearestStation = chargingStation;
+                nearestDistance = distance;
+            }
         }
+        return nearestStation.getIdent();
+    }
+    @Test
+    public void testChargingStationAssignment() throws ApiException {
+        VehicleStatus vehicle1;
 
-        //Post vehicle and charging station into Vehicle- and StationApi
-        /*vehicleApi.postAddVehicles(vehicle1);
-        vehicleApi.putVehicle(vehicle2);
-        vehicleApi.putVehicle(vehicle3);
-        vehicleApi.putVehicle(vehicle4);
-        vehicleApi.putVehicle(vehicle5);
+        vehicle1 = new VehicleStatus();
+        vehicle1.setLatitude((float) 41.62);
+        vehicle1.setLongitude((float) 8.78);
 
-        chargingStationApi.putChargingStation(chargingStation1);
-        chargingStationApi.putChargingStation(chargingStation2);
-        chargingStationApi.putChargingStation(chargingStation3);
-        chargingStationApi.putChargingStation(chargingStation4);
-        chargingStationApi.putChargingStation(chargingStation5);*/
+        String nearestToVehicle1 = getAssignedStationId_2(vehicle1);
 
-        //assertEquals(expected, actual)
-        //assertNotNull(chargingStationId1);
-        assertEquals(chargingStation1.getIdent(), testMapVehicleStation.get(vehicle1.getIdent()));
-        assertEquals(chargingStation2.getIdent(), testMapVehicleStation.get(vehicle2.getIdent()));
-        assertEquals(chargingStation3.getIdent(), testMapVehicleStation.get(vehicle3.getIdent()));
-        assertEquals(chargingStation4.getIdent(), testMapVehicleStation.get(vehicle4.getIdent()));
-        assertEquals(chargingStation5.getIdent(), testMapVehicleStation.get(vehicle5.getIdent()));
-
+        assertEquals("S4", nearestToVehicle1);
 
     }
 
 }
-
 
 
