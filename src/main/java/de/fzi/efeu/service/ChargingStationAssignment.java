@@ -24,9 +24,6 @@ public class ChargingStationAssignment {
     @Autowired
     private ProcessMgmtApi processMgmtApi;
 
-    // Vehicle-Station-Assignment: Vehicle i to Station i
-    //TODO: Fahrzeug zur nahsten Ladestation
-
     private Map<String, String> assignVehicleToStation() throws ApiException {
         Map<String, String> mapVehicleStation = new HashMap<>();
         List<EfCaVehicle> vehicles = vehicleApi.getAllVehicles().getVehicles();
