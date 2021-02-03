@@ -1,3 +1,4 @@
+package testYourCode;
 import java.util.ArrayList;
 
 //erstellt angegebene Anzahl an Knoten auf 2D Koordinatensystem von 0-50 auf x- und y-Achse
@@ -32,6 +33,32 @@ public class Campus {
 				break;
 			}
 		}
+
+		try {
+			knots.get(depotRandom).setCharacter(1);
+			knots.get(chargingStationOneRandom).setCharacter(-1);
+			knots.get(chargingStationTwoRandom).setCharacter(-1);
+			System.out.println("Assignment depot/charging stations successful.");
+			System.out.println("Depot ID: " + depotRandom);
+			System.out.println("Charging Station 1 ID: " + chargingStationOneRandom);
+			System.out.println("Charging Station 2 ID: " + chargingStationTwoRandom);
+		} catch (Exception e) {
+			System.out.println("Assignment depot/charging stations not successful.");
+			System.out.println("Depot ID: " + depotRandom);
+			System.out.println("Charging Station 1 ID: " + chargingStationOneRandom);
+			System.out.println("Charging Station 2 ID: " + chargingStationTwoRandom);
+		}
+	}
+
+	ArrayList<Knot> getKnots() {
+		ArrayList<Knot> dummy = knots;
+		return dummy;
+	}
+
+	Knot getDepot() {
+		return knots.get(depotRandom);
+	}
+}
 
 		try {
 			knots.get(depotRandom).setCharacter(1);
