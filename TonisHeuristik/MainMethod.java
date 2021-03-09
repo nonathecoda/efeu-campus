@@ -16,7 +16,9 @@ public class MainMethod {
 	static ArrayList<Order> orders = Methods.createOrderList(knots, depot);
 
 	public static void main(String[] args) {
-
+		
+		System.out.println("Datei mit Ergebnissen: resultsBA.csv");
+		
 		DecimalFormat df = new DecimalFormat("0.00");
 
 		FileWriter csvWriter;
