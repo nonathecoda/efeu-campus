@@ -1,4 +1,4 @@
-package BachelorarbeitAntonia;
+package Dashboard;
 
 public class Customer {
 	double x, y;

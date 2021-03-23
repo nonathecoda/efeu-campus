@@ -1,23 +1,24 @@
-package BachelorarbeitAntonia;
+package Dashboard;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 //erstellt angegebene Anzahl an Knoten auf kartesischem Koordinatensystem
 public class Campus {
-	int amountCustomers;
-	int size;
-	int depotRandom;
-	Customer chargingStationOneRandom;
-	Customer chargingStationTwoRandom;
-	Customer depotKnot;
-	static ArrayList<Customer> chargingStations = new ArrayList<Customer>();
-	ArrayList<Customer> knots = new ArrayList<>();
 
-	public Campus(int amountCustomers, int size) {
-		this.amountCustomers = amountCustomers;
-		this.size = size;
+	static Customer chargingStationOneRandom;
+	static Customer chargingStationTwoRandom;
 
+	// static ArrayList<DSCustomer> chargingStations = new ArrayList<DSCustomer>();
+	static ArrayList<Customer> knots = new ArrayList<>();
+
+	
+	
+	// public DSCampus(int amountCustomers, int size) {
+	static ArrayList<Customer> getKnots(int amountCustomers, int size) {
+
+		knots.clear();
+		
 		// zufallszahlen für x/y koordinaten (<size) werden generiert
 		Random generator = new Random(87);
 		double[] randomListe = new double[amountCustomers * 2];
@@ -34,24 +35,25 @@ public class Campus {
 			knots.add(k);
 		}
 
-		depotKnot = knots.get(knots.size() / 2);// irgendein Knoten wird als Depot definiert
-		chargingStationOneRandom = knots.get(knots.size() / 3);// irgendein Knoten wird als
-		chargingStationTwoRandom = knots.get(knots.size() / 4);// Chargingstation definiert
 
+		return knots;
+	}
+
+	static public ArrayList<Customer> getChargingStations() {
+		chargingStationOneRandom = knots.get(knots.size() / 3);
+		chargingStationTwoRandom = knots.get(knots.size() / 4);
+
+		ArrayList<Customer> chargingStations = new ArrayList<>();
 		chargingStations.add(chargingStationOneRandom);
 		chargingStations.add(chargingStationTwoRandom);
-		chargingStations.add(depotKnot);
-
+		chargingStations.add(getDepot());
+		return chargingStations;
 	}
 
-	ArrayList<Customer> getKnots() {
-		ArrayList<Customer> dummy = knots;
-		return dummy;
-	}
+	static public Customer getDepot() {
 
-	Customer getDepot() {
+		Customer depotKnot = RunSimulation.knots.get(knots.size() / 2);
 		return depotKnot;
-		// return knots.get(depotRandom);
 	}
 
 }

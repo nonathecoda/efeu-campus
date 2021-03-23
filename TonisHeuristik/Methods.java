@@ -1,6 +1,7 @@
-package BachelorarbeitAntonia;
+package Dashboard;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
@@ -11,9 +12,12 @@ public class Methods {
 	static public ArrayList<Bot> createBotList(Customer depot) {
 
 		ArrayList<Bot> bots = new ArrayList<>();
-		for (int i = 0; i < Data.numberOfBots; i++) {
+		
+		for (int i = 0; i < DataDashboard.numberOfBots; i++) {
 
-			bots.add(new Bot(i, Data.batteryCapacity, depot, 0));
+			ArrayList<Double> dummyList = new ArrayList<>();
+
+			bots.add(new Bot(i, DataDashboard.batteryCapacity, depot, 0, dummyList, 0));
 
 		}
 		return bots;
@@ -27,31 +31,48 @@ public class Methods {
 		Customer pickup = null;
 		Customer delivery = null;
 
-		Random generator = new Random(45);
+		Random r = new Random(45);
 
 		// erstelle Liste mit Zufallszahlen
-		int[] randomListe = new int[Data.numberOfOrders * 3];
-		for (int i = 0; i < (randomListe.length - 3); i = i + 3) {
-			randomListe[i] = generator.nextInt(Data.durationWorkdayInMinutes);
-			randomListe[i + 1] = generator.nextInt(knots.size());
-			randomListe[i + 2] = generator.nextInt(knots.size());
+		int gaussMean = DataDashboard.getStartPT() + ((DataDashboard.getEndPT() - DataDashboard.getStartPT()) / 2);
+		int gaussStanDev = DataDashboard.getStandardDeviation();
+		int[] randomList = new int[DataDashboard.getNumberOfOrders() * 3];
+		for (int i = 0; i < (randomList.length - 3); i = i + 3) {
+
+			int gaussDummy = (int) Math.round(r.nextGaussian() * gaussStanDev + gaussMean);
+
+			if (gaussDummy >= 0 && gaussDummy <= DataDashboard.durationWorkdayInMinutes) {
+				
+				randomList[i] = r.nextInt(knots.size());
+				randomList[i + 1] = r.nextInt(knots.size());
+
+				if (DataDashboard.getNormalDistribution() == true) {
+					randomList[i + 2] = gaussDummy;
+				} else {
+					randomList[i + 2] = r.nextInt(DataDashboard.durationWorkdayInMinutes);
+				}
+			} else {
+				i = i - 3;
+			}
 		}
 
 		// erstellt orders, die das Depot entweder als Pickup oder als Delivery haben
-		for (int i = 0; i < Data.numberOfOrders; i++) {
+		for (int i = 0; i < DataDashboard.getNumberOfOrders(); i++) {
 
-			int ran = generator.nextInt(2);
+			int ran = r.nextInt(2);
 
 			switch (ran) {
 			case 0:
-				pickup = knots.get(randomListe[i * 3 + 2]); // nicht depot
+
+				pickup = knots.get(randomList[i * 3]); // nicht depot
 				delivery = depot;// Depot
-				startingTime = randomListe[i * 3];
+				startingTime = randomList[i * 3 + 2];
 				break;
 			case 1:
 				pickup = depot; // Depot
-				delivery = knots.get(randomListe[i * 3 + 1]); // nicht depot
-				startingTime = randomListe[i * 3];
+
+				delivery = knots.get(randomList[i * 3 + 1]); // nicht depot
+				startingTime = randomList[i * 3 + 2];
 				break;
 
 			}
@@ -98,12 +119,12 @@ public class Methods {
 		Collections.sort(bots, Comparator.comparing(Bot::getTimeTracker));
 
 		for (int i = 0; i < bots.size(); i++) {
-
+			
 			Bot dummyBot = bots.get(i);
 
 			double executionTime = Methods.calculateDistance(dummyBot.getLocation(), currentOrder.getPickUpID(),
-					currentOrder.getDeliveryID()) / Data.velocity;
-			double batteryConsumption = executionTime * Data.dechargingSpeed;
+					currentOrder.getDeliveryID()) / DataDashboard.velocity;
+			double batteryConsumption = executionTime * DataDashboard.dechargingSpeed;
 
 			if (dummyBot.getTimeTracker() <= currentOrder.getStartingTime() && dummyBot.getSoc() > batteryConsumption) {
 				result = i;
@@ -111,6 +132,7 @@ public class Methods {
 				break;
 			}
 		}
+		
 
 		return result;
 	}
@@ -120,12 +142,12 @@ public class Methods {
 		 * wird im moment voll aufgeladen
 		 */
 
-		chargingTime = Math.min(chargingTime, ((Data.batteryCapacity - currentBot.getSoc()) / Data.chargingSpeed));
+		chargingTime = Math.min(chargingTime, ((DataDashboard.getChargingGoal() - currentBot.getSoc()) / DataDashboard.chargingSpeed));
 		double minutesToChargingStation = Methods.calculateDistance(currentBot.getLocation(), chargingStation)
-				/ Data.velocity;
+				/ DataDashboard.velocity;
 
 		currentBot.setTimeTracker((int) (currentBot.getTimeTracker() + minutesToChargingStation + chargingTime));
-		currentBot.setSoc(currentBot.getSoc() + (chargingTime * Data.chargingSpeed));
+		currentBot.setSoc(currentBot.getSoc() + (chargingTime * DataDashboard.chargingSpeed));
 		currentBot.setLocation(chargingStation);
 	}
 
@@ -139,25 +161,25 @@ public class Methods {
 
 		Customer chargingStation = null;
 
-		if (currentBot.getLocation() == MainMethod.depot) {
-			chargingStation = MainMethod.depot;
+		if (currentBot.getLocation() == Campus.getDepot()) {
+			chargingStation = Campus.getDepot();
 
 		} else {
 
 			ArrayList<Customer> chargingStationsInReach = new ArrayList<>();
-			for (int i = 0; i < Campus.chargingStations.size(); i++) {
+			for (int i = 0; i < Campus.getChargingStations().size(); i++) {
 
 				double minutesToChargingStation = Methods.calculateDistance(currentBot.getLocation(),
-						Campus.chargingStations.get(i)) / Data.velocity;
-				double batteryConsumption = minutesToChargingStation * Data.dechargingSpeed;
+						Campus.getChargingStations().get(i)) / DataDashboard.velocity;
+				double batteryConsumption = minutesToChargingStation * DataDashboard.dechargingSpeed;
 
 				if (batteryConsumption < currentBot.getSoc()) {
-					chargingStationsInReach.add(Campus.chargingStations.get(i));
+					chargingStationsInReach.add(Campus.getChargingStations().get(i));
 				}
 
 			}
 
-			double minimalDistance = Data.campusSize * 4;
+			double minimalDistance = DataDashboard.getCampusSize() * 4;
 
 			for (int i = 0; i < chargingStationsInReach.size(); i++) {
 
