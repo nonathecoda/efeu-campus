@@ -1,6 +1,7 @@
 package Dashboard;
 
 import java.awt.BorderLayout;
+
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.FlowLayout;
@@ -13,59 +14,87 @@ import java.awt.event.KeyListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.Chart;
+import javafx.scene.chart.NumberAxis;
+import javafx.stage.Stage;
 
 import javax.swing.*;
 
 public class View extends JFrame {
 
-	JPanel basePanel = new JPanel(new GridLayout(5, 1));
-	JPanel panel1 = new JPanel(new GridLayout(2, 2));
-	JPanel panel2 = new JPanel(new GridLayout(1, 2));
-	JPanel panel3 = new JPanel(new GridLayout(1, 3));
-	JPanel panel4 = new JPanel(new GridLayout(1, 2));
-	JPanel panel5 = new JPanel(new GridLayout(1, 2));
+	JPanel basePanel = new JPanel(new BorderLayout());
+	JPanel north = new JPanel(new GridLayout(3, 1));
+	JPanel east = new JPanel(new GridLayout(2, 1));
+	JPanel west = new JPanel(new GridLayout(10, 1));
+	JPanel south = new JPanel(new GridLayout(3, 1));
 
-	JPanel panel11 = new JPanel(new FlowLayout());
-	JPanel panel12 = new JPanel(new FlowLayout());
-	JPanel panel13 = new JPanel(new FlowLayout());
-	JPanel panel14 = new JPanel(new FlowLayout());
+	JPanel n1 = new JPanel(new GridLayout(1, 4));
+	JPanel n2 = new JPanel(new GridLayout(1, 4));
+	JPanel n3 = new JPanel(new GridLayout(1, 4));
+	JPanel n11 = new JPanel(new FlowLayout());
+	JPanel n12 = new JPanel(new FlowLayout());
+	JPanel n13 = new JPanel(new FlowLayout());
+	JPanel n21 = new JPanel(new FlowLayout());
+	JPanel n22 = new JPanel(new FlowLayout());
+	JPanel n23 = new JPanel(new FlowLayout());
+	JPanel n24 = new JPanel(new FlowLayout());
+	JPanel n34 = new JPanel(new FlowLayout());
 
-	JPanel panel21 = new JPanel(new FlowLayout());
-	JPanel panel22 = new JPanel(new GridLayout(4, 1));
-	JPanel panel221 = new JPanel(new FlowLayout());
-	JPanel panel222 = new JPanel(new FlowLayout());
-	JPanel panel223 = new JPanel(new FlowLayout());
-	JPanel panel224 = new JPanel(new FlowLayout());
+	JPanel s1 = new JPanel(new GridLayout());
+	JPanel s2 = new JPanel(new GridLayout());
+	JPanel s3 = new JPanel(new GridLayout());
 
-	JPanel panel31 = new JPanel(new FlowLayout());
-	JPanel panel32 = new JPanel(new GridLayout(3, 1));
-	JPanel panel33 = new JPanel(new FlowLayout());
+	JPanel e1 = new JPanel(new FlowLayout());
+	JPanel e2 = new JPanel(new GridLayout(6, 1));
+	JPanel e24 = new JPanel(new GridLayout());
 
-	JPanel panel41 = new JPanel(new GridLayout(3, 1));
-	JPanel panel42 = new JPanel(new GridLayout(3, 1));
+	JPanel w1 = new JPanel(new GridLayout());
+	JPanel w2 = new JPanel(new GridLayout());
+	JPanel w3 = new JPanel(new GridLayout());
+	JPanel w4 = new JPanel(new GridLayout());
+	JPanel w5 = new JPanel(new GridLayout());
+	JPanel w6 = new JPanel(new GridLayout(1, 2));
+	JPanel w7 = new JPanel(new GridLayout(1, 2));
+	JPanel w8 = new JPanel(new GridLayout(1, 2));
+	JPanel w9 = new JPanel(new GridLayout(1, 3));
+	JPanel w10 = new JPanel(new GridLayout());
+	JPanel w61 = new JPanel(new GridLayout());
+	JPanel w62 = new JPanel(new GridLayout());
+	JPanel w71 = new JPanel(new GridLayout());
+	JPanel w72 = new JPanel(new GridLayout());
+	JPanel w81 = new JPanel(new GridLayout());
+	JPanel w82 = new JPanel(new GridLayout());
+	JPanel w91 = new JPanel(new GridLayout());
+	JPanel w92 = new JPanel(new GridLayout());
+	JPanel w93 = new JPanel(new GridLayout());
 
-	JPanel panel51 = new JPanel(new FlowLayout());
-	JPanel panel52 = new JPanel(new FlowLayout());
+	JPanel fillerPanel = new JPanel(new GridLayout());
 
-	JLabel campusSizeLabel = new JLabel("Size of Campus:");
+	JLabel campusSizeLabel = new JLabel("Radius of Campus [m]:");
 	JLabel numberOfOrdersLabel = new JLabel("Number of Orders");
 	JLabel numberOfCustomersLabel = new JLabel("Number of Customers:");
-	JLabel chargingGoalLabel = new JLabel("Charging Goal:");
-	JLabel startPTLabel = new JLabel("Start Peaktime:");
-	JLabel endPTLabel = new JLabel("End Peaktime:");
+	JLabel chargingGoalLabel = new JLabel("Charging Goal [Wh]:");
+	JLabel startPTLabel = new JLabel("Start Peaktime [min]:");
+	JLabel endPTLabel = new JLabel("End Peaktime [min]:");
 	JLabel sdLabel = new JLabel("Stand-Dev:");
 	static JLabel exportLabel = new JLabel("");
-	static JLabel fillerLabel = new JLabel("");
+	static JLabel fillerLabel = new JLabel("fghjknlmnjbhvgcf ");
 	static JLabel outputLabel = new JLabel("Output:");
 	static JLabel errorLabel = new JLabel("Error:");
+	JLabel dayDurationLabel = new JLabel("Duration Working Day [min]:");
+	JLabel availableChargingLabel = new JLabel("Available Charging Stations:");
+	JLabel diyLabel = new JLabel("Choose your y and x axis:");
+	JLabel emergencyLabel = new JLabel("Definition Emergency Charging");
+	JLabel percentLabel = new JLabel("Trigger at [%/100]:");
 
 	static JTextField campusSizeTextField = new JTextField("750");
 	static JTextField numberOfOrdersTextField = new JTextField("250");
@@ -75,23 +104,44 @@ public class View extends JFrame {
 	static JTextField startPTTextField = new JTextField("300");
 	static JTextField endPTTextField = new JTextField("420");
 	static JTextField sdTextField = new JTextField("100");
+	static JTextField dayDurationTextField = new JTextField("480");
+	static JTextField percentTextField = new JTextField("0.3");
+
+	static String[] chargingStations = { "Only charge at depot.", "Charge at depot and two customers." };
+	static String[] xValues = { "Campus Size", "Number of Customers", "Number of Orders", "Charging Goal",
+			"Charging Frequency (only Interval)" };
+	static String[] yValues = { "Late Orders", "Missed Orders", "Average Delay per Order" };
+
+	static JComboBox chargingStationComboBox = new JComboBox(chargingStations);
+	static JComboBox xComboBox = new JComboBox(xValues);
+	static JComboBox yComboBox = new JComboBox(yValues);
 
 	static JRadioButton normalDistributionRadioButton = new JRadioButton("Normaldistribution");
 	JRadioButton equalDistributionRadioButton = new JRadioButton("Equaldistribution");
-
 	static JRadioButton noChargingButton = new JRadioButton("No Battery constraints");
 	static JRadioButton intervalChargingButton = new JRadioButton("Interval charging");
 	static JRadioButton idleTimeChargingButton = new JRadioButton("Idle-time charging");
+	static JRadioButton emergencyChargingButton = new JRadioButton("Emergency charging only");
 	static JRadioButton operationsPerHourButton = new JRadioButton("Charging Operations per hour");
-	static JRadioButton missedOrdersSOCGoalButton = new JRadioButton("Missed Orders per Charging Goal");
+	static JRadioButton lateOrdersSOCGoalButton = new JRadioButton("Late Orders per Charging Goal");
+	static JRadioButton lateOrdersFrequency = new JRadioButton("Late Orders per Charging Frequency");
+	static JRadioButton chargingReasonButton = new JRadioButton("Charging Reasons");
+	static JRadioButton diyButton = new JRadioButton("Configure own graph");
+	static JRadioButton onlyDepotRadioButton = new JRadioButton("Only charge at depot.");
+	static JRadioButton alsoAtCustomersRadioButton = new JRadioButton("Charge at depot and two customers.");
+	static JRadioButton under5RadioButton = new JRadioButton("Charge under 5%");
+	static JRadioButton notReachableButton = new JRadioButton("Charge while CS reachable");
 	static JTextField intervalTextField = new JTextField("20");
-	JLabel intervalLabel = new JLabel("In which intervals shall the bots be charged? [min]");
+	JLabel intervalLabel = new JLabel("Charging Frequency [min] :");
 	ButtonGroup distributionGroup = new ButtonGroup();
 	ButtonGroup chargingGroup = new ButtonGroup();
 	ButtonGroup graficGroup = new ButtonGroup();
+	ButtonGroup chargingStationGroup = new ButtonGroup();
+	ButtonGroup emergencyGroup = new ButtonGroup();
 
 	JButton runButton = new JButton("Run simulation");
 	JButton graficButton = new JButton("Show graph");
+	JButton testButton = new JButton("Test me!");
 
 	public View() {
 		Container c;
@@ -99,68 +149,93 @@ public class View extends JFrame {
 
 		c.add(basePanel);
 
-		basePanel.add(panel1);
-		basePanel.add(panel2);
-		basePanel.add(panel3);
-		basePanel.add(panel4);
-		basePanel.add(panel5);
+		basePanel.add(north, BorderLayout.NORTH);
+		basePanel.add(east, BorderLayout.CENTER);
+		basePanel.add(west, BorderLayout.WEST);
+		basePanel.add(south, BorderLayout.SOUTH);
 
-		panel1.add(panel11);
-		panel1.add(panel12);
-		panel1.add(panel13);
-		panel1.add(panel14);
+		north.add(n1);
+		north.add(n2);
+		north.add(n3);
 
-		panel2.add(panel21);
-		panel2.add(panel22);
+		n1.add(noChargingButton);
+		n1.add(idleTimeChargingButton);
+		n1.add(intervalChargingButton);
+		n1.add(emergencyChargingButton);
+		n2.add(n21);
+		n2.add(n22);
+		n2.add(n23);
+		n2.add(n24);
+		n23.add(intervalLabel);
+		n23.add(intervalTextField);
+		n3.add(emergencyLabel);
+		n3.add(under5RadioButton);
+		n3.add(notReachableButton);
+		n3.add(n34);
+		n34.add(percentLabel);
+		n34.add(percentTextField);
 
-		panel3.add(panel31);
-		panel3.add(panel32);
-		panel3.add(panel33);
+		south.add(s1);
+		south.add(s2);
+		south.add(s3);
 
-		panel4.add(panel41);
-		panel4.add(panel42);
+		s2.add(runButton);
 
-		panel5.add(panel51);
-		panel5.add(panel52);
+		east.add(e1);
+		east.add(e2);
 
-		panel11.add(campusSizeLabel);
-		panel11.add(campusSizeTextField);
-		panel12.add(numberOfOrdersLabel);
-		panel12.add(numberOfOrdersTextField);
-		panel13.add(numberOfCustomersLabel);
-		panel13.add(numberOfCustomersTextField);
-		panel14.add(chargingGoalLabel);
-		panel14.add(chargingGoalSlider);
-		panel14.add(sliderValueTextField);
+		e1.add(outputLabel);
+		e2.add(operationsPerHourButton);
+		e2.add(chargingReasonButton);
+		e2.add(diyButton);
+		e2.add(diyLabel);
+		e2.add(e24);
+		e24.add(yComboBox);
+		e24.add(xComboBox);
+		e2.add(graficButton);
 
-		panel21.add(equalDistributionRadioButton);
-		panel22.add(panel221);
-		panel22.add(panel222);
-		panel22.add(panel223);
-		panel22.add(panel224);
-		panel221.add(normalDistributionRadioButton);
-		panel222.add(startPTLabel);
-		panel222.add(startPTTextField);
-		panel223.add(endPTLabel);
-		panel223.add(endPTTextField);
-		panel224.add(sdLabel);
-		panel224.add(sdTextField);
+		west.add(w1);
+		west.add(w2);
+		west.add(w3);
+		west.add(w4);
+		west.add(w5);
+		west.add(w6);
+		west.add(w7);
+		west.add(w8);
+		west.add(w9);
+		west.add(w10);
 
-		panel31.add(noChargingButton);
-		panel32.add(intervalChargingButton);
-		panel32.add(intervalLabel);
-		panel32.add(intervalTextField);
-		panel33.add(idleTimeChargingButton);
+		w1.add(campusSizeLabel);
+		w1.add(campusSizeTextField);
+		w2.add(dayDurationLabel);
+		w2.add(dayDurationTextField);
+		w3.add(numberOfCustomersLabel);
+		w3.add(numberOfCustomersTextField);
+		w4.add(numberOfOrdersLabel);
+		w4.add(numberOfOrdersTextField);
+		w5.add(equalDistributionRadioButton);
+		w5.add(normalDistributionRadioButton);
+		w6.add(w61);
+		w6.add(w62);
+		w7.add(w71);
+		w7.add(w72);
+		w8.add(w81);
+		w8.add(w82);
+		w9.add(w91);
+		w9.add(w92);
+		w9.add(w93);
+		w10.add(availableChargingLabel);
+		w10.add(chargingStationComboBox);
 
-		panel41.add(fillerLabel);
-		panel41.add(exportLabel);
-		panel41.add(runButton);
-		panel42.add(operationsPerHourButton);
-		panel42.add(missedOrdersSOCGoalButton);
-		panel42.add(graficButton);
-
-		panel51.add(outputLabel);
-		panel52.add(errorLabel);
+		w62.add(startPTLabel);
+		w62.add(startPTTextField);
+		w72.add(endPTLabel);
+		w72.add(endPTTextField);
+		w82.add(sdLabel);
+		w82.add(sdTextField);
+		w91.add(chargingGoalLabel);
+		w92.add(chargingGoalSlider);
+		w93.add(sliderValueTextField);
 
 		chargingGoalSlider.setPaintTicks(true);
 		chargingGoalSlider.setPaintLabels(true);
@@ -186,7 +261,7 @@ public class View extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<Customer> knots = Campus.getKnots(DataDashboard.getNumberOfCustomers(),
 						DataDashboard.getCampusSize());
-				RunSimulation r = new RunSimulation(knots);
+				TestRun r = new TestRun(knots);
 				System.out.println("Run-Button clicked!");
 
 			}
@@ -197,23 +272,122 @@ public class View extends JFrame {
 
 				if (operationsPerHourButton.isSelected() == true) {
 					System.out.println("Button clicked, Graph will be visible soon!");
-					Application.launch(GraficChargingOperationsPerHour.class, new String[] {});
-				} else {
-					System.out.println("Button clicked, Graph will be visible soon!");
-					Application.launch(GraficMissedOrdersChargingGoal.class, new String[] {});
+					GraphChargingPerHour obj = new GraphChargingPerHour();
+
+					JFrame frame = new JFrame("FX");
+					final JFXPanel fxPanel = new JFXPanel();
+					frame.setSize(1000, 600);
+					frame.add(fxPanel);
+					frame.setVisible(true);
+
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							obj.initFX(fxPanel);
+						}
+					});
+
+				} else if (lateOrdersSOCGoalButton.isSelected() == true) {
+					GraphSOCGoalMissedOrders obj = new GraphSOCGoalMissedOrders();
+					JFrame frame = new JFrame("FX");
+					final JFXPanel fxPanel = new JFXPanel();
+					frame.setSize(1000, 600);
+					frame.add(fxPanel);
+					frame.setVisible(true);
+
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							obj.initFX(fxPanel);
+						}
+					});
+				} else if (lateOrdersFrequency.isSelected() == true) {
+					GraphLateOrdersPerInterval obj = new GraphLateOrdersPerInterval();
+					JFrame frame = new JFrame("FX");
+					final JFXPanel fxPanel = new JFXPanel();
+					frame.setSize(1000, 600);
+					frame.add(fxPanel);
+					frame.setVisible(true);
+
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							obj.initFX(fxPanel);
+						}
+					});
+				} else if (chargingReasonButton.isSelected() == true) {
+					GraphChargingReason obj = new GraphChargingReason();
+					JFrame frame = new JFrame("FX");
+					final JFXPanel fxPanel = new JFXPanel();
+					frame.setSize(1000, 600);
+					frame.add(fxPanel);
+					frame.setVisible(true);
+
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							obj.initFX(fxPanel);
+						}
+					});
+				} else if (diyButton.isSelected() == true) {
+					GraphAllrounder obj = new GraphAllrounder();
+					JFrame frame = new JFrame("FX");
+					final JFXPanel fxPanel = new JFXPanel();
+					frame.setSize(1000, 600);
+					frame.add(fxPanel);
+					frame.setVisible(true);
+
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							obj.initFX(fxPanel);
+						}
+					});
 				}
 
 			}
 		});
+
+		testButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Button clicked, Graph will be visible soon!");
+				GraphChargingReason lateOrdersPerInterval = new GraphChargingReason();
+
+				JFrame frame = new JFrame("FX");
+				final JFXPanel fxPanel = new JFXPanel();
+				frame.setSize(1000, 600);
+				frame.add(fxPanel);
+				frame.setVisible(true);
+
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						lateOrdersPerInterval.initFX(fxPanel);
+					}
+				});
+
+			}
+		});
+
 		distributionGroup.add(normalDistributionRadioButton);
 		distributionGroup.add(equalDistributionRadioButton);
 
 		chargingGroup.add(noChargingButton);
 		chargingGroup.add(intervalChargingButton);
 		chargingGroup.add(idleTimeChargingButton);
+		chargingGroup.add(emergencyChargingButton);
 
 		graficGroup.add(operationsPerHourButton);
-		graficGroup.add(missedOrdersSOCGoalButton);
+		graficGroup.add(lateOrdersSOCGoalButton);
+		graficGroup.add(lateOrdersFrequency);
+		graficGroup.add(chargingReasonButton);
+		graficGroup.add(diyButton);
+
+		chargingStationGroup.add(alsoAtCustomersRadioButton);
+		chargingStationGroup.add(onlyDepotRadioButton);
+
+		emergencyGroup.add(notReachableButton);
+		emergencyGroup.add(under5RadioButton);
 
 		// STYLIING
 
@@ -221,34 +395,26 @@ public class View extends JFrame {
 		Color white = new Color(255, 255, 255);
 		Color red = new Color(255, 0, 0);
 
-		panel1.setBackground(green);
-		panel11.setBackground(green);
-		panel12.setBackground(green);
-		panel13.setBackground(green);
-		panel14.setBackground(green);
+		n1.setBackground(green);
+		n2.setBackground(green);
+		n3.setBackground(green);
+		n34.setBackground(green);
+		n21.setBackground(green);
+		n22.setBackground(green);
+		n23.setBackground(green);
+		n24.setBackground(green);
 
-		panel2.setBackground(white);
-		panel21.setBackground(white);
-		panel222.setBackground(white);
-		panel221.setBackground(white);
-		panel223.setBackground(white);
-		panel224.setBackground(white);
-
-		panel31.setBackground(green);
-		panel32.setBackground(green);
-		panel33.setBackground(green);
-
-		panel41.setBackground(white);
-		panel42.setBackground(white);
-
-		panel51.setBackground(green);
-		panel52.setBackground(green);
+		s1.setBackground(green);
+		s2.setBackground(green);
+		s3.setBackground(green);
 
 		runButton.setForeground(red);
 
 		equalDistributionRadioButton.setSelected(true);
 		intervalChargingButton.setSelected(true);
 		operationsPerHourButton.setSelected(true);
+		alsoAtCustomersRadioButton.setSelected(true);
+		under5RadioButton.setSelected(true);
 
 		// TODO: default values + falsche eingaben auffangen
 	}

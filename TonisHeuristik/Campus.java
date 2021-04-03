@@ -6,54 +6,40 @@ import java.util.Random;
 //erstellt angegebene Anzahl an Knoten auf kartesischem Koordinatensystem
 public class Campus {
 
-	static Customer chargingStationOneRandom;
-	static Customer chargingStationTwoRandom;
-
 	// static ArrayList<DSCustomer> chargingStations = new ArrayList<DSCustomer>();
 	static ArrayList<Customer> knots = new ArrayList<>();
 
-	
-	
 	// public DSCampus(int amountCustomers, int size) {
 	static ArrayList<Customer> getKnots(int amountCustomers, int size) {
-
 		knots.clear();
-		
-		// zufallszahlen für x/y koordinaten (<size) werden generiert
-		Random generator = new Random(87);
-		double[] randomListe = new double[amountCustomers * 2];
-		for (int i = 0; i < (randomListe.length - 2); i = i + 2) {
-			randomListe[i] = generator.nextDouble() * size;
-			randomListe[i + 1] = generator.nextDouble() * size;
-		}
+		Random generator = new Random(1);
+		double x;
+		double y;
+		int[] occupied = new int[2];
+		occupied[0] = 0;
+		occupied[1] = 0;
 
-		// erzeugt Knoten auf Koordinatensystem
-		for (Integer i = 0; i < amountCustomers; i++) {
-			double x = randomListe[i * 2];
-			double y = randomListe[i * 2 + 1];
-			Customer k = new Customer(x, y, i);
-			knots.add(k);
-		}
+		Customer depot = new Customer(0, 0, 0, occupied);
+		knots.add(depot);
 
+		for (int i = 0; i < DataDashboard.getNumberOfCustomers(); i++) {
+
+			double radius = generator.nextDouble() * DataDashboard.getCampusSize();
+			double degree = generator.nextDouble() * 360;
+
+			x = radius * Math.cos(degree);
+			y = radius * Math.sin(degree);
+
+			knots.add(new Customer(x, y, i + 1, occupied));
+		}
 
 		return knots;
-	}
 
-	static public ArrayList<Customer> getChargingStations() {
-		chargingStationOneRandom = knots.get(knots.size() / 3);
-		chargingStationTwoRandom = knots.get(knots.size() / 4);
-
-		ArrayList<Customer> chargingStations = new ArrayList<>();
-		chargingStations.add(chargingStationOneRandom);
-		chargingStations.add(chargingStationTwoRandom);
-		chargingStations.add(getDepot());
-		return chargingStations;
 	}
 
 	static public Customer getDepot() {
-
-		Customer depotKnot = RunSimulation.knots.get(knots.size() / 2);
-		return depotKnot;
+		Customer depot = knots.get(0);
+		return depot;
 	}
 
 }

@@ -11,17 +11,19 @@ public class Bot {
 	int timeTracker;
 	ArrayList<Double> socList;
 	int lastChargingMoment;
+	int totalExecutionTime;
 
 	// jeder Roboter hat eine ID, eine "Batterie" (=SOC), die momentane Position und
 	// wie weit im Tag er schon vorangeschritten ist(=timeTracker)
 	public Bot(int id, double soc, Customer currentLocation, int timeTracker, ArrayList<Double> socList,
-			int lastChargingMoment) {
+			int lastChargingMoment, int totalExecutionTime) {
 		this.id = id;
 		this.soc = soc;
 		this.currentLocation = currentLocation;
 		this.timeTracker = timeTracker;
 		this.socList = socList;
 		this.lastChargingMoment = lastChargingMoment;
+		this.totalExecutionTime = totalExecutionTime;
 
 	}
 
@@ -31,10 +33,6 @@ public class Bot {
 
 	void setLastChargingMoment(int lastChargingMoment) {
 		this.lastChargingMoment = lastChargingMoment;
-	}
-
-	void addToSocList(Double d) {
-		this.socList.add(d);
 	}
 
 	ArrayList<Double> getSocList() {
@@ -67,5 +65,20 @@ public class Bot {
 
 	void setLocation(Customer currentLocation) {
 		this.currentLocation = currentLocation;
+	}
+
+	int getTotalExecutionTime() {
+
+		return this.totalExecutionTime;
+	}
+
+	void setTotalExecutionTime(int executionTime, int earliest) {
+		double idleTime = earliest - executionTime - this.getTimeTracker();
+		if (idleTime <= 0) {
+			idleTime = 0;
+		}
+
+		this.totalExecutionTime = (int) Math.round(executionTime + idleTime);
+
 	}
 }
