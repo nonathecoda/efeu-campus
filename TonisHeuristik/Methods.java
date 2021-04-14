@@ -173,6 +173,52 @@ public class Methods {
 		return order;
 	}
 
+	static Order assignNextOrder(Bot bot, int index, ArrayList<Order> orders) {
+		Order nextOrder = null;
+
+		for (int i = index + 1; i < orders.size(); i++) {
+			Order order = orders.get(i);
+			double chargingTime = 0;
+			if (order.getIsTaken() == DataDashboard.numberOfBots + 1) {
+
+				double minutesToPickUp = calculateDistance(bot.getLocation(), order.getPickUpID())
+						/ DataDashboard.velocity;
+				int executionTime = (int) Math
+						.round(Methods.calculateDistance(bot.getLocation(), order.getPickUpID(), order.getDeliveryID())
+								/ DataDashboard.velocity);
+				double batteryConsumption = executionTime * DataDashboard.dechargingSpeed;
+				boolean emergencyDefinition = DataDashboard.getEmergencyDefinition();
+
+				Customer chargingStation = Methods.chooseClosestChargingStation(bot);
+				double minutesToChargingStation = Methods.calculateDistance(order.getDeliveryID(), chargingStation)
+						/ DataDashboard.velocity;
+				double batteryConsumptionToChargingStation = minutesToChargingStation * DataDashboard.dechargingSpeed;
+
+				if ((emergencyDefinition == true && (bot.getSoc()
+						- batteryConsumption) <= (DataDashboard.batteryCapacity * DataDashboard.getEmergencyCharge()))
+						|| (emergencyDefinition == false && (bot.getSoc() - batteryConsumption
+								- batteryConsumptionToChargingStation) <= (DataDashboard.batteryCapacity
+										* DataDashboard.getEmergencyCharge()))) {
+
+					chargingTime = (int) Math
+							.round((DataDashboard.getChargingGoal() - bot.getSoc()) / DataDashboard.chargingSpeed);
+				}
+				
+				if (order.getLatest() - executionTime - chargingTime >= bot.getTimeTracker()) {
+					if (i > (DataDashboard.numberOfBots-1)) {
+						order.setIsTaken(bot.getId());
+						nextOrder = order;
+						break;
+					}
+				}
+
+			}
+
+		}
+
+		return nextOrder;
+	}
+
 	static void charge(Bot currentBot, double chargingTime, Customer chargingStation) {
 
 		chargingTime = Math.min(chargingTime,

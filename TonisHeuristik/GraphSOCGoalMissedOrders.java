@@ -65,7 +65,7 @@ public class GraphSOCGoalMissedOrders {
 		for (int i = (int) (DataDashboard.batteryCapacity * DataDashboard.getEmergencyCharge()); i < 556; i = i + 10) {
 
 			View.sliderValueTextField.setText("" + i);
-			View.idleTimeChargingButton.setSelected(true);
+			View.opportunityChargingButton.setSelected(true);
 
 			ArrayList<Customer> knots = Campus.getKnots(DataDashboard.getNumberOfCustomers(),
 					DataDashboard.getCampusSize());

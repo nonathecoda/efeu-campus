@@ -18,7 +18,7 @@ public class CSVWriter {
 				csvWriter = new FileWriter("resultsNoConstraints.csv");
 				break;
 			case 1:
-				csvWriter = new FileWriter("resultsIdleTimeHeuristik.csv");
+				csvWriter = new FileWriter("resultsOpportunityHeuristik.csv");
 				break;
 			case 2:
 				csvWriter = new FileWriter("resultsIntervalHeuristik.csv");
@@ -42,8 +42,6 @@ public class CSVWriter {
 			csvWriter.append("State of charge before Execution");
 			csvWriter.append(';');
 			csvWriter.append("Execution Duration");
-			csvWriter.append(';');
-			csvWriter.append("Emergency Charging?");
 			csvWriter.append(';');
 			csvWriter.append("Charging Decision");
 			csvWriter.append(';');

@@ -36,6 +36,7 @@ public class View extends JFrame {
 	JPanel east = new JPanel(new GridLayout(2, 1));
 	JPanel west = new JPanel(new GridLayout(10, 1));
 	JPanel south = new JPanel(new GridLayout(3, 1));
+	JPanel center = new JPanel(new FlowLayout());
 
 	JPanel n1 = new JPanel(new GridLayout(1, 4));
 	JPanel n2 = new JPanel(new GridLayout(1, 4));
@@ -53,8 +54,8 @@ public class View extends JFrame {
 	JPanel s2 = new JPanel(new GridLayout());
 	JPanel s3 = new JPanel(new GridLayout());
 
-	JPanel e1 = new JPanel(new FlowLayout());
-	JPanel e2 = new JPanel(new GridLayout(6, 1));
+	JPanel e1 = new JPanel(new GridLayout(1, 1));
+	JPanel e2 = new JPanel(new GridLayout(7, 1));
 	JPanel e24 = new JPanel(new GridLayout());
 
 	JPanel w1 = new JPanel(new GridLayout());
@@ -86,15 +87,14 @@ public class View extends JFrame {
 	JLabel startPTLabel = new JLabel("Start Peaktime [min]:");
 	JLabel endPTLabel = new JLabel("End Peaktime [min]:");
 	JLabel sdLabel = new JLabel("Stand-Dev:");
-	static JLabel exportLabel = new JLabel("");
-	static JLabel fillerLabel = new JLabel("fghjknlmnjbhvgcf ");
 	static JLabel outputLabel = new JLabel("Output:");
-	static JLabel errorLabel = new JLabel("Error:");
 	JLabel dayDurationLabel = new JLabel("Duration Working Day [min]:");
 	JLabel availableChargingLabel = new JLabel("Available Charging Stations:");
 	JLabel diyLabel = new JLabel("Choose your y and x axis:");
 	JLabel emergencyLabel = new JLabel("Definition Emergency Charging");
 	JLabel percentLabel = new JLabel("Trigger at [%/100]:");
+	JLabel intervalLabel = new JLabel("Charging Frequency [min] :");
+	static JLabel exportLabel = new JLabel("");
 
 	static JTextField campusSizeTextField = new JTextField("750");
 	static JTextField numberOfOrdersTextField = new JTextField("250");
@@ -107,7 +107,7 @@ public class View extends JFrame {
 	static JTextField dayDurationTextField = new JTextField("480");
 	static JTextField percentTextField = new JTextField("0.3");
 
-	static String[] chargingStations = { "Only charge at depot.", "Charge at depot and two customers." };
+	static String[] chargingStations = { "Charge at depot and two customers.", "Only charge at depot." };
 	static String[] xValues = { "Campus Size", "Number of Customers", "Number of Orders", "Charging Goal",
 			"Charging Frequency (only Interval)" };
 	static String[] yValues = { "Late Orders", "Missed Orders", "Average Delay per Order" };
@@ -120,19 +120,17 @@ public class View extends JFrame {
 	JRadioButton equalDistributionRadioButton = new JRadioButton("Equaldistribution");
 	static JRadioButton noChargingButton = new JRadioButton("No Battery constraints");
 	static JRadioButton intervalChargingButton = new JRadioButton("Interval charging");
-	static JRadioButton idleTimeChargingButton = new JRadioButton("Idle-time charging");
+	static JRadioButton opportunityChargingButton = new JRadioButton("Opportunity charging");
 	static JRadioButton emergencyChargingButton = new JRadioButton("Emergency charging only");
-	static JRadioButton operationsPerHourButton = new JRadioButton("Charging Operations per hour");
-	static JRadioButton lateOrdersSOCGoalButton = new JRadioButton("Late Orders per Charging Goal");
-	static JRadioButton lateOrdersFrequency = new JRadioButton("Late Orders per Charging Frequency");
+	static JRadioButton operationsPerHourInMinutesButton = new JRadioButton(
+			"Charging Operations per hour (in minutes)");
+	static JRadioButton operationsPerHourInTimesButton = new JRadioButton("Charging Operations per hour (#)");
 	static JRadioButton chargingReasonButton = new JRadioButton("Charging Reasons");
 	static JRadioButton diyButton = new JRadioButton("Configure own graph");
-	static JRadioButton onlyDepotRadioButton = new JRadioButton("Only charge at depot.");
-	static JRadioButton alsoAtCustomersRadioButton = new JRadioButton("Charge at depot and two customers.");
-	static JRadioButton under5RadioButton = new JRadioButton("Charge under 5%");
+	static JRadioButton underxRadioButton = new JRadioButton("Charge under 30%");
 	static JRadioButton notReachableButton = new JRadioButton("Charge while CS reachable");
 	static JTextField intervalTextField = new JTextField("20");
-	JLabel intervalLabel = new JLabel("Charging Frequency [min] :");
+
 	ButtonGroup distributionGroup = new ButtonGroup();
 	ButtonGroup chargingGroup = new ButtonGroup();
 	ButtonGroup graficGroup = new ButtonGroup();
@@ -141,7 +139,8 @@ public class View extends JFrame {
 
 	JButton runButton = new JButton("Run simulation");
 	JButton graficButton = new JButton("Show graph");
-	JButton testButton = new JButton("Test me!");
+
+	JSeparator sep = new JSeparator();
 
 	public View() {
 		Container c;
@@ -153,13 +152,16 @@ public class View extends JFrame {
 		basePanel.add(east, BorderLayout.CENTER);
 		basePanel.add(west, BorderLayout.WEST);
 		basePanel.add(south, BorderLayout.SOUTH);
+		//basePanel.add(center, BorderLayout.CENTER);
 
+		
+		
 		north.add(n1);
 		north.add(n2);
 		north.add(n3);
 
 		n1.add(noChargingButton);
-		n1.add(idleTimeChargingButton);
+		n1.add(opportunityChargingButton);
 		n1.add(intervalChargingButton);
 		n1.add(emergencyChargingButton);
 		n2.add(n21);
@@ -169,7 +171,7 @@ public class View extends JFrame {
 		n23.add(intervalLabel);
 		n23.add(intervalTextField);
 		n3.add(emergencyLabel);
-		n3.add(under5RadioButton);
+		n3.add(underxRadioButton);
 		n3.add(notReachableButton);
 		n3.add(n34);
 		n34.add(percentLabel);
@@ -181,11 +183,15 @@ public class View extends JFrame {
 
 		s2.add(runButton);
 
+		
+
 		east.add(e1);
 		east.add(e2);
 
 		e1.add(outputLabel);
-		e2.add(operationsPerHourButton);
+		//e1.add(exportLabel);
+		e2.add(operationsPerHourInMinutesButton);
+		e2.add(operationsPerHourInTimesButton);
 		e2.add(chargingReasonButton);
 		e2.add(diyButton);
 		e2.add(diyLabel);
@@ -257,6 +263,14 @@ public class View extends JFrame {
 			}
 		});
 
+		percentTextField.addActionListener(new AbstractAction() {
+			public void actionPerformed(ActionEvent event) {
+				Double value = Double.valueOf(percentTextField.getText()) * 100;
+				String text = "Charge under " + String.valueOf(value) + "%";
+				underxRadioButton.setText(text);
+			}
+		});
+
 		runButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<Customer> knots = Campus.getKnots(DataDashboard.getNumberOfCustomers(),
@@ -270,7 +284,7 @@ public class View extends JFrame {
 		graficButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				if (operationsPerHourButton.isSelected() == true) {
+				if (operationsPerHourInMinutesButton.isSelected() == true) {
 					System.out.println("Button clicked, Graph will be visible soon!");
 					GraphChargingPerHour obj = new GraphChargingPerHour();
 
@@ -287,8 +301,10 @@ public class View extends JFrame {
 						}
 					});
 
-				} else if (lateOrdersSOCGoalButton.isSelected() == true) {
-					GraphSOCGoalMissedOrders obj = new GraphSOCGoalMissedOrders();
+				} else if (operationsPerHourInTimesButton.isSelected() == true) {
+					System.out.println("Button clicked, Graph will be visible soon!");
+					GraphChargingPerHourInTimes obj = new GraphChargingPerHourInTimes();
+
 					JFrame frame = new JFrame("FX");
 					final JFXPanel fxPanel = new JFXPanel();
 					frame.setSize(1000, 600);
@@ -301,20 +317,7 @@ public class View extends JFrame {
 							obj.initFX(fxPanel);
 						}
 					});
-				} else if (lateOrdersFrequency.isSelected() == true) {
-					GraphLateOrdersPerInterval obj = new GraphLateOrdersPerInterval();
-					JFrame frame = new JFrame("FX");
-					final JFXPanel fxPanel = new JFXPanel();
-					frame.setSize(1000, 600);
-					frame.add(fxPanel);
-					frame.setVisible(true);
 
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							obj.initFX(fxPanel);
-						}
-					});
 				} else if (chargingReasonButton.isSelected() == true) {
 					GraphChargingReason obj = new GraphChargingReason();
 					JFrame frame = new JFrame("FX");
@@ -348,46 +351,21 @@ public class View extends JFrame {
 			}
 		});
 
-		testButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("Button clicked, Graph will be visible soon!");
-				GraphChargingReason lateOrdersPerInterval = new GraphChargingReason();
-
-				JFrame frame = new JFrame("FX");
-				final JFXPanel fxPanel = new JFXPanel();
-				frame.setSize(1000, 600);
-				frame.add(fxPanel);
-				frame.setVisible(true);
-
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						lateOrdersPerInterval.initFX(fxPanel);
-					}
-				});
-
-			}
-		});
-
 		distributionGroup.add(normalDistributionRadioButton);
 		distributionGroup.add(equalDistributionRadioButton);
 
 		chargingGroup.add(noChargingButton);
 		chargingGroup.add(intervalChargingButton);
-		chargingGroup.add(idleTimeChargingButton);
+		chargingGroup.add(opportunityChargingButton);
 		chargingGroup.add(emergencyChargingButton);
 
-		graficGroup.add(operationsPerHourButton);
-		graficGroup.add(lateOrdersSOCGoalButton);
-		graficGroup.add(lateOrdersFrequency);
+		graficGroup.add(operationsPerHourInMinutesButton);
 		graficGroup.add(chargingReasonButton);
 		graficGroup.add(diyButton);
-
-		chargingStationGroup.add(alsoAtCustomersRadioButton);
-		chargingStationGroup.add(onlyDepotRadioButton);
+		graficGroup.add(operationsPerHourInTimesButton);
 
 		emergencyGroup.add(notReachableButton);
-		emergencyGroup.add(under5RadioButton);
+		emergencyGroup.add(underxRadioButton);
 
 		// STYLIING
 
@@ -411,10 +389,9 @@ public class View extends JFrame {
 		runButton.setForeground(red);
 
 		equalDistributionRadioButton.setSelected(true);
-		intervalChargingButton.setSelected(true);
-		operationsPerHourButton.setSelected(true);
-		alsoAtCustomersRadioButton.setSelected(true);
-		under5RadioButton.setSelected(true);
+		opportunityChargingButton.setSelected(true);
+		operationsPerHourInMinutesButton.setSelected(true);
+		notReachableButton.setSelected(true);
 
 		// TODO: default values + falsche eingaben auffangen
 	}

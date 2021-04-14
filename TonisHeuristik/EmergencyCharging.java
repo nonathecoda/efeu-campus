@@ -1,12 +1,13 @@
 package Dashboard;
 
-public class ChargeInIntervals {
+public class EmergencyCharging {
 
 	public static String chargingHeuristic(Order currentOrder, Order nextOrder, Bot currentBot,
 			double batteryConsumption) {
+
 		String chargingDecision = "No charging.";
 
-		Customer chargingStation = Methods.chooseClosestChargingStation(currentBot);
+		Customer chargingStation = Methods.chooseChargingStation(currentBot, nextOrder);
 
 		double currentSoc = currentBot.getSoc();
 		double executionTimeNextJob = (int) Math.round(Methods.calculateDistance(currentOrder.getDeliveryID(),
@@ -26,25 +27,8 @@ public class ChargeInIntervals {
 					.round((DataDashboard.batteryCapacity - currentSoc) / DataDashboard.chargingSpeed);
 			Methods.charge(currentBot, chargingTime, chargingStation);
 			chargingDecision = "SOC not enough for next order.";
-			currentBot.setLastChargingMoment(currentBot.getTimeTracker());
-		}
-
-		else if (currentBot.getSoc() < DataDashboard.getChargingGoal()
-				&& ((currentBot.getTimeTracker() - currentBot.getLastChargingMoment()) >= DataDashboard
-						.getChargingFrequency())) {
-
-			chargingStation = Methods.chooseChargingStation(currentBot, nextOrder);
-
-			double chargingTime = (DataDashboard.getChargingGoal() - currentBot.getSoc()) / DataDashboard.chargingSpeed;
-
-			Methods.charge(currentBot, chargingTime, chargingStation);
-
-			chargingDecision = "Last charging " + DataDashboard.getChargingFrequency() + " min ago.";
-
-			currentBot.setLastChargingMoment(currentBot.getTimeTracker());
 
 		}
 		return chargingDecision;
 	}
-
 }

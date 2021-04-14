@@ -29,6 +29,8 @@ public class TestRun {
 		int latest = -1;
 		String chargingDecision = "No decision made.";
 		String emergencyCharging;
+		String executionTimeString;
+		String botIDString;
 		lateOrders = 0;
 		missedOrders = 0;
 
@@ -54,140 +56,135 @@ public class TestRun {
 
 		results.clear();
 
-		int b = 0;
 		for (int o = 0; o < orders.size(); o++) {
 
-			if (b == bots.size()) {
-				b = 0;
+			if (o < DataDashboard.numberOfBots) {
+				orders.get(o).setIsTaken(bots.get(o).getId());
 			}
-			Bot currentBot = bots.get(b);
-
-//			if (o < DataDashboard.numberOfBots) {
-//				orders.get(o).setIsTaken(bots.get(o).getId());
-//			}
-//
-//			if (o % DataDashboard.numberOfBots == 0) {
-//				System.out.println("\nASSIGN NEXT BUNCH\n");
-//				Methods.assignNextBots(orders, o, bots);
-//			}
 
 			Order currentOrder = orders.get(o);
 			earliest = currentOrder.getEarliest();
 			latest = currentOrder.getLatest();
-			emergencyCharging = "No";
 
-			// Bot currentBot = bots.get(currentOrder.getIsTaken());
+			boolean orderLate = false;
 
-			System.out.println("Order: " + currentOrder.getId() + ", Bot: " + currentBot.getId());
+			try {
+				Bot currentBot = bots.get(currentOrder.getIsTaken());
+				botIDString = String.valueOf(currentBot.getId());
+				int executionTime = (int) Math.round(Methods.calculateDistance(currentBot.getLocation(),
+						currentOrder.getPickUpID(), currentOrder.getDeliveryID()) / DataDashboard.velocity);
+				batteryConsumption = executionTime * DataDashboard.dechargingSpeed;
 
-			int executionTime = (int) Math.round(Methods.calculateDistance(currentBot.getLocation(),
-					currentOrder.getPickUpID(), currentOrder.getDeliveryID()) / DataDashboard.velocity);
-			batteryConsumption = executionTime * DataDashboard.dechargingSpeed;
+				executionTimeString = String.valueOf(executionTime);
+				currentBot.socList.add(socBeforeExecution);
 
-			currentBot.socList.add(socBeforeExecution);
-			b++;
+//				boolean emergencyDefinition = DataDashboard.getEmergencyDefinition();
+//
+//				Customer chargingStation = Methods.chooseClosestChargingStation(currentBot);
+//				double minutesToChargingStation = Methods.calculateDistance(currentOrder.getDeliveryID(),
+//						chargingStation) / DataDashboard.velocity;
+//				double batteryConsumptionToChargingStation = minutesToChargingStation * DataDashboard.dechargingSpeed;
+//
+//				if ((emergencyDefinition == true && (currentBot.getSoc()
+//						- batteryConsumption) <= (DataDashboard.batteryCapacity * DataDashboard.getEmergencyCharge()))
+//						|| (emergencyDefinition == false && (currentBot.getSoc() - batteryConsumption
+//								- batteryConsumptionToChargingStation) <= (DataDashboard.batteryCapacity
+//										* DataDashboard.getEmergencyCharge()))) {
+//
+//					int timeTrackerBeforeCharging = currentBot.getTimeTracker();
+//
+//					chargingTime = (int) Math.round(
+//							(DataDashboard.getChargingGoal() - currentBot.getSoc()) / DataDashboard.chargingSpeed);
+//
+//					emergencyCharging = "Yes, charging at " + currentBot.getTimeTracker() + " for " + chargingTime
+//							+ " minutes.";
+//					Methods.charge(currentBot, chargingTime, chargingStation);
+//					overallChargingDuration.get(currentBot.getId())
+//							.add(currentBot.getTimeTracker() - timeTrackerBeforeCharging);
+//
+//				}
 
-			boolean emergencyDefinition = DataDashboard.getEmergencyDefinition();
+				currentBot.setTotalExecutionTime(executionTime, currentOrder.getEarliest());
+				timeTrackerBeforeExecution = currentBot.getTimeTracker();
+				socBeforeExecution = currentBot.getSoc();
 
-			if (emergencyDefinition == true) {
-				System.out.println("TRUE");
-				if ((currentBot.getSoc() - batteryConsumption) <= (DataDashboard.batteryCapacity
-						* DataDashboard.getEmergencyCharge())) {
-					int timeTrackerBeforeCharging = currentBot.getTimeTracker();
-					Customer chargingStation = Methods.chooseClosestChargingStation(currentBot);
-					chargingTime = (int) Math.round(
-							(DataDashboard.getChargingGoal() - currentBot.getSoc()) / DataDashboard.chargingSpeed);
+				if ((currentBot.getTimeTracker() + executionTime) <= currentOrder.getLatest()) {
 
-					emergencyCharging = "Yes, charging at " + currentBot.getTimeTracker() + " for " + chargingTime
-							+ " minutes.";
-					Methods.charge(currentBot, chargingTime, chargingStation);
-					overallChargingDuration.get(currentBot.getId())
-							.add(currentBot.getTimeTracker() - timeTrackerBeforeCharging);
-				}
-			} else if (emergencyDefinition == false) {
+					overallExecutionDuration.get(currentBot.getId()).add(executionTime);
 
-				System.out.println("FALSE");
-				Customer chargingStation = Methods.chooseClosestChargingStation(currentBot);
-				double minutesToChargingStation = Methods.calculateDistance(currentOrder.getDeliveryID(),
-						chargingStation) / DataDashboard.velocity;
-				double batteryConsumptionToChargingStation = minutesToChargingStation * DataDashboard.dechargingSpeed;
+					currentBot.setTimeTracker(currentBot.getTimeTracker() + currentBot.getTotalExecutionTime());
+					currentBot.setLocation(currentOrder.getDeliveryID());
+					if (DataDashboard.getHeuristicIterator() != 0) {
+						currentBot.setSoc(currentBot.getSoc() - batteryConsumption);
+					}
 
-				if ((currentBot.getSoc() - batteryConsumption
-						- batteryConsumptionToChargingStation) <= (DataDashboard.batteryCapacity
-								* DataDashboard.getEmergencyCharge())) {
-					int timeTrackerBeforeCharging = currentBot.getTimeTracker();
-
-					chargingTime = (int) Math.round(
-							(DataDashboard.getChargingGoal() - currentBot.getSoc()) / DataDashboard.chargingSpeed);
-
-					emergencyCharging = "Yes, charging at " + currentBot.getTimeTracker() + " for " + chargingTime
-							+ " minutes.";
-					Methods.charge(currentBot, chargingTime, chargingStation);
-					overallChargingDuration.get(currentBot.getId())
-							.add(currentBot.getTimeTracker() - timeTrackerBeforeCharging);
-				}
-			}
-
-			currentBot.setTotalExecutionTime(executionTime, currentOrder.getEarliest());
-			timeTrackerBeforeExecution = currentBot.getTimeTracker();
-			socBeforeExecution = currentBot.getSoc();
-
-			if ((currentBot.getTimeTracker() + executionTime) <= currentOrder.getLatest()) {
-
-				overallExecutionDuration.get(currentBot.getId()).add(executionTime);
-
-				currentBot.setTimeTracker(currentBot.getTimeTracker() + currentBot.getTotalExecutionTime());
-				currentBot.setLocation(currentOrder.getDeliveryID());
-				if (DataDashboard.getHeuristicIterator() != 0) {
-					currentBot.setSoc(currentBot.getSoc() - batteryConsumption);
-				}
-
-				try {
 					chargingMoment = currentBot.getTimeTracker();
-					Order nextOrder = orders.get(o + bots.size());
-					// Order nextOrder = Methods.identifyNextOrder(currentBot, o, orders);
-					System.out.println("Next order: " + nextOrder.getId() + ", Bot: " + currentBot.getId());
-					switch (DataDashboard.getHeuristicIterator()) {
 
-					case 0:
-						// no battery constraints
-						chargingDecision = "I don't need no battery.";
-						break;
-					case 1:
-						// opportunity charging
-						chargingDecision = OpportunityCharging.chargingHeuristic(currentOrder, nextOrder, currentBot,
-								batteryConsumption);
-						break;
-					case 2:
-						// interval charging
-						chargingDecision = ChargeInIntervals.chargingHeuristic(currentOrder, nextOrder, currentBot,
-								batteryConsumption);
-						break;
+					Order nextOrder = Methods.assignNextOrder(currentBot, o, orders);
+
+					if (nextOrder != null) {
+						
+
+						switch (DataDashboard.getHeuristicIterator()) {
+
+						case 0:
+							// no battery constraints
+							chargingDecision = "I don't need no battery.";
+							break;
+						case 1:
+							// opportunity charging
+							chargingDecision = OpportunityCharging.chargingHeuristic(currentOrder, nextOrder,
+									currentBot, batteryConsumption);
+							break;
+						case 2:
+							// interval charging
+							chargingDecision = ChargeInIntervals.chargingHeuristic(currentOrder, nextOrder, currentBot,
+									batteryConsumption);
+							break;
+						case 3:
+							chargingDecision = EmergencyCharging.chargingHeuristic(currentOrder, nextOrder, currentBot,
+									batteryConsumption);
+						}
+						socAfterCharging = currentBot.getSoc();
+						durationChargingProcess = currentBot.getTimeTracker() - chargingMoment;
+						overallChargingDuration.get(currentBot.getId()).add(durationChargingProcess);
+
+					} else {
+
+						chargingDecision = "Letzte Order des Tages, keine Ladungen mehr.";
 
 					}
+
+					// Order ausführen + charging decision treffen
+				} else if ((currentBot.getTimeTracker() + executionTime) > currentOrder.getLatest()) {
+					executionTimeString = "-1";
+
+					try {
+						Order nextOrder = Methods.assignNextOrder(currentBot, o, orders);
+					} catch (NullPointerException e) {
+						System.out.println("Keine nächste Order");
+					}
+					orderLate = true;
+					chargingMoment = currentBot.getTimeTracker();
 					socAfterCharging = currentBot.getSoc();
 					durationChargingProcess = currentBot.getTimeTracker() - chargingMoment;
-					overallChargingDuration.get(currentBot.getId()).add(durationChargingProcess);
-
-				} catch (IndexOutOfBoundsException e) {
-
-					chargingDecision = "Letzte Order des Tages, keine Ladungen mehr.";
 
 				}
 
-				// Order ausführen + charging decision treffen
-			} else if ((currentBot.getTimeTracker() + executionTime) > currentOrder.getLatest()) {
+			} catch (Exception e) {
+				botIDString = "No Bot";
+				executionTimeString = "-1";
+				orderLate = true;
+			}
 
-				chargingMoment = currentBot.getTimeTracker();
-				socAfterCharging = currentBot.getSoc();
-				durationChargingProcess = currentBot.getTimeTracker() - chargingMoment;
-
+			if (orderLate == true) {
 				if (currentOrder.getLatest() <= DataDashboard.getDayDurationTextField()
 						- (DataDashboard.defaultDelay)) {
 					earliest = currentOrder.getEarliest();
 					latest = currentOrder.getLatest();
 					currentOrder.setEarliest(currentOrder.getEarliest() + DataDashboard.defaultDelay);
 					currentOrder.setLatest(currentOrder.getLatest() + DataDashboard.defaultDelay);
+					currentOrder.setIsTaken(DataDashboard.numberOfBots + 1);
 					orders.remove(currentOrder);
 
 					int newIndex = 0;
@@ -205,21 +202,20 @@ public class TestRun {
 				} else {
 					chargingDecision = "Bot too late - Order is missed.";
 					missedOrders++;
+
 				}
 			}
 
 			List<String> result = Arrays.asList(String.valueOf(currentOrder.getId()),
 					String.valueOf(currentOrder.getPickUpID().getID()),
-					String.valueOf(currentOrder.getDeliveryID().getID()), earliest + " - " + latest,
-					String.valueOf(currentBot.getId()), String.valueOf(timeTrackerBeforeExecution),
-					String.valueOf(df.format(socBeforeExecution)), String.valueOf(executionTime), emergencyCharging,
-					chargingDecision, String.valueOf(df.format(socAfterCharging)), String.valueOf(chargingMoment),
-					String.valueOf(durationChargingProcess));
+					String.valueOf(currentOrder.getDeliveryID().getID()), earliest + " - " + latest, botIDString,
+					String.valueOf(timeTrackerBeforeExecution), String.valueOf(df.format(socBeforeExecution)),
+					executionTimeString, chargingDecision, String.valueOf(df.format(socAfterCharging)),
+					String.valueOf(chargingMoment), String.valueOf(durationChargingProcess));
 
 			results.add(result);
 
 		}
-
 		for (int i = 0; i < orders.size(); i++) {
 			if (orders.get(i).getDelayed() == true) {
 				lateOrders++;

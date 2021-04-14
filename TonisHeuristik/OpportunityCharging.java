@@ -9,7 +9,7 @@ public class OpportunityCharging {
 		String chargingDecision = "No charging.";
 		try {
 
-			Customer chargingStation = Methods.chooseChargingStation(currentBot, nextOrder);
+			Customer chargingStation = Methods.chooseClosestChargingStation(currentBot);
 
 			double currentSoc = currentBot.getSoc();
 			double executionTimeNextJob = (int) Math.round(Methods.calculateDistance(currentOrder.getDeliveryID(),
@@ -17,18 +17,18 @@ public class OpportunityCharging {
 			double batteryConsumptionNextJob = executionTimeNextJob * DataDashboard.dechargingSpeed;
 			int minutesToChargingStation = (int) (Methods.calculateDistance(currentBot.getLocation(), chargingStation)
 					/ DataDashboard.velocity);
+			double batteryConsumptionToChargingStation = minutesToChargingStation * DataDashboard.dechargingSpeed;
 
-			int idleTime = (int) Math.round(nextOrder.getLatest() - currentBot.getTimeTracker() - executionTimeNextJob);
+			int idleTime = (int) Math.round(nextOrder.getLatest() - currentBot.getTimeTracker() - executionTimeNextJob
+					- minutesToChargingStation);
 
-//			if (currentSoc <= DataDashboard.batteryCapacity * DataDashboard.emergencyCharge) {
-//				int chargingTime = (int) Math
-//						.round((DataDashboard.getChargingGoal() - currentSoc) / DataDashboard.chargingSpeed);
-//				Methods.charge(currentBot, chargingTime, chargingStation);
-//				chargingDecision = "SOC under 30%.";
-
-//			 } else
-			if ((currentSoc - batteryConsumptionNextJob) < DataDashboard.batteryCapacity
-					* DataDashboard.getEmergencyCharge()) {
+			boolean emergencyDefinition = DataDashboard.getEmergencyDefinition();
+			if ((emergencyDefinition == true
+					&& (currentBot.getSoc() - batteryConsumptionNextJob) <= (DataDashboard.batteryCapacity
+							* DataDashboard.getEmergencyCharge()))
+					|| (emergencyDefinition == false && (currentBot.getSoc() - batteryConsumptionNextJob
+							- batteryConsumptionToChargingStation) <= (DataDashboard.batteryCapacity
+									* DataDashboard.getEmergencyCharge()))) {
 				int chargingTime = (int) Math
 						.round((DataDashboard.batteryCapacity - currentSoc) / DataDashboard.chargingSpeed);
 				Methods.charge(currentBot, chargingTime, chargingStation);
@@ -36,12 +36,15 @@ public class OpportunityCharging {
 			}
 
 			else if ((idleTime) > 10 && currentSoc < DataDashboard.getChargingGoal()) {
+				chargingStation = Methods.chooseChargingStation(currentBot, nextOrder);
 				int chargingTime = idleTime;
 				Methods.charge(currentBot, chargingTime, chargingStation);
 				chargingDecision = "Enough idletime (= " + idleTime + " min) to charge.";
 			}
 		} catch (Exception e) {
+			
 			chargingDecision = "No charging station in reach. Bot is removed.";
+		e.printStackTrace();
 		}
 
 		return chargingDecision;

@@ -127,7 +127,7 @@ public class GraphAllrounder {
 			for (int i = init; i < end; i = i + increment) {
 
 				txtField.setText("" + i);
-				View.idleTimeChargingButton.setSelected(true);
+				View.opportunityChargingButton.setSelected(true);
 
 				ArrayList<Customer> knots = Campus.getKnots(DataDashboard.getNumberOfCustomers(),
 						DataDashboard.getCampusSize());

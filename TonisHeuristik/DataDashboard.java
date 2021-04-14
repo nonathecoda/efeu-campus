@@ -63,7 +63,7 @@ public class DataDashboard {
 
 	public static boolean getEmergencyDefinition() {// Maße des quadratischen Campus in Metern
 		boolean result = true;
-		if (View.under5RadioButton.isSelected() == true) {
+		if (View.underxRadioButton.isSelected() == true) {
 			result = true;
 		} else if (View.notReachableButton.isSelected() == true) {
 			result = false;
@@ -90,6 +90,7 @@ public class DataDashboard {
 			chargingStations.add(Campus.getDepot());
 
 		}
+		
 		return chargingStations;
 	}
 
@@ -99,8 +100,8 @@ public class DataDashboard {
 		if (View.noChargingButton.isSelected() == true) {
 			View.exportLabel.setText("Export to file: resultsNoConstraints.csv");
 			heuristicIterator = 0;
-		} else if (View.idleTimeChargingButton.isSelected() == true) {
-			View.exportLabel.setText("Export to file: resultsIdleTimeHeuristik.csv");
+		} else if (View.opportunityChargingButton.isSelected() == true) {
+			View.exportLabel.setText("Export to file: resultsOpportunityHeuristik.csv");
 			heuristicIterator = 1;
 		} else if (View.intervalChargingButton.isSelected() == true) {
 			View.exportLabel.setText("Export to file: resultsIntervalHeuristik.csv");

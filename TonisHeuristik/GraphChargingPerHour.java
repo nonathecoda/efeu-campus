@@ -22,12 +22,12 @@ import java.util.ArrayList;
 
 class ChargingProcess {
 	int chargingMoment, chargingDuration;
-	String emergencyCharge;
+	
 
-	ChargingProcess(int chargingMoment, int chargingDuration, String emergencyCharge) {
+	ChargingProcess(int chargingMoment, int chargingDuration) {
 		this.chargingDuration = chargingDuration;
 		this.chargingMoment = chargingMoment;
-		this.emergencyCharge = emergencyCharge;
+		
 	}
 
 	void setChargingDuration(int i) {
@@ -46,13 +46,7 @@ class ChargingProcess {
 		return this.chargingMoment;
 	}
 
-	void setEmergencyCharge(String emergencyCharge) {
-		this.emergencyCharge = emergencyCharge;
-	}
-
-	String getEmergencyCharge() {
-		return this.emergencyCharge;
-	}
+	
 }
 
 public class GraphChargingPerHour {
@@ -63,20 +57,20 @@ public class GraphChargingPerHour {
 		ArrayList<ChargingProcess> list1 = new ArrayList<>();
 		BufferedReader csvReaderTC;
 
-		View.idleTimeChargingButton.setSelected(true);
+		View.opportunityChargingButton.setSelected(true);
 		ArrayList<Customer> knots = Campus.getKnots(DataDashboard.getNumberOfCustomers(),
 				DataDashboard.getCampusSize());
 		TestRun r = new TestRun(knots);
 
 		try {
 			csvReaderTC = new BufferedReader(
-					new FileReader("/Users/Toni/eclipse-workspace/Dashboard/resultsIdleTimeHeuristik.csv"));
+					new FileReader("/Users/Toni/eclipse-workspace/Dashboard/resultsOpportunityHeuristik.csv"));
 
 			while ((rowIdleTime = csvReaderTC.readLine()) != null) {
 				String[] data = rowIdleTime.split(";");
 
 				try {
-					list1.add(new ChargingProcess(Integer.parseInt(data[11]), Integer.parseInt(data[12]), data[8]));
+					list1.add(new ChargingProcess(Integer.parseInt(data[10]), Integer.parseInt(data[11])));
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
@@ -109,20 +103,7 @@ public class GraphChargingPerHour {
 			}
 		}
 
-		for (int i = 0; i < list1.size(); i++) {
-			String str = list1.get(i).getEmergencyCharge();
-			if (str.contains("No") == false) {
-				String data[] = str.split(" ");
-				int chargingMoment = Integer.parseInt(data[3]);
-				int chargingDuration = Integer.parseInt(data[5]);
-				for (int k = 0; k < amountHours; k++) {
-					if (chargingMoment >= k * 60 && chargingMoment < ((k * 60) + 60)) {
-						list2.get(k).add(chargingDuration);
-						break;
-					}
-				}
-			}
-		}
+		
 
 		int sumIdleCharging = 0;
 		for (int i = 0; i < list2.size(); i++) {
@@ -168,7 +149,7 @@ public class GraphChargingPerHour {
 				String[] data = rowEmergency.split(";");
 
 				try {
-					list1b.add(new ChargingProcess(Integer.parseInt(data[11]), Integer.parseInt(data[12]), data[8]));
+					list1b.add(new ChargingProcess(Integer.parseInt(data[10]), Integer.parseInt(data[11])));
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
@@ -196,20 +177,7 @@ public class GraphChargingPerHour {
 			}
 		}
 
-		for (int i = 0; i < list1b.size(); i++) {
-			String str = list1b.get(i).getEmergencyCharge();
-			if (str.contains("No") == false) {
-				String data[] = str.split(" ");
-				int chargingMoment = Integer.parseInt(data[3]);
-				int chargingDuration = Integer.parseInt(data[5]);
-				for (int k = 0; k < amountHours; k++) {
-					if (chargingMoment >= k * 60 && chargingMoment < ((k * 60) + 60)) {
-						list2b.get(k).add(chargingDuration);
-						break;
-					}
-				}
-			}
-		}
+		
 
 		int sumEmergencyCharging = 0;
 		for (int i = 0; i < list2b.size(); i++) {
@@ -250,7 +218,7 @@ public class GraphChargingPerHour {
 				String[] data = rowIntervalCharging.split(";");
 
 				try {
-					list1a.add(new ChargingProcess(Integer.parseInt(data[11]), Integer.parseInt(data[12]), data[8]));
+					list1a.add(new ChargingProcess(Integer.parseInt(data[10]), Integer.parseInt(data[11])));
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
@@ -281,22 +249,6 @@ public class GraphChargingPerHour {
 				}
 			}
 
-		}
-
-		for (int i = 0; i < list1a.size(); i++) {
-			String str = list1a.get(i).getEmergencyCharge();
-			if (str.contains("No") == false) {
-				String data[] = str.split(" ");
-				int chargingMoment = Integer.parseInt(data[3]);
-				int chargingDuration = Integer.parseInt(data[5]);
-
-				for (int k = 0; k < amountHours; k++) {
-					if (chargingMoment >= k * 60 && chargingMoment < ((k * 60) + 60)) {
-						list2a.get(k).add(chargingDuration);
-						break;
-					}
-				}
-			}
 		}
 
 		int sumInterval = 0;
