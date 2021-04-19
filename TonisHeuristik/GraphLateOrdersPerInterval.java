@@ -29,9 +29,9 @@ public class GraphLateOrdersPerInterval {
 			View.intervalChargingButton.setSelected(true);
 			ArrayList<Customer> knots = Campus.getKnots(DataDashboard.getNumberOfCustomers(),
 					DataDashboard.getCampusSize());
-			TestRun r = new TestRun(knots);
+			RunSimulation r = new RunSimulation(knots);
 
-			series1.getData().add(new XYChart.Data(i * 10, TestRun.lateOrders));
+			series1.getData().add(new XYChart.Data(i * 10, RunSimulation.lateOrders));
 		}
 
 		Scene scene = new Scene(lineChart, 800, 600);

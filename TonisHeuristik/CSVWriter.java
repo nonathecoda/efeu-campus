@@ -64,19 +64,19 @@ public class CSVWriter {
 		DecimalFormat df = new DecimalFormat("0.00");
 
 		try {
-			for (List<String> rowData : TestRun.results) {
+			for (List<String> rowData : RunSimulation.results) {
 				csvWriter.append(String.join(";", rowData));
 				csvWriter.append('\n');
 			}
 
 			csvWriter.append("Late Orders:");
 			csvWriter.append(';');
-			csvWriter.append(String.valueOf(TestRun.lateOrders));
+			csvWriter.append(String.valueOf(RunSimulation.lateOrders));
 			csvWriter.append('\n');
 
 			csvWriter.append("Missed Orders:");
 			csvWriter.append(';');
-			csvWriter.append(String.valueOf(TestRun.missedOrders));
+			csvWriter.append(String.valueOf(RunSimulation.missedOrders));
 			csvWriter.append('\n');
 
 			for (int i = 0; i < averageSocList.size(); i++) {

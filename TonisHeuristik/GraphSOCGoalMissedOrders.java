@@ -52,10 +52,10 @@ public class GraphSOCGoalMissedOrders {
 
 			ArrayList<Customer> knots = Campus.getKnots(DataDashboard.getNumberOfCustomers(),
 					DataDashboard.getCampusSize());
-			TestRun r = new TestRun(knots);
+			RunSimulation r = new RunSimulation(knots);
 
-			seriesIntervalCharging.getData().add(new XYChart.Data(i, TestRun.lateOrders));
-			seriesIntervalMissed.getData().add(new XYChart.Data(i, TestRun.missedOrders));
+			seriesIntervalCharging.getData().add(new XYChart.Data(i, RunSimulation.lateOrders));
+			seriesIntervalMissed.getData().add(new XYChart.Data(i, RunSimulation.missedOrders));
 
 		}
 
@@ -69,9 +69,9 @@ public class GraphSOCGoalMissedOrders {
 
 			ArrayList<Customer> knots = Campus.getKnots(DataDashboard.getNumberOfCustomers(),
 					DataDashboard.getCampusSize());
-			TestRun r = new TestRun(knots);
+			RunSimulation r = new RunSimulation(knots);
 
-			seriesIdleCharging.getData().add(new XYChart.Data(i, TestRun.lateOrders));
+			seriesIdleCharging.getData().add(new XYChart.Data(i, RunSimulation.lateOrders));
 
 		}
 
@@ -85,9 +85,9 @@ public class GraphSOCGoalMissedOrders {
 
 			ArrayList<Customer> knots = Campus.getKnots(DataDashboard.getNumberOfCustomers(),
 					DataDashboard.getCampusSize());
-			TestRun r = new TestRun(knots);
+			RunSimulation r = new RunSimulation(knots);
 
-			seriesEmergencyCharging.getData().add(new XYChart.Data(i, TestRun.lateOrders));
+			seriesEmergencyCharging.getData().add(new XYChart.Data(i, RunSimulation.lateOrders));
 
 		}
 

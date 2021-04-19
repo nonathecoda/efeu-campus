@@ -17,7 +17,7 @@ public class Methods {
 
 			ArrayList<Double> dummyList = new ArrayList<>();
 
-			bots.add(new Bot(i, DataDashboard.batteryCapacity, depot, 0, dummyList, 0, 0));
+			bots.add(new Bot(i, DataDashboard.batteryCapacity, depot, 0, dummyList, 0));
 
 		}
 		return bots;
@@ -44,13 +44,13 @@ public class Methods {
 
 			switch (k) {
 			case 0:
-				pickup = TestRun.customers
+				pickup = RunSimulation.customers
 						.get((int) Math.round(generator.nextDouble() * (DataDashboard.getNumberOfCustomers() - 1) + 1));
 				delivery = Campus.getDepot();
 				break;
 			case 1:
 				pickup = Campus.getDepot();
-				delivery = TestRun.customers
+				delivery = RunSimulation.customers
 						.get((int) Math.round(generator.nextDouble() * (DataDashboard.getNumberOfCustomers() - 1) + 1));
 				break;
 			}
@@ -108,114 +108,23 @@ public class Methods {
 		return overallDistance;
 	}
 
-	static void assignNextBots(ArrayList<Order> orderList, int index, ArrayList<Bot> bots) {
-
-		ArrayList<Bot> botCopy = new ArrayList<Bot>();
-
-		for (int i = 0; i < bots.size(); i++) {
-			botCopy.add(bots.get(i));
-		}
-		try {
-
-			for (int i = index + DataDashboard.numberOfBots; i < index + DataDashboard.numberOfBots * 2; i++) {
-				Order currentOrder = orderList.get(i);
-				currentOrder.setIsTaken(DataDashboard.numberOfBots + 1);
-			}
-
-			for (int i = index + DataDashboard.numberOfBots; i < index + DataDashboard.numberOfBots * 2; i++) {
-				double minimalDistance = DataDashboard.getCampusSize() * 2;
-				Order currentOrder = orderList.get(i);
-				if (currentOrder.getIsTaken() == DataDashboard.numberOfBots + 1) {
-					Bot assignedBot = null;
-					for (int j = 0; j < botCopy.size(); j++) {
-						Bot currentBot = botCopy.get(j);
-						double distance = calculateDistance(currentBot.getLocation(), currentOrder.getPickUpID());
-
-						if (distance < minimalDistance) {
-							minimalDistance = distance;
-							assignedBot = currentBot;
-						}
-
-					}
-					botCopy.remove(assignedBot);
-					if (assignedBot == null) {
-
-						System.out.println("FEHLER: Order :" + currentOrder.getId() + ", botCopy size: "
-								+ botCopy.size() + ", Minimal Distance: " + minimalDistance);
-					}
-					currentOrder.setIsTaken(assignedBot.getId());
-				}
-				// System.out.println("Order: " + currentOrder.getId() + ", Bot: " +
-				// assignedBot.getId());
-			}
-		} catch (IndexOutOfBoundsException e) {
-			e.printStackTrace();
-		}
-	}
-
-	static Order identifyNextOrder(Bot bot, int index, ArrayList<Order> orders) {
-		Order order = null;
-
-		for (int i = index + 1; i < index + DataDashboard.numberOfBots * 2; i++) {
-			int assignedBotId = orders.get(i).getIsTaken();
-			System.out.println("assignedBotId: " + assignedBotId + " Order: " + orders.get(i).getId());
-			if (assignedBotId == bot.getId()) {
-				order = orders.get(i);
-				break;
-			}
-
-		}
-
-		if (order == null) {
-			System.out.println("Fehler: ");
-		}
-
-		return order;
-	}
-
 	static Order assignNextOrder(Bot bot, int index, ArrayList<Order> orders) {
 		Order nextOrder = null;
-
 		for (int i = index + 1; i < orders.size(); i++) {
 			Order order = orders.get(i);
-			double chargingTime = 0;
 			if (order.getIsTaken() == DataDashboard.numberOfBots + 1) {
-
-				double minutesToPickUp = calculateDistance(bot.getLocation(), order.getPickUpID())
-						/ DataDashboard.velocity;
 				int executionTime = (int) Math
 						.round(Methods.calculateDistance(bot.getLocation(), order.getPickUpID(), order.getDeliveryID())
 								/ DataDashboard.velocity);
-				double batteryConsumption = executionTime * DataDashboard.dechargingSpeed;
-				boolean emergencyDefinition = DataDashboard.getEmergencyDefinition();
-
-				Customer chargingStation = Methods.chooseClosestChargingStation(bot);
-				double minutesToChargingStation = Methods.calculateDistance(order.getDeliveryID(), chargingStation)
-						/ DataDashboard.velocity;
-				double batteryConsumptionToChargingStation = minutesToChargingStation * DataDashboard.dechargingSpeed;
-
-				if ((emergencyDefinition == true && (bot.getSoc()
-						- batteryConsumption) <= (DataDashboard.batteryCapacity * DataDashboard.getEmergencyCharge()))
-						|| (emergencyDefinition == false && (bot.getSoc() - batteryConsumption
-								- batteryConsumptionToChargingStation) <= (DataDashboard.batteryCapacity
-										* DataDashboard.getEmergencyCharge()))) {
-
-					chargingTime = (int) Math
-							.round((DataDashboard.getChargingGoal() - bot.getSoc()) / DataDashboard.chargingSpeed);
-				}
-				
-				if (order.getLatest() - executionTime - chargingTime >= bot.getTimeTracker()) {
-					if (i > (DataDashboard.numberOfBots-1)) {
+				if (order.getLatest() - executionTime >= bot.getTimeTracker()) {
+					if (i > (DataDashboard.numberOfBots - 1)) {
 						order.setIsTaken(bot.getId());
 						nextOrder = order;
 						break;
 					}
 				}
-
 			}
-
 		}
-
 		return nextOrder;
 	}
 
@@ -226,7 +135,8 @@ public class Methods {
 
 		int minutesToChargingStation = (int) Math
 				.round(Methods.calculateDistance(currentBot.getLocation(), chargingStation) / DataDashboard.velocity);
-
+		double batteryConsumptionToChargingStation = minutesToChargingStation * DataDashboard.dechargingSpeed;
+		
 		if (chargingStation != Campus.getDepot()) {
 
 			int[] occupied = new int[2];
@@ -236,7 +146,7 @@ public class Methods {
 		}
 		currentBot.setTimeTracker(
 				(int) Math.round(currentBot.getTimeTracker() + minutesToChargingStation + chargingTime));
-		currentBot.setSoc(currentBot.getSoc() + (chargingTime * DataDashboard.chargingSpeed));
+		currentBot.setSoc(currentBot.getSoc()- batteryConsumptionToChargingStation + (chargingTime * DataDashboard.chargingSpeed));
 		currentBot.setLocation(chargingStation);
 
 	}
@@ -275,11 +185,11 @@ public class Methods {
 		return chargingStation;
 	}
 
-	static Customer chooseClosestChargingStation(Bot currentBot) {
+	static Customer chooseClosestChargingStation(Bot currentBot, Customer location) {
 
 		Customer chargingStation = null;
 
-		if (currentBot.getLocation() == Campus.getDepot()) {
+		if (location == Campus.getDepot()) {
 			chargingStation = Campus.getDepot();
 
 		} else {
@@ -287,12 +197,12 @@ public class Methods {
 
 			for (int i = 0; i < DataDashboard.getAvailableChargingStations().size(); i++) {
 
-				double minutesToChargingStation = Methods.calculateDistance(currentBot.getLocation(),
+				double minutesToChargingStation = Methods.calculateDistance(location,
 						DataDashboard.getAvailableChargingStations().get(i)) / DataDashboard.velocity;
 				double batteryConsumption = minutesToChargingStation * DataDashboard.dechargingSpeed;
 
-				if (batteryConsumption < currentBot.getSoc() && (DataDashboard.getAvailableChargingStations().get(i)
-						.checkIfFree(currentBot.getTimeTracker(), minutesToChargingStation) == true)) {
+				if (DataDashboard.getAvailableChargingStations().get(i).checkIfFree(currentBot.getTimeTracker(),
+						minutesToChargingStation) == true) {
 
 					if (minutesToChargingStation < minimalDuration) {
 						minimalDuration = minutesToChargingStation;
@@ -300,11 +210,8 @@ public class Methods {
 					}
 
 				}
-
 			}
-
 		}
-
 		return chargingStation;
 	}
 

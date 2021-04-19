@@ -31,28 +31,28 @@ public class GraphAllrounder {
 
 		lineChart.setTitle(y + " depending on " + x);
 
-		int init = 0;
-		int end = 0;
-		int increment = 0;
+		double init = 0;
+		double end = 0;
+		double increment = 0;
 		JTextField txtField = new JTextField();
 
 		switch (x) {
 		case "Campus Size":
 			init = 10;
-			end = 1500;
+			end = 7000;
 			increment = 50;
 			txtField = View.campusSizeTextField;
 			break;
 		case "Number of Customers":
 			init = 5;
-			end = 100;
+			end = 300;
 			increment = 5;
 			txtField = View.numberOfCustomersTextField;
 			break;
 		case "Number of Orders":
-			init = 50;
+			init = 25;
 			end = 1000;
-			increment = 50;
+			increment = 25;
 			txtField = View.numberOfOrdersTextField;
 			break;
 		case "Charging Goal":
@@ -61,9 +61,15 @@ public class GraphAllrounder {
 			increment = 10;
 			txtField = View.sliderValueTextField;
 			break;
+		case "Trigger Emergency charging":
+			init = 0.01;
+			end = 1.0;
+			increment = 0.1;
+			txtField = View.percentTextField;
+			break;
 		case "Charging Frequency (only Interval)":
 			init = 10;
-			end = 120;
+			end = DataDashboard.getDayDurationTextField();
 			increment = 10;
 			txtField = View.intervalTextField;
 			break;
@@ -71,80 +77,93 @@ public class GraphAllrounder {
 
 		XYChart.Series series1 = new XYChart.Series();
 		series1.setName("Interval Charging");
-		for (int i = init; i < end; i = i + increment) {
+		for (double i = init; i < end; i = i + increment) {
+			Object j = (double) i;
+			if (x.contains("Trigger Emergency charging") == false) {
+				j = (int) i;
+			}
 
-			txtField.setText("" + i);
+			txtField.setText("" + j);
 			View.intervalChargingButton.setSelected(true);
 
 			ArrayList<Customer> knots = Campus.getKnots(DataDashboard.getNumberOfCustomers(),
 					DataDashboard.getCampusSize());
-			TestRun r = new TestRun(knots);
+			RunSimulation r = new RunSimulation(knots);
 			int yValue = 0;
 			switch (y) {
 			case "Late Orders":
-				yValue = TestRun.lateOrders;
+				yValue = RunSimulation.lateOrders;
 				break;
 			case "Missed Orders":
-				yValue = TestRun.missedOrders;
+				yValue = RunSimulation.missedOrders;
 				break;
 			case "Average Delay per Order":
-				yValue = TestRun.avgDelay;
+				yValue = RunSimulation.avgDelay;
 				break;
 			}
-			series1.getData().add(new XYChart.Data(i, yValue));
+			series1.getData().add(new XYChart.Data(j, yValue));
 
 		}
 
 		if (x.contains("Charging Frequency (only Interval)") == false) {
 			XYChart.Series series2 = new XYChart.Series();
 			series2.setName("Emergency Charging");
-			for (int i = init; i < end; i = i + increment) {
+			for (double i = init; i < end; i = i + increment) {
 
-				txtField.setText("" + i);
+				Object j = (double) i;
+				if (x.contains("Trigger Emergency charging") == false) {
+					j = (int) i;
+				}
+
+				txtField.setText("" + j);
 				View.emergencyChargingButton.setSelected(true);
 
 				ArrayList<Customer> knots = Campus.getKnots(DataDashboard.getNumberOfCustomers(),
 						DataDashboard.getCampusSize());
-				TestRun r = new TestRun(knots);
+				RunSimulation r = new RunSimulation(knots);
 				int yValue = 0;
 				switch (y) {
 				case "Late Orders":
-					yValue = TestRun.lateOrders;
+					yValue = RunSimulation.lateOrders;
 					break;
 				case "Missed Orders":
-					yValue = TestRun.missedOrders;
+					yValue = RunSimulation.missedOrders;
 					break;
 				case "Average Delay per Order":
-					yValue = TestRun.avgDelay;
+					yValue = RunSimulation.avgDelay;
 					break;
 				}
-				series2.getData().add(new XYChart.Data(i, yValue));
+				series2.getData().add(new XYChart.Data(j, yValue));
 
 			}
 
 			XYChart.Series series3 = new XYChart.Series();
 			series3.setName("Opportunity Charging");
-			for (int i = init; i < end; i = i + increment) {
-
-				txtField.setText("" + i);
+			for (double i = init; i < end; i = i + increment) {
+				Object j = (double) i;
+				if (x.contains("Trigger Emergency charging") == false) {
+					j = (int) i;
+				}
+				txtField.setText("" + j);
 				View.opportunityChargingButton.setSelected(true);
 
 				ArrayList<Customer> knots = Campus.getKnots(DataDashboard.getNumberOfCustomers(),
 						DataDashboard.getCampusSize());
-				TestRun r = new TestRun(knots);
+				System.out.println("j: " + j);
+				RunSimulation r = new RunSimulation(knots);
 				int yValue = 0;
 				switch (y) {
 				case "Late Orders":
-					yValue = TestRun.lateOrders;
+					yValue = RunSimulation.lateOrders;
 					break;
 				case "Missed Orders":
-					yValue = TestRun.missedOrders;
+					yValue = RunSimulation.missedOrders;
 					break;
 				case "Average Delay per Order":
-					yValue = TestRun.avgDelay;
+					yValue = RunSimulation.avgDelay;
 					break;
 				}
-				series3.getData().add(new XYChart.Data(i, yValue));
+				series3.getData().add(new XYChart.Data(j, yValue));
 
 			}
 			lineChart.getData().addAll(series1, series2, series3);

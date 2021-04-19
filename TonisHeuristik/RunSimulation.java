@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class TestRun {
+public class RunSimulation {
 
 	static ArrayList<Customer> customers;
 	static int lateOrders;
@@ -16,7 +16,7 @@ public class TestRun {
 	static int avgDelay;
 	static ArrayList<List<String>> results = new ArrayList<>();
 
-	public TestRun(ArrayList<Customer> customers) {
+	public RunSimulation(ArrayList<Customer> customers) {
 
 		FileWriter csvWriter = CSVWriter.startCSV();
 		DecimalFormat df = new DecimalFormat("0.00");
@@ -78,52 +78,31 @@ public class TestRun {
 				executionTimeString = String.valueOf(executionTime);
 				currentBot.socList.add(socBeforeExecution);
 
-//				boolean emergencyDefinition = DataDashboard.getEmergencyDefinition();
-//
-//				Customer chargingStation = Methods.chooseClosestChargingStation(currentBot);
-//				double minutesToChargingStation = Methods.calculateDistance(currentOrder.getDeliveryID(),
-//						chargingStation) / DataDashboard.velocity;
-//				double batteryConsumptionToChargingStation = minutesToChargingStation * DataDashboard.dechargingSpeed;
-//
-//				if ((emergencyDefinition == true && (currentBot.getSoc()
-//						- batteryConsumption) <= (DataDashboard.batteryCapacity * DataDashboard.getEmergencyCharge()))
-//						|| (emergencyDefinition == false && (currentBot.getSoc() - batteryConsumption
-//								- batteryConsumptionToChargingStation) <= (DataDashboard.batteryCapacity
-//										* DataDashboard.getEmergencyCharge()))) {
-//
-//					int timeTrackerBeforeCharging = currentBot.getTimeTracker();
-//
-//					chargingTime = (int) Math.round(
-//							(DataDashboard.getChargingGoal() - currentBot.getSoc()) / DataDashboard.chargingSpeed);
-//
-//					emergencyCharging = "Yes, charging at " + currentBot.getTimeTracker() + " for " + chargingTime
-//							+ " minutes.";
-//					Methods.charge(currentBot, chargingTime, chargingStation);
-//					overallChargingDuration.get(currentBot.getId())
-//							.add(currentBot.getTimeTracker() - timeTrackerBeforeCharging);
-//
-//				}
-
-				currentBot.setTotalExecutionTime(executionTime, currentOrder.getEarliest());
 				timeTrackerBeforeExecution = currentBot.getTimeTracker();
 				socBeforeExecution = currentBot.getSoc();
 
 				if ((currentBot.getTimeTracker() + executionTime) <= currentOrder.getLatest()) {
 
+					double idleTime = currentOrder.getEarliest() - executionTime - currentBot.getTimeTracker();
+					if (idleTime <= 0) {
+						idleTime = 0;
+					}
 					overallExecutionDuration.get(currentBot.getId()).add(executionTime);
 
-					currentBot.setTimeTracker(currentBot.getTimeTracker() + currentBot.getTotalExecutionTime());
+					currentBot.setTimeTracker((int) Math.round(currentBot.getTimeTracker() + executionTime + idleTime));
 					currentBot.setLocation(currentOrder.getDeliveryID());
 					if (DataDashboard.getHeuristicIterator() != 0) {
 						currentBot.setSoc(currentBot.getSoc() - batteryConsumption);
+						// System.out.println("currentBot.getSoc(): " + currentBot.getSoc());
 					}
 
 					chargingMoment = currentBot.getTimeTracker();
 
 					Order nextOrder = Methods.assignNextOrder(currentBot, o, orders);
+//					System.out.println("BOT: " + currentBot.getId() + " Order: " + currentOrder.getId()
+//							+ ", Next order: " + nextOrder.getId());
 
 					if (nextOrder != null) {
-						
 
 						switch (DataDashboard.getHeuristicIterator()) {
 
@@ -135,11 +114,14 @@ public class TestRun {
 							// opportunity charging
 							chargingDecision = OpportunityCharging.chargingHeuristic(currentOrder, nextOrder,
 									currentBot, batteryConsumption);
+//							System.out.println("BOT: " + currentBot.getId() + " Order: " + currentOrder.getId()
+//							+ ", Next order: " + nextOrder.getId() + ", charging decision: " + chargingDecision);
 							break;
 						case 2:
 							// interval charging
 							chargingDecision = ChargeInIntervals.chargingHeuristic(currentOrder, nextOrder, currentBot,
 									batteryConsumption);
+
 							break;
 						case 3:
 							chargingDecision = EmergencyCharging.chargingHeuristic(currentOrder, nextOrder, currentBot,

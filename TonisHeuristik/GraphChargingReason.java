@@ -26,7 +26,7 @@ public class GraphChargingReason {
 		View.intervalChargingButton.setSelected(true);
 		ArrayList<Customer> knots = Campus.getKnots(DataDashboard.getNumberOfCustomers(),
 				DataDashboard.getCampusSize());
-		TestRun r = new TestRun(knots);
+		RunSimulation r = new RunSimulation(knots);
 
 		ArrayList<String> chargingReasonList = new ArrayList<>();
 		BufferedReader csvReaderInterval;
@@ -78,7 +78,7 @@ public class GraphChargingReason {
 		View.emergencyChargingButton.setSelected(true);
 		ArrayList<Customer> knots1 = Campus.getKnots(DataDashboard.getNumberOfCustomers(),
 				DataDashboard.getCampusSize());
-		TestRun r1 = new TestRun(knots1);
+		RunSimulation r1 = new RunSimulation(knots1);
 
 		ArrayList<String> chargingReasonList1 = new ArrayList<>();
 		BufferedReader csvReaderEmergency;
@@ -123,7 +123,7 @@ public class GraphChargingReason {
 		View.opportunityChargingButton.setSelected(true);
 		ArrayList<Customer> knots2 = Campus.getKnots(DataDashboard.getNumberOfCustomers(),
 				DataDashboard.getCampusSize());
-		TestRun r2 = new TestRun(knots2);
+		RunSimulation r2 = new RunSimulation(knots2);
 
 		ArrayList<String> chargingReasonList2 = new ArrayList<>();
 		BufferedReader csvReaderIdleTime;

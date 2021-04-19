@@ -33,7 +33,7 @@ public class GraphChargingPerHourInTimes {
 		View.intervalChargingButton.setSelected(true);
 		ArrayList<Customer> knotsA = Campus.getKnots(DataDashboard.getNumberOfCustomers(),
 				DataDashboard.getCampusSize());
-		TestRun rA = new TestRun(knotsA);
+		RunSimulation rA = new RunSimulation(knotsA);
 
 		try {
 			csvReaderIC = new BufferedReader(
@@ -110,7 +110,7 @@ public class GraphChargingPerHourInTimes {
 		View.opportunityChargingButton.setSelected(true);
 		ArrayList<Customer> knotsB = Campus.getKnots(DataDashboard.getNumberOfCustomers(),
 				DataDashboard.getCampusSize());
-		TestRun rB = new TestRun(knotsB);
+		RunSimulation rB = new RunSimulation(knotsB);
 
 		try {
 			csvReaderOC = new BufferedReader(
@@ -180,7 +180,7 @@ public class GraphChargingPerHourInTimes {
 		View.emergencyChargingButton.setSelected(true);
 		ArrayList<Customer> knotsC = Campus.getKnots(DataDashboard.getNumberOfCustomers(),
 				DataDashboard.getCampusSize());
-		TestRun rC = new TestRun(knotsC);
+		RunSimulation rC = new RunSimulation(knotsC);
 
 		try {
 			csvReaderEC = new BufferedReader(

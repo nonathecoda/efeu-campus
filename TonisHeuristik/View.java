@@ -108,7 +108,7 @@ public class View extends JFrame {
 	static JTextField percentTextField = new JTextField("0.3");
 
 	static String[] chargingStations = { "Charge at depot and two customers.", "Only charge at depot." };
-	static String[] xValues = { "Campus Size", "Number of Customers", "Number of Orders", "Charging Goal",
+	static String[] xValues = { "Campus Size", "Number of Customers", "Number of Orders", "Charging Goal","Trigger Emergency charging",
 			"Charging Frequency (only Interval)" };
 	static String[] yValues = { "Late Orders", "Missed Orders", "Average Delay per Order" };
 
@@ -275,7 +275,7 @@ public class View extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<Customer> knots = Campus.getKnots(DataDashboard.getNumberOfCustomers(),
 						DataDashboard.getCampusSize());
-				TestRun r = new TestRun(knots);
+				RunSimulation r = new RunSimulation(knots);
 				System.out.println("Run-Button clicked!");
 
 			}
@@ -388,7 +388,7 @@ public class View extends JFrame {
 
 		runButton.setForeground(red);
 
-		equalDistributionRadioButton.setSelected(true);
+		normalDistributionRadioButton.setSelected(true);
 		opportunityChargingButton.setSelected(true);
 		operationsPerHourInMinutesButton.setSelected(true);
 		notReachableButton.setSelected(true);

@@ -10,7 +10,6 @@ public class DataDashboard {
 	static double chargingSpeed = 16.6666667; // Wh/minute
 	static double dechargingSpeed = 6.6666667; // Wh/Minute
 	static double batteryCapacity = 556.0;
-//	static double emergencyCharge = 0.3; // In prozent
 	static int defaultDelay = 30; // wie viel später soll eine verpasste Order angesetzt werden?
 
 	public static int getCampusSize() {// Maße des quadratischen Campus in Metern
@@ -84,7 +83,7 @@ public class DataDashboard {
 
 			for (int i = 0; i < 2; i++) {
 				chargingStations.add(
-						TestRun.customers.get((int) (generator.nextDouble() * (TestRun.customers.size() - 1) + 1)));
+						RunSimulation.customers.get((int) (generator.nextDouble() * (RunSimulation.customers.size() - 1) + 1)));
 			}
 
 			chargingStations.add(Campus.getDepot());
