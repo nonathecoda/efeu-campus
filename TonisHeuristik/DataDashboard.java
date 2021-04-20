@@ -44,15 +44,19 @@ public class DataDashboard {
 		return Integer.valueOf(View.sliderValueTextField.getText());
 	}
 
-	public static int getStartPT() {// Maße des quadratischen Campus in Metern
+	public static int getStartPT() {
 		return Integer.valueOf(View.startPTTextField.getText());
 	}
 
-	public static int getEndPT() {// Maße des quadratischen Campus in Metern
+	public static int getEndPT() {// 
 		return Integer.valueOf(View.endPTTextField.getText());
 	}
+	
+	public static int getIdleTimeTrigger() {
+		return Integer.valueOf(View.idleTimeTriggerTextField.getText());
+	}
 
-	public static int getDayDurationTextField() {// Maße des quadratischen Campus in Metern
+	public static int getDayDurationTextField() {
 		return Integer.valueOf(View.dayDurationTextField.getText());
 	}
 
@@ -60,7 +64,7 @@ public class DataDashboard {
 		return View.normalDistributionRadioButton.isSelected();
 	}
 
-	public static boolean getEmergencyDefinition() {// Maße des quadratischen Campus in Metern
+	public static boolean getEmergencyDefinition() {
 		boolean result = true;
 		if (View.underxRadioButton.isSelected() == true) {
 			result = true;
@@ -117,5 +121,6 @@ public class DataDashboard {
 	// Verteilung zu wann gehen Fahrzeuge laden
 	// wie wirkt sich SOC Goal auf performance aus?
 	// Ergebnisse visualisieren
-
+//multKorr
+	//[1] 0.9992448
 }

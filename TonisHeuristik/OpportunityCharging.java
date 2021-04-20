@@ -59,7 +59,7 @@ public class OpportunityCharging {
 
 			}
 
-			else if ((idleTime) > 10 && currentSoc < DataDashboard.getChargingGoal()) {
+			else if ((idleTime) > DataDashboard.getIdleTimeTrigger() && currentSoc < DataDashboard.getChargingGoal()) {
 				chargingStation = Methods.chooseChargingStation(currentBot, nextOrder);
 				int chargingTime = idleTime;
 				Methods.charge(currentBot, chargingTime, chargingStation);

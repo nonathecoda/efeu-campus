@@ -252,7 +252,7 @@ public class RunSimulation {
 					+ " Wh<br>");
 		}
 		outputString = outputString + "<br>Late Orders: " + lateOrders + "<br>Missed Orders: " + missedOrders
-				+ "</body></html>";
+				+ "<br>Average Delay per Order: " + avgDelay + " minutes</body></html>";
 
 		View.outputLabel.setText(outputString);
 		CSVWriter.endCSV(csvWriter, averageSocList, execDurationPerBot, chargingTimePerBot);

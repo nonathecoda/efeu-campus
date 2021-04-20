@@ -52,7 +52,7 @@ public class View extends JFrame {
 
 	JPanel s1 = new JPanel(new GridLayout());
 	JPanel s2 = new JPanel(new GridLayout());
-	JPanel s3 = new JPanel(new GridLayout());
+	JPanel s3 = new JPanel(new GridLayout(1, 3));
 
 	JPanel e1 = new JPanel(new GridLayout(1, 1));
 	JPanel e2 = new JPanel(new GridLayout(7, 1));
@@ -95,6 +95,7 @@ public class View extends JFrame {
 	JLabel percentLabel = new JLabel("Trigger at [%/100]:");
 	JLabel intervalLabel = new JLabel("Charging Frequency [min] :");
 	static JLabel exportLabel = new JLabel("");
+	JLabel idleTimeTriggerLabel = new JLabel("Required idletime [min] :");
 
 	static JTextField campusSizeTextField = new JTextField("750");
 	static JTextField numberOfOrdersTextField = new JTextField("250");
@@ -106,10 +107,11 @@ public class View extends JFrame {
 	static JTextField sdTextField = new JTextField("100");
 	static JTextField dayDurationTextField = new JTextField("480");
 	static JTextField percentTextField = new JTextField("0.3");
+	static JTextField idleTimeTriggerTextField = new JTextField("10");
 
 	static String[] chargingStations = { "Charge at depot and two customers.", "Only charge at depot." };
-	static String[] xValues = { "Campus Size", "Number of Customers", "Number of Orders", "Charging Goal","Trigger Emergency charging",
-			"Charging Frequency (only Interval)" };
+	static String[] xValues = { "Campus Size", "Number of Customers", "Number of Orders", "Charging Goal",
+			"Trigger Emergency charging", "Charging Frequency (only Interval)" };
 	static String[] yValues = { "Late Orders", "Missed Orders", "Average Delay per Order" };
 
 	static JComboBox chargingStationComboBox = new JComboBox(chargingStations);
@@ -139,6 +141,9 @@ public class View extends JFrame {
 
 	JButton runButton = new JButton("Run simulation");
 	JButton graficButton = new JButton("Show graph");
+	JButton ecDataButton = new JButton("get whole EC data");
+	JButton icDataButton = new JButton("get whole IC data");
+	JButton ocDataButton = new JButton("get whole OC data");
 
 	JSeparator sep = new JSeparator();
 
@@ -152,10 +157,8 @@ public class View extends JFrame {
 		basePanel.add(east, BorderLayout.CENTER);
 		basePanel.add(west, BorderLayout.WEST);
 		basePanel.add(south, BorderLayout.SOUTH);
-		//basePanel.add(center, BorderLayout.CENTER);
+		// basePanel.add(center, BorderLayout.CENTER);
 
-		
-		
 		north.add(n1);
 		north.add(n2);
 		north.add(n3);
@@ -168,6 +171,8 @@ public class View extends JFrame {
 		n2.add(n22);
 		n2.add(n23);
 		n2.add(n24);
+		n22.add(idleTimeTriggerLabel);
+		n22.add(idleTimeTriggerTextField);
 		n23.add(intervalLabel);
 		n23.add(intervalTextField);
 		n3.add(emergencyLabel);
@@ -182,14 +187,15 @@ public class View extends JFrame {
 		south.add(s3);
 
 		s2.add(runButton);
-
-		
+		s3.add(ocDataButton);
+		s3.add(icDataButton);
+		s3.add(ecDataButton);
 
 		east.add(e1);
 		east.add(e2);
 
 		e1.add(outputLabel);
-		//e1.add(exportLabel);
+		// e1.add(exportLabel);
 		e2.add(operationsPerHourInMinutesButton);
 		e2.add(operationsPerHourInTimesButton);
 		e2.add(chargingReasonButton);
@@ -277,6 +283,28 @@ public class View extends JFrame {
 						DataDashboard.getCampusSize());
 				RunSimulation r = new RunSimulation(knots);
 				System.out.println("Run-Button clicked!");
+
+			}
+		});
+
+		ocDataButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegressionData.getOCData();
+				System.out.println("Test-Button clicked!");
+
+			}
+		});
+		icDataButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegressionData.getICData();
+				System.out.println("Test-Button clicked!");
+
+			}
+		});
+		ecDataButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegressionData.getECData();
+				System.out.println("Test-Button clicked!");
 
 			}
 		});

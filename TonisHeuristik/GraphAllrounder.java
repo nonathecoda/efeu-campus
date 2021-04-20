@@ -77,7 +77,7 @@ public class GraphAllrounder {
 
 		XYChart.Series series1 = new XYChart.Series();
 		series1.setName("Interval Charging");
-		for (double i = init; i < end; i = i + increment) {
+		for (double i = init; i <= end; i = i + increment) {
 			Object j = (double) i;
 			if (x.contains("Trigger Emergency charging") == false) {
 				j = (int) i;
@@ -108,7 +108,7 @@ public class GraphAllrounder {
 		if (x.contains("Charging Frequency (only Interval)") == false) {
 			XYChart.Series series2 = new XYChart.Series();
 			series2.setName("Emergency Charging");
-			for (double i = init; i < end; i = i + increment) {
+			for (double i = init; i <= end; i = i + increment) {
 
 				Object j = (double) i;
 				if (x.contains("Trigger Emergency charging") == false) {
@@ -139,7 +139,7 @@ public class GraphAllrounder {
 
 			XYChart.Series series3 = new XYChart.Series();
 			series3.setName("Opportunity Charging");
-			for (double i = init; i < end; i = i + increment) {
+			for (double i = init; i <= end; i = i + increment) {
 				Object j = (double) i;
 				if (x.contains("Trigger Emergency charging") == false) {
 					j = (int) i;
