@@ -1,5 +1,33 @@
-KPI: wie viel zu spät sind die Order im Durchschnitt
-Missed Orders
-Late Orders
+weiter KPIS:
 
-Orders dynamisch zuweisen
+avergae SOC hoch
+energie verbrauch während peak time (wie viele WH werden insgesamt verbraucht
+average delay
+missed orders
+late orders
+
+was bedeutet überhaupt peak hours?
+
+Evaluation:
+Nicht text unter jedem graphen einzeln, sondern einmal unter allen
+average SOC NBC
+NBC erklären
+bei optimierung for schleife erklären (mit inkrement erklären)
+wenn es bei optimierung mehrere Kombination gibt, wie verfährst du?
+wie wurden Werte normiert? -> Radargraph
+
+Interpretation:
+OC&IC ist besser als EC
+Vergleich mit NBC?
+EC sollte nur als safety netz verwendet werden, sollte aber nicht alleine verwendet werden
+Systembetreiber sollen heuristik nach Wunsch auswählen, weitere KPIs selbst entscheiden
+Key findings:
+exogene parameter besser
+nicht nach energy consumption during peak hours optimieren, das macht logitisch keinen Sinn ; Netzbelastung wird kaum beeinflusst, da energy consumption der e-AGV sehr gering
+
+
+-> Vergleich mit Gleichverteilung #sensitivityanalysis (Paketaufkommen ist sehr wichtig)
+
+Outlook & Grenzen des Systems:
+1.energy consumption von e-AGVs vorhersagen -> EC Trigger vermeiden
+2. NBC zeigt, dass Exogene Parameter nicht gut genug -> mehr CS oder mehr Bots

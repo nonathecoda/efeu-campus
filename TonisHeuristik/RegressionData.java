@@ -1,6 +1,7 @@
 package Dashboard;
 
 import java.io.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import javafx.scene.chart.XYChart;
@@ -13,17 +14,14 @@ public class RegressionData {
 	// charge while cs reachable (jetzt immer damit gerechnet)
 	// how much idletime to trigger opportunity charging
 
-	static double weightMissedOrders = 0.5;
-	static double weightLateOrders = 0.3;
-	static double weightAvgDelay = 0.2;
-
 	static void getOCData() {
+		DecimalFormat df = new DecimalFormat("0.00");
 
 		try {
 
 			FileWriter txtWriter = new FileWriter("OCRegression.csv");
 
-			System.out.println("Successfully wrote to the file.");
+			System.out.println("Successfully wrote to the file, wait...");
 
 			txtWriter.append("trigger");
 			txtWriter.append(";");
@@ -37,7 +35,9 @@ public class RegressionData {
 			txtWriter.append(";");
 			txtWriter.append("averageDelay");
 			txtWriter.append(";");
-			txtWriter.append("kpi");
+			txtWriter.append("averageSOC");
+			txtWriter.append(";");
+			txtWriter.append("consumptionPeakTime");
 			txtWriter.append('\n');
 
 			// nur opportunity charging
@@ -59,17 +59,14 @@ public class RegressionData {
 								DataDashboard.getCampusSize());
 						RunSimulation r = new RunSimulation(knots);
 
-						double kpi = RunSimulation.missedOrders * weightMissedOrders
-								+ RunSimulation.lateOrders * weightLateOrders + RunSimulation.avgDelay * weightAvgDelay;
-
-						kpi = (double) Math.round(kpi * 100d) / 100d;
-						String kpiString = String.valueOf(kpi);
-						kpiString = kpiString.replaceAll("\\.", ",");
-
 						String iString = String.valueOf(i);
 						iString = iString.replaceAll("\\.", ",");
 
-						System.out.println("KPI: " + kpiString);
+						String avgSocString = String.valueOf(df.format(RunSimulation.averageSOC));
+						avgSocString = avgSocString.replaceAll("\\.", ",");
+
+						String consumptionString = String.valueOf(df.format(RunSimulation.consumptionPeakTime));
+						consumptionString = consumptionString.replaceAll("\\.", ",");
 
 						txtWriter.append(iString);
 						txtWriter.append(";");
@@ -83,7 +80,9 @@ public class RegressionData {
 						txtWriter.append(";");
 						txtWriter.append("" + RunSimulation.avgDelay);
 						txtWriter.append(";");
-						txtWriter.append(kpiString);
+						txtWriter.append(avgSocString);
+						txtWriter.append(";");
+						txtWriter.append(consumptionString);
 						txtWriter.append('\n');
 
 					}
@@ -97,20 +96,24 @@ public class RegressionData {
 			System.out.println("An error occurred.");
 			e.printStackTrace();
 		}
+		System.out.println("DONE.");
+
 	}
 
 	static void getICData() {
+
+		DecimalFormat df = new DecimalFormat("0.00");
 		try {
 
 			FileWriter txtWriter = new FileWriter("ICRegression.csv");
 
-			System.out.println("Successfully wrote to the file.");
+			System.out.println("Successfully wrote to the file, wait...");
 
 			txtWriter.append("trigger");
 			txtWriter.append(";");
 			txtWriter.append("charginggoal");
 			txtWriter.append(";");
-			txtWriter.append("chargingfrequency");
+			txtWriter.append("chargingFrequency");
 			txtWriter.append(";");
 			txtWriter.append("missedOrders");
 			txtWriter.append(";");
@@ -118,7 +121,9 @@ public class RegressionData {
 			txtWriter.append(";");
 			txtWriter.append("averageDelay");
 			txtWriter.append(";");
-			txtWriter.append("kpi");
+			txtWriter.append("averageSOC");
+			txtWriter.append(";");
+			txtWriter.append("consumptionPeakTime");
 			txtWriter.append('\n');
 
 			// nur opportunity charging
@@ -140,17 +145,14 @@ public class RegressionData {
 								DataDashboard.getCampusSize());
 						RunSimulation r = new RunSimulation(knots);
 
-						double kpi = RunSimulation.missedOrders * weightMissedOrders
-								+ RunSimulation.lateOrders * weightLateOrders + RunSimulation.avgDelay * weightAvgDelay;
-
-						kpi = (double) Math.round(kpi * 100d) / 100d;
-						String kpiString = String.valueOf(kpi);
-						kpiString = kpiString.replaceAll("\\.", ",");
-
 						String iString = String.valueOf(i);
 						iString = iString.replaceAll("\\.", ",");
 
-						System.out.println("KPI: " + kpiString);
+						String avgSocString = String.valueOf(df.format(RunSimulation.averageSOC));
+						avgSocString = avgSocString.replaceAll("\\.", ",");
+
+						String consumptionString = String.valueOf(df.format(RunSimulation.consumptionPeakTime));
+						consumptionString = consumptionString.replaceAll("\\.", ",");
 
 						txtWriter.append(iString);
 						txtWriter.append(";");
@@ -164,7 +166,9 @@ public class RegressionData {
 						txtWriter.append(";");
 						txtWriter.append("" + RunSimulation.avgDelay);
 						txtWriter.append(";");
-						txtWriter.append(kpiString);
+						txtWriter.append(avgSocString);
+						txtWriter.append(";");
+						txtWriter.append(consumptionString);
 						txtWriter.append('\n');
 
 					}
@@ -178,26 +182,32 @@ public class RegressionData {
 			System.out.println("An error occurred.");
 			e.printStackTrace();
 		}
+		System.out.println("DONE.");
+
 	}
 
 	static void getECData() {
+
+		DecimalFormat df = new DecimalFormat("0.00");
 		try {
 
 			FileWriter txtWriter = new FileWriter("ECRegression.csv");
 
-			System.out.println("Successfully wrote to the file.");
+			System.out.println("Successfully wrote to the file, wait...");
 
 			txtWriter.append("trigger");
 			txtWriter.append(";");
 			txtWriter.append("charginggoal");
 			txtWriter.append(";");
-			txtWriter.append("lateOrders");
-			txtWriter.append(";");
 			txtWriter.append("missedOrders");
+			txtWriter.append(";");
+			txtWriter.append("lateOrders");
 			txtWriter.append(";");
 			txtWriter.append("averageDelay");
 			txtWriter.append(";");
-			txtWriter.append("kpi");
+			txtWriter.append("averageSOC");
+			txtWriter.append(";");
+			txtWriter.append("consumptionPeakTime");
 			txtWriter.append('\n');
 
 			// nur opportunity charging
@@ -216,29 +226,28 @@ public class RegressionData {
 							DataDashboard.getCampusSize());
 					RunSimulation r = new RunSimulation(knots);
 
-					double kpi = RunSimulation.missedOrders * weightMissedOrders
-							+ RunSimulation.lateOrders * weightLateOrders + RunSimulation.avgDelay * weightAvgDelay;
-
-					kpi = (double) Math.round(kpi * 100d) / 100d;
-					String kpiString = String.valueOf(kpi);
-					kpiString = kpiString.replaceAll("\\.", ",");
-
 					String iString = String.valueOf(i);
 					iString = iString.replaceAll("\\.", ",");
 
-					System.out.println("KPI: " + kpiString);
+					String avgSocString = String.valueOf(df.format(RunSimulation.averageSOC));
+					avgSocString = avgSocString.replaceAll("\\.", ",");
+
+					String consumptionString = String.valueOf(df.format(RunSimulation.consumptionPeakTime));
+					consumptionString = consumptionString.replaceAll("\\.", ",");
 
 					txtWriter.append(iString);
 					txtWriter.append(";");
 					txtWriter.append("" + j);
 					txtWriter.append(";");
-					txtWriter.append("" + RunSimulation.lateOrders);
-					txtWriter.append(";");
 					txtWriter.append("" + RunSimulation.missedOrders);
+					txtWriter.append(";");
+					txtWriter.append("" + RunSimulation.lateOrders);
 					txtWriter.append(";");
 					txtWriter.append("" + RunSimulation.avgDelay);
 					txtWriter.append(";");
-					txtWriter.append(kpiString);
+					txtWriter.append(avgSocString);
+					txtWriter.append(";");
+					txtWriter.append(consumptionString);
 					txtWriter.append('\n');
 
 				}
@@ -250,6 +259,7 @@ public class RegressionData {
 			System.out.println("An error occurred.");
 			e.printStackTrace();
 		}
+		System.out.println("DONE.");
 
 	}
 }

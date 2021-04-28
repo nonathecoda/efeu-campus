@@ -53,7 +53,7 @@ public class OpportunityCharging {
 					int chargingTime = (int) Math
 							.round((DataDashboard.batteryCapacity - currentSoc) / DataDashboard.chargingSpeed);
 					Methods.charge(currentBot, chargingTime, chargingStation);
-					System.out.println("BOT HAD TO BE BROUGHT TO CS MANUALLY");
+					
 					chargingDecision = "BOT HAD TO BE BROUGHT TO CS MANUALLY";
 				}
 

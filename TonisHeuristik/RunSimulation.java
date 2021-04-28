@@ -14,6 +14,8 @@ public class RunSimulation {
 	static int lateOrders;
 	static int missedOrders;
 	static int avgDelay;
+	static double consumptionPeakTime;
+	static double averageSOC;
 	static ArrayList<List<String>> results = new ArrayList<>();
 
 	public RunSimulation(ArrayList<Customer> customers) {
@@ -33,6 +35,8 @@ public class RunSimulation {
 		String botIDString;
 		lateOrders = 0;
 		missedOrders = 0;
+		consumptionPeakTime = 0;
+		averageSOC = 0;
 
 		this.customers = customers;
 		Customer depot = Campus.getDepot();
@@ -52,6 +56,7 @@ public class RunSimulation {
 		for (int i = 0; i < bots.size(); i++) {
 			overallExecutionDuration.add(new ArrayList<Integer>());
 			overallChargingDuration.add(new ArrayList<Integer>());
+			bots.get(i).socList.clear();
 		}
 
 		results.clear();
@@ -76,10 +81,11 @@ public class RunSimulation {
 				batteryConsumption = executionTime * DataDashboard.dechargingSpeed;
 
 				executionTimeString = String.valueOf(executionTime);
-				currentBot.socList.add(socBeforeExecution);
+				
 
 				timeTrackerBeforeExecution = currentBot.getTimeTracker();
 				socBeforeExecution = currentBot.getSoc();
+				currentBot.socList.add(socBeforeExecution);
 
 				if ((currentBot.getTimeTracker() + executionTime) <= currentOrder.getLatest()) {
 
@@ -90,17 +96,20 @@ public class RunSimulation {
 					overallExecutionDuration.get(currentBot.getId()).add(executionTime);
 
 					currentBot.setTimeTracker((int) Math.round(currentBot.getTimeTracker() + executionTime + idleTime));
+					if (currentBot.getTimeTracker() >= DataDashboard.getStartPT()
+							&& currentBot.getTimeTracker() <= DataDashboard.getEndPT()) {
+						consumptionPeakTime += batteryConsumption;
+					}
+
 					currentBot.setLocation(currentOrder.getDeliveryID());
 					if (DataDashboard.getHeuristicIterator() != 0) {
 						currentBot.setSoc(currentBot.getSoc() - batteryConsumption);
-						// System.out.println("currentBot.getSoc(): " + currentBot.getSoc());
+
 					}
 
 					chargingMoment = currentBot.getTimeTracker();
 
 					Order nextOrder = Methods.assignNextOrder(currentBot, o, orders);
-//					System.out.println("BOT: " + currentBot.getId() + " Order: " + currentOrder.getId()
-//							+ ", Next order: " + nextOrder.getId());
 
 					if (nextOrder != null) {
 
@@ -114,8 +123,6 @@ public class RunSimulation {
 							// opportunity charging
 							chargingDecision = OpportunityCharging.chargingHeuristic(currentOrder, nextOrder,
 									currentBot, batteryConsumption);
-//							System.out.println("BOT: " + currentBot.getId() + " Order: " + currentOrder.getId()
-//							+ ", Next order: " + nextOrder.getId() + ", charging decision: " + chargingDecision);
 							break;
 						case 2:
 							// interval charging
@@ -248,11 +255,20 @@ public class RunSimulation {
 			}
 			averageSocDummy = averageSocDummy / dummyBot.socList.size();
 			averageSocList.add(averageSocDummy);
-			outputString = (outputString + "Average Soc Bot " + dummyBot.getId() + ": " + df.format(averageSocDummy)
-					+ " Wh<br>");
+//			outputString = (outputString + "Average Soc Bot " + dummyBot.getId() + ": " + df.format(averageSocDummy)
+//					+ " Wh<br>");
+
 		}
-		outputString = outputString + "<br>Late Orders: " + lateOrders + "<br>Missed Orders: " + missedOrders
-				+ "<br>Average Delay per Order: " + avgDelay + " minutes</body></html>";
+
+		for (int i = 0; i < averageSocList.size(); i++) {
+			averageSOC += averageSocList.get(i);
+		}
+		averageSOC = averageSOC / averageSocList.size();
+		
+		outputString = outputString + "Late Orders: " + lateOrders + "<br>Missed Orders: " + missedOrders
+				+ "<br>Average Delay per Order: " + avgDelay + " minutes" + "<br>Energy consumption Peak Time: "
+				+ df.format(consumptionPeakTime) + " Wh" + "<br>Average SOC: " + df.format(averageSOC)
+				+ " Wh</body></html>";
 
 		View.outputLabel.setText(outputString);
 		CSVWriter.endCSV(csvWriter, averageSocList, execDurationPerBot, chargingTimePerBot);

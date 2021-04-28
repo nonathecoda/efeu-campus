@@ -146,6 +146,11 @@ public class Methods {
 		}
 		currentBot.setTimeTracker(
 				(int) Math.round(currentBot.getTimeTracker() + minutesToChargingStation + chargingTime));
+		
+		if (currentBot.getTimeTracker() >= DataDashboard.getStartPT()
+				&& currentBot.getTimeTracker() <= DataDashboard.getEndPT()) {
+			RunSimulation.consumptionPeakTime += batteryConsumptionToChargingStation;
+		}
 		currentBot.setSoc(currentBot.getSoc()- batteryConsumptionToChargingStation + (chargingTime * DataDashboard.chargingSpeed));
 		currentBot.setLocation(chargingStation);
 
